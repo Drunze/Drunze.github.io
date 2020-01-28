@@ -4,6 +4,81 @@
   
     
     <entry>
+      <title>堆内存结构及简单性能调优</title>
+      <link href="/2020/01/28/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
+      <url>/2020/01/28/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</url>
+      
+        <content type="html"><![CDATA[<p>Java底层最重要的一部分就是jvm堆内存，它影响着Java的性能。</p><p>这篇博客主要介绍Java堆内存的分区及简单的Java调优。</p><h2 id="一、Java堆内存"><a href="#一、Java堆内存" class="headerlink" title="一、Java堆内存"></a>一、Java堆内存</h2><p>首先看这张图：</p><p><img src="https://img-blog.csdnimg.cn/20191121235622158.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p><ul><li>堆中的分区</li><li>Java堆内存分为两部分：<strong>年轻代、老年代</strong></li></ul><p>其中，年轻代分两个部分：<strong>Eden、Survivor</strong></p><ul><li>内存分配</li></ul><pre><code>老年代的内存占堆内总内存的2/3年轻代占1/3，在年轻代中，Eden分8/10，From和To都是1/10例：堆中总共300M空间，那么老年代有200M，年轻代有100M</code></pre><ul><li>运行时到底是什么个情况呢？</li></ul><p>当我们new一个对象之后，首先，这个对象就会被放入Eden区，直到Eden区内存被占满</p><ul><li>Eden满了之后：</li><li>Eden满了后，就会触发垃圾回收机制gc，但是呢，在这个地方是minor gc。minor gc会回收Eden区的垃圾对象（没有任何指针引用程序的对象）</li></ul><p><img src="https://img-blog.csdnimg.cn/201911220014486.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="JVM虚拟机内部构造图"></p><ul><li>垃圾对象？</li></ul><p>可以理解为：当main函数结束时，栈帧区域会被销毁掉，然后局部变量也就被释放掉，那么指向堆中对象的指针也就被干掉了，最后，堆中的对象就是个垃圾对象。<strong>这里我们要注意一个点：查找垃圾对象的起始是从栈帧中开始的，然后查到的时一个局部变量</strong></p><ul><li>可达性分析算法？GC Root？</li></ul><p>在垃圾对象里面说了，堆中的对象是由局部变量指出的，那么我们就可以利用它来判断是不是垃圾对象，这里的局部变量就可以理解为GC Root。可达性分析算法就是以GC Root为起点，往下搜索，找到的对象就不是垃圾对象，找不到的就是垃圾对象。</p><ul><li>接着minor gc</li></ul><p>上面已经说了，minor gc只是针对Eden区的。然后，当进行一次minor gc后，Eden中的垃圾对象全部被干掉，剩下的非垃圾对象，要进入Survivor区中的From中，这时候，这些非垃圾对象的分代年龄就会加一。</p><ul><li>分代年龄？对象头？</li></ul><p>分代年龄存放在对象的对象头中，每经历一轮的垃圾回收，分代年龄就会加一<br>对象头：（<a href="https://blog.csdn.net/lkforce/article/details/81128115#1%EF%BC%8CMark%20Word" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/81128115#1%EF%BC%8CMark%20Word</a>）</p><pre><code>1. Mark Word2. 指向类的指针3. 数组长度（只有数组对象才有）</code></pre><ul><li>然后Eden区再次满的时候，又会触发垃圾回收，再次将垃圾对象（包括刚刚放入from中变成新垃圾的对象）干掉，把Eden和From中非垃圾对象放入To中，并将年龄加一。</li></ul><p>当下次Eden再满的时候，又会把Eden和To中的非垃圾对象放入From中，年龄加一，以此不断循环……</p><ul><li>所以年龄有什么卵用？</li></ul><p>当进行的次数多了，直到年龄达到了15（可以改这个参数），这时候就会被移到老年代</p><ul><li>上面已经说过，老年代也有一定的大小，那么如果老年代满的时候怎么办呢？<br>这时候就会发生full gc</li></ul><p>下面我们以代码为例，查看运行时的各区情况：</p><p>利用上篇微信红包中的main函数，使它进入死循环</p><p>（对微信红包算法感兴趣的可以看：<a href="https://blog.csdn.net/qq_44357371/article/details/103115263" target="_blank" rel="noopener">https://blog.csdn.net/qq_44357371/article/details/103115263</a>）</p><pre><code>public static void main(String[] args) {        while (true) {            test.thirdMethod(5, 20);        }    }</code></pre><p><img src="https://img-blog.csdnimg.cn/20191122011034389.gif" alt=""></p><p>old就是代表老年区，我们可以看到Eden区是最快的，然后就发生垃圾回收……，和上面所述相符。</p><p><img src="https://img-blog.csdnimg.cn/20191122011342596.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>说实话，我想看old区被塞满的情况，可惜它增长的太慢了。。。</p><ul><li>接着full gc。STW？</li></ul><p>当发生full gc时，就会产生STW（stop world，，毁掉整个世界），（哈哈哈，没这么牛逼）。这时候呢，就会暂停所有的线程，让垃圾回收机制专心的回收垃圾。这样的话，用户端会卡掉。</p><ul><li>为什么要把线程停掉呢？</li></ul><p>考虑一种情况，如果在找垃圾时，刚好已经在某个链条上面了，这时候，如果线程把这条链给干掉了，那么后面的本来应该全部是垃圾的，但是gc没有把它们给找出来，所以停掉线程。</p><h2 id="二、性能调优"><a href="#二、性能调优" class="headerlink" title="二、性能调优"></a>二、性能调优</h2><ul><li>Jvm性能调优到底调的是什么？</li></ul><p>我们上面已经知道，minor gc发生时，对性能的影响不大，但是full gc发生时，对性能的影响是巨大的。所以调优就是要减少full gc发生的次数，减少STW出现次数；还有就是在发生了Full gc时，所有的线程停掉等待垃圾回收，所以，减少垃圾回收时间。</p><p>下面举一个调优例子：</p><p><img src="https://img-blog.csdnimg.cn/20191122013401603.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>首先分析：</p><p>我们设置了堆的大小为3G，老年区就有2G，eden有800M，from和to各占100M</p><p>线程在运行时，每秒产生60M的对象，用后直接干掉变垃圾，这样大概每13秒就会把Eden占满，触发minor gc。</p><p>但是一个问题，在第13s产生的进程，会被直接移到survivor区，但是它的大小超过了survivor中一个区的一半，这时候触发==对象动态年龄判断机制==，直接进入老年代。</p><p>但是着60M的对象，在下一秒就又变成了垃圾。。。这样算下来，大概5、6分钟就会使老年代触发full gc，这样的效率是极其低下的。</p><p>所以呢，我们可以对这个系统进行一个调优：</p><p>把这些参数改一下，我们可以尽量让垃圾在年轻代就被干掉。</p><p><strong>总共3G，把old区设置为1G（因为没那么多要放的），这样，新生代就有了2G，这样，Eden分了1.6G，from和to分别200M</strong></p><p>这时候，每秒60M的对象过来，最后那一秒在Eden区中传入survivor中，但是根据==对象动态年龄判断机制==，60M小于from或to的一半，不会被传进老年代，变成垃圾，直接被minor gc干死，所以基本上，老年代就不可能被放满，所以就极大的改善了性能！！！</p><p>今晚收获巨大。jvm内容还多，路途且长，继续奋斗！</p><p>图片来源：诸葛老师</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JVM结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>JVM底层结构</title>
+      <link href="/2020/01/28/JVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/"/>
+      <url>/2020/01/28/JVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</url>
+      
+        <content type="html"><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Java的优点：一次编写，处处执行，即跨平台。<br>Java如何做到跨平台呢？<br><img src="https://img-blog.csdnimg.cn/20191127121557147.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70#pic_center=400x500" alt=""></p><p>首先看这张图片，我们写的Java代码，通过Javac编译成字节码文件，然后通过Java命令进入jvm。但是在不同的平台上机器码不一样，所以jvm一个宏观上的理解就是：从软件层面屏蔽不同操作系统在底层硬件与指令上的区别。</p><h2 id="JVM虚拟机结构图"><a href="#JVM虚拟机结构图" class="headerlink" title="JVM虚拟机结构图"></a>JVM虚拟机结构图</h2><p><img src="https://img-blog.csdnimg.cn/20191127123045440.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p><h2 id="JVM各组成部分："><a href="#JVM各组成部分：" class="headerlink" title="JVM各组成部分："></a>JVM各组成部分：</h2><ul><li>运行时数据区（内存模型）</li><li>类转载子系统</li><li>字节码执行引擎</li></ul><h2 id="运行时数据区（内存模型"><a href="#运行时数据区（内存模型" class="headerlink" title="运行时数据区（内存模型):"></a>运行时数据区（内存模型):</h2><ul><li>堆</li><li>栈（线程栈）</li><li>本地方法栈</li><li>方法区（元空间）</li><li>程序计数器</li></ul><h4 id="栈（线程栈）"><a href="#栈（线程栈）" class="headerlink" title="栈（线程栈）"></a>栈（线程栈）</h4><p>程序在运行时会有很多个线程，每产生一个新的线程，Java的线程栈就会给线程分配一段栈内存区。<br>栈帧：Java中方法在运行时，栈会给每一个方法分配一段栈帧内存区，里面放各自方法的局部变量。栈帧内存区存放在栈中。</p><p>当方法执行完，栈帧中相应的内存区就被干掉</p><p>栈的结构：FILO，在JVM中亦然，先调用的方法，分配栈帧内存区之后压栈，后调用的方法，先被干掉。</p><p>以代码为例：</p><p><img src="https://img-blog.csdnimg.cn/20191127130535518.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p><p>在代码运行时，首先线程栈会给它分配一个栈内存区，然后执行main方法，这个栈内存区给main方法分配一个栈帧内存区，并压入栈底。main方法中调用Computer时，给computer方法分配一个栈帧内存区，当Computer方法执行完成之后，将为该方法分配的栈帧从栈中干掉。最后，main方法执行完成之后，将main方法对应的栈帧干掉。（FILO）</p><p><strong>栈帧内部</strong></p><ul><li>局部变量表</li><li>操作数栈</li><li>动态链接</li><li>方法出口</li></ul><h4 id="方法区（元空间"><a href="#方法区（元空间" class="headerlink" title="方法区（元空间)"></a>方法区（元空间)</h4><ul><li>常量</li><li>静态变量(new出来的对象放在堆里面)</li><li>类元信息</li></ul><p>堆和方法区：</p><p>堆中的对象的头会存放类的信息指针，指向方法区</p><h4 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h4><p>记录程序执行的位置。行数。</p><h4 id="本地方法"><a href="#本地方法" class="headerlink" title="本地方法"></a>本地方法</h4><p>每个线程独有，底层C语言与Java交互调用</p><p><em>可能有些地方说的不清楚，若有疑问，下面留言。</em> </p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JVM结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>通过Java字节码深入理解Java执行过程及JVM底层结构</title>
+      <link href="/2020/01/28/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/"/>
+      <url>/2020/01/28/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</url>
+      
+        <content type="html"><![CDATA[<p>在读本文时，可以参考我的另外两篇介绍jvm的博客。</p><p><a href="https://blog.csdn.net/qq_44357371/article/details/103330641" target="_blank" rel="noopener">JVM底层结构</a></p><p><a href="https://blog.csdn.net/qq_44357371/article/details/103192906" target="_blank" rel="noopener">Java堆内存介绍及简单性能调优</a></p><h2 id="生成一个字节码文件"><a href="#生成一个字节码文件" class="headerlink" title="生成一个字节码文件"></a>生成一个字节码文件</h2><p>首先我们编写一个简单的Java文件</p><p><img src="https://img-blog.csdnimg.cn/20200121101732904.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>在文件夹中找到这个文件，可以看到只有一个.java 文件</p><p><img src="https://img-blog.csdnimg.cn/20200121101824654.png" alt=""></p><p>在命令行使用Javac命令，生成.class文件</p><p><img src="https://img-blog.csdnimg.cn/2020012110192682.png" alt=""></p><p>使用Javap -c命令，生成字节码文件</p><p><img src="https://img-blog.csdnimg.cn/20200121102035583.png" alt=""></p><p><img src="https://img-blog.csdnimg.cn/20200121102059870.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>看到这个乱七八糟的代码，你可能会问，，这tm是什么鬼。</p><p>下面通过<strong>JVM指令手册</strong>从Java底层对字节码进行分析</p><h2 id="字节码分析"><a href="#字节码分析" class="headerlink" title="字节码分析"></a>字节码分析</h2><h3 id="一、computer方法："><a href="#一、computer方法：" class="headerlink" title="一、computer方法："></a>一、computer方法：</h3><p><img src="https://img-blog.csdnimg.cn/20200121103143498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><h4 id="代码-int-a-1"><a href="#代码-int-a-1" class="headerlink" title="==代码 int a=1=="></a>==代码 int a=1==</h4><p>iconst_1:将int型常量①压入操作数栈</p><p>istore_2:将int类型的值存入局部变量①</p><p>结合<strong>JVM虚拟机内存结构图</strong></p><p><img src="https://img-blog.csdnimg.cn/20200121103907248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>首先，给常量a在操作数栈中分配一个内存空间，即<strong>iconst_1</strong>对应<strong>int a</strong></p><p>然后，把常量a的值变成1，并存进局部变量表，即<strong>istore_2</strong>对应<strong>a=1</strong></p><h4 id="代码-int-b-2"><a href="#代码-int-b-2" class="headerlink" title="代码 int b=2"></a>代码 int b=2</h4><p>iconst_2:将int型常量②压入操作数栈</p><p>istore_2:将int类型的值存入局部变量②</p><p>同理，很容易理解</p><h4 id="代码-return-a-b"><a href="#代码-return-a-b" class="headerlink" title="代码 return a+b"></a>代码 return a+b</h4><p>iload_1：从局部变量①中转载int类型值  即<strong>a的值1</strong></p><p>iload_2：从局部变量②中装载int类型值  即<strong>b的值2</strong></p><p>即把变量a的值1给装载出来，放在操作数栈</p><p>把变量b的值2给装载出来，放在操作数栈</p><p><img src="https://img-blog.csdnimg.cn/20200121105426146.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>iadd:执行int类型的加法</p><p>即从操作数栈中依次弹出栈顶元素相加，最终生成的结果压回操作数栈    <strong>a+b</strong></p><p>最后 ireturn:从当前方法返回int</p><p>从操作数栈中弹出3</p><p>即对应 <strong>return 3</strong></p><h3 id="二、main方法"><a href="#二、main方法" class="headerlink" title="二、main方法"></a>二、main方法</h3><p><img src="https://img-blog.csdnimg.cn/20200121110948756.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><h4 id="代码-Test-test-new-Test"><a href="#代码-Test-test-new-Test" class="headerlink" title="代码 Test test = new Test()"></a>代码 Test test = new Test()</h4><p> new：创建一个对象</p><p> 我们对比上面的 int a 可以知道，new出来的test 也是一个局部变量，它被存放在main方法对应的栈帧内存区的局部变量表中，<br> 但在jvm底层，对象创建之后放在堆中，</p><p> 这样我们就可以发现栈和堆之间的一个联系。</p><p> <strong>那么，这两个东西真的就是一样的嘛？</strong></p><p> 其实，局部变量表中存放的是堆中对象对应的内存地址，即可以理解为它存放一个指向堆中对象的指针。</p><p> <img src="https://img-blog.csdnimg.cn/20200121112345695.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p> 到这里，我们就可以通过字节码在jvm底层结构理解整个Java代码的执行过程。</p><p> 最后还有一个问题</p><p><img src="https://img-blog.csdnimg.cn/20200121112738874.png" alt="">)<img src="https://img-blog.csdnimg.cn/20200121112648124.png" alt="在这里插入图片描述"></p><p>在执行main方法时，会跳出去转到computer方法中，在执行完computer方法后，它会再回到main方法中，但是，它回到哪了呢？</p><p>方法出口就记录着返回的位置。</p><p>同样，程序计数器？</p><p><img src="https://img-blog.csdnimg.cn/20200121113147728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>它记录着程序执行的位置，即行数</p><p>设想，在Java代码执行时，经常会有多个线程。学过操作系统的就知道，cpu在运行时，经常会发生线程被抢占，被执行的线程挂起。那么，这个线程被挂起之后，它重新运行时，从哪开始呢？</p><p>程序计数器就解决了这个问题。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> JVM结构 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>运行时栈帧结构</title>
       <link href="/2020/01/28/JVJVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/"/>
       <url>/2020/01/28/JVJVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/</url>

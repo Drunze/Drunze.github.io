@@ -140,11 +140,11 @@
 
 
 <ul>
-    <li><div class="all active">全部文章<small>(5)</small></div></li>
+    <li><div class="all active">全部文章<small>(8)</small></div></li>
     
         
             
-            <li><div data-rel="JVM">JVM<small>(4)</small></div>
+            <li><div data-rel="JVM">JVM<small>(7)</small></div>
                 
             </li>
             
@@ -162,8 +162,8 @@
     </div>
     <div><a class="about  hasFriend  site_url"  href="/about">关于</a><a style="width: 50%"  class="friends">友链</a></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="5">
-<input type="hidden" id="yelog_site_word_count" value="3.4k">
+<input type="hidden" id="yelog_site_posts_number" value="8">
+<input type="hidden" id="yelog_site_word_count" value="6.3k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -202,6 +202,10 @@
     
     <li class="article-tag-list-item">
         <a class="color3">字节码执行引擎</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">JVM结构</a>
     </li>
     
     <div class="clearfix"></div>
@@ -252,6 +256,30 @@
            data-author="" >
             <span class="post-title" title="运行时栈帧结构">运行时栈帧结构</span>
             <span class="post-date" title="2020-01-28 17:09:57">2020/01/28</span>
+        </a>
+        
+        <a  class="JVM "
+           href="/2020/01/28/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"
+           data-tag="JVM结构"
+           data-author="" >
+            <span class="post-title" title="堆内存结构及简单性能调优">堆内存结构及简单性能调优</span>
+            <span class="post-date" title="2020-01-28 19:08:24">2020/01/28</span>
+        </a>
+        
+        <a  class="JVM "
+           href="/2020/01/28/JVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/"
+           data-tag="JVM结构"
+           data-author="" >
+            <span class="post-title" title="JVM底层结构">JVM底层结构</span>
+            <span class="post-date" title="2020-01-28 19:03:38">2020/01/28</span>
+        </a>
+        
+        <a  class="JVM "
+           href="/2020/01/28/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/"
+           data-tag="JVM结构"
+           data-author="" >
+            <span class="post-title" title="通过Java字节码深入理解Java执行过程及JVM底层结构">通过Java字节码深入理解Java执行过程及JVM底层结构</span>
+            <span class="post-date" title="2020-01-28 18:58:38">2020/01/28</span>
         </a>
         
     </nav>
@@ -494,7 +522,7 @@ public class NotInitialization {
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#类加载机制','#字节码执行引擎',],
+            'data': ['#类加载机制','#字节码执行引擎','#JVM结构',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');

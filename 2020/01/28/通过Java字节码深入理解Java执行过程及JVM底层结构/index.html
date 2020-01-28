@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Hello World | Jacob</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="Hello World | Jacob">
+  <title>通过Java字节码深入理解Java执行过程及JVM底层结构 | Jacob</title>
+  <meta name="keywords" content=" JVM结构 ">
+  <meta name="description" content="通过Java字节码深入理解Java执行过程及JVM底层结构 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="栈帧中包括：局部变量表、操作数栈、动态链接、方法出口。  动态连接在类加载的过程中已介绍过类加载过程中的解析阶段，是将符号引用转换为直接引用，但是是静态的。在与运行期间转化为直接引用就是动态连接。 其他部分可参考阅读 JVM底层结构 通过Java字节码深入理解Java执行过程及JVM底层结构">
 <meta property="og:type" content="article">
@@ -294,24 +294,36 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-通过Java字节码深入理解Java执行过程及JVM底层结构" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Hello World</h1>
+        <h1 class="article-title">通过Java字节码深入理解Java执行过程及JVM底层结构</h1>
     
     <div class="article-meta">
         
         
         
+        <span class="book">
+            
+                <a  data-rel="JVM">JVM</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">JVM结构</a>
+            
+        </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 10:04:07'>2020-01-28 10:04</time>
+        创建时间:<time class="date" title='更新时间: 2020-01-28 19:07:15'>2020-01-28 18:58</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:73</span>
+        <span>字数:782</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -341,7 +353,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#生成一个字节码文件"><span class="toc-text">生成一个字节码文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字节码分析"><span class="toc-text">字节码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、computer方法："><span class="toc-text">一、computer方法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-int-a-1"><span class="toc-text">&#x3D;&#x3D;代码 int a&#x3D;1&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-int-b-2"><span class="toc-text">代码 int b&#x3D;2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-return-a-b"><span class="toc-text">代码 return a+b</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、main方法"><span class="toc-text">二、main方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-Test-test-new-Test"><span class="toc-text">代码 Test test &#x3D; new Test()</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -357,19 +369,57 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+        <p>在读本文时，可以参考我的另外两篇介绍jvm的博客。</p>
+<p><a href="https://blog.csdn.net/qq_44357371/article/details/103330641" target="_blank" rel="noopener">JVM底层结构</a></p>
+<p><a href="https://blog.csdn.net/qq_44357371/article/details/103192906" target="_blank" rel="noopener">Java堆内存介绍及简单性能调优</a></p>
+<h2 id="生成一个字节码文件"><a href="#生成一个字节码文件" class="headerlink" title="生成一个字节码文件"></a>生成一个字节码文件</h2><p>首先我们编写一个简单的Java文件</p>
+<p><img src="https://img-blog.csdnimg.cn/20200121101732904.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>在文件夹中找到这个文件，可以看到只有一个.java 文件</p>
+<p><img src="https://img-blog.csdnimg.cn/20200121101824654.png" alt=""></p>
+<p>在命令行使用Javac命令，生成.class文件</p>
+<p><img src="https://img-blog.csdnimg.cn/2020012110192682.png" alt=""></p>
+<p>使用Javap -c命令，生成字节码文件</p>
+<p><img src="https://img-blog.csdnimg.cn/20200121102035583.png" alt=""></p>
+<p><img src="https://img-blog.csdnimg.cn/20200121102059870.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>看到这个乱七八糟的代码，你可能会问，，这tm是什么鬼。</p>
+<p>下面通过<strong>JVM指令手册</strong>从Java底层对字节码进行分析</p>
+<h2 id="字节码分析"><a href="#字节码分析" class="headerlink" title="字节码分析"></a>字节码分析</h2><h3 id="一、computer方法："><a href="#一、computer方法：" class="headerlink" title="一、computer方法："></a>一、computer方法：</h3><p><img src="https://img-blog.csdnimg.cn/20200121103143498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<h4 id="代码-int-a-1"><a href="#代码-int-a-1" class="headerlink" title="==代码 int a=1=="></a>==代码 int a=1==</h4><p>iconst_1:将int型常量①压入操作数栈</p>
+<p>istore_2:将int类型的值存入局部变量①</p>
+<p>结合<strong>JVM虚拟机内存结构图</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20200121103907248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>首先，给常量a在操作数栈中分配一个内存空间，即<strong>iconst_1</strong>对应<strong>int a</strong></p>
+<p>然后，把常量a的值变成1，并存进局部变量表，即<strong>istore_2</strong>对应<strong>a=1</strong></p>
+<h4 id="代码-int-b-2"><a href="#代码-int-b-2" class="headerlink" title="代码 int b=2"></a>代码 int b=2</h4><p>iconst_2:将int型常量②压入操作数栈</p>
+<p>istore_2:将int类型的值存入局部变量②</p>
+<p>同理，很容易理解</p>
+<h4 id="代码-return-a-b"><a href="#代码-return-a-b" class="headerlink" title="代码 return a+b"></a>代码 return a+b</h4><p>iload_1：从局部变量①中转载int类型值  即<strong>a的值1</strong></p>
+<p>iload_2：从局部变量②中装载int类型值  即<strong>b的值2</strong></p>
+<p>即把变量a的值1给装载出来，放在操作数栈</p>
+<p>把变量b的值2给装载出来，放在操作数栈</p>
+<p><img src="https://img-blog.csdnimg.cn/20200121105426146.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>iadd:执行int类型的加法</p>
+<p>即从操作数栈中依次弹出栈顶元素相加，最终生成的结果压回操作数栈    <strong>a+b</strong></p>
+<p>最后 ireturn:从当前方法返回int</p>
+<p>从操作数栈中弹出3</p>
+<p>即对应 <strong>return 3</strong></p>
+<h3 id="二、main方法"><a href="#二、main方法" class="headerlink" title="二、main方法"></a>二、main方法</h3><p><img src="https://img-blog.csdnimg.cn/20200121110948756.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<h4 id="代码-Test-test-new-Test"><a href="#代码-Test-test-new-Test" class="headerlink" title="代码 Test test = new Test()"></a>代码 Test test = new Test()</h4><p> new：创建一个对象</p>
+<p> 我们对比上面的 int a 可以知道，new出来的test 也是一个局部变量，它被存放在main方法对应的栈帧内存区的局部变量表中，<br> 但在jvm底层，对象创建之后放在堆中，</p>
+<p> 这样我们就可以发现栈和堆之间的一个联系。</p>
+<p> <strong>那么，这两个东西真的就是一样的嘛？</strong></p>
+<p> 其实，局部变量表中存放的是堆中对象对应的内存地址，即可以理解为它存放一个指向堆中对象的指针。</p>
+<p> <img src="https://img-blog.csdnimg.cn/20200121112345695.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p> 到这里，我们就可以通过字节码在jvm底层结构理解整个Java代码的执行过程。</p>
+<p> 最后还有一个问题</p>
+<p><img src="https://img-blog.csdnimg.cn/20200121112738874.png" alt="">)<img src="https://img-blog.csdnimg.cn/20200121112648124.png" alt="在这里插入图片描述"></p>
+<p>在执行main方法时，会跳出去转到computer方法中，在执行完computer方法后，它会再回到main方法中，但是，它回到哪了呢？</p>
+<p>方法出口就记录着返回的位置。</p>
+<p>同样，程序计数器？</p>
+<p><img src="https://img-blog.csdnimg.cn/20200121113147728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>它记录着程序执行的位置，即行数</p>
+<p>设想，在Java代码执行时，经常会有多个线程。学过操作系统的就知道，cpu在运行时，经常会发生线程被抢占，被执行的线程挂起。那么，这个线程被挂起之后，它重新运行时，从哪开始呢？</p>
+<p>程序计数器就解决了这个问题。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -383,12 +433,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Hello World</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">73</span></p>
+    <p><span class="copy-title">文章标题:</span>通过Java字节码深入理解Java执行过程及JVM底层结构</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">782</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 10:04:07</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 10:04:07</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/hello-world/" title="Hello World">http://yoursite.com/2020/01/28/hello-world/</a>
+    <p><span class="copy-title">发布时间:</span>2020-01-28, 18:58:38</p>
+    <p><span class="copy-title">最后更新:</span>2020-01-28, 19:07:15</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/" title="通过Java字节码深入理解Java执行过程及JVM底层结构">http://yoursite.com/2020/01/28/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
