@@ -4,6 +4,81 @@
   
     
     <entry>
+      <title>运行时栈帧结构</title>
+      <link href="/2020/01/28/JVJVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/"/>
+      <url>/2020/01/28/JVJVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/</url>
+      
+        <content type="html"><![CDATA[<p>栈帧中包括：局部变量表、操作数栈、动态链接、方法出口。</p><p><img src="https://img-blog.csdnimg.cn/20200126175647510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><h2 id="动态连接"><a href="#动态连接" class="headerlink" title="动态连接"></a>动态连接</h2><p>在<a href="https://blog.csdn.net/qq_44357371/article/details/104072447" target="_blank" rel="noopener">类加载的过程</a>中已介绍过类加载过程中的解析阶段，是将符号引用转换为直接引用，但是是静态的。<br>在与运行期间转化为直接引用就是动态连接。</p><p>其他部分可参考阅读</p><p><a href="https://blog.csdn.net/qq_44357371/article/details/103330641" target="_blank" rel="noopener">JVM底层结构</a></p><p><a href="https://blog.csdn.net/qq_44357371/article/details/104059180" target="_blank" rel="noopener">通过Java字节码深入理解Java执行过程及JVM底层结构</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 字节码执行引擎 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>类加载器</title>
+      <link href="/2020/01/28/JVJVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B63%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/"/>
+      <url>/2020/01/28/JVJVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B63%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>类加载器：实现 “ 通过类的全限定名来获取描述此类的二进制字节流 ” 的模块<br><img src="https://img-blog.csdnimg.cn/20200126141937329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p></blockquote><h2 id="类加载器种类："><a href="#类加载器种类：" class="headerlink" title="类加载器种类："></a>类加载器种类：</h2><ul><li><strong>启动类加载器</strong>：负责加载支撑JVM运行的位于jre/lib目录下的核心类库（例如：String、Object类），在虚拟机启动时就会加载完，以支撑虚拟机的运行。对于hotspot，这个类加载器使用C++实现。</li><li><strong>扩展类加载器</strong>：负责加载支撑JVM运行的位于jre/lib/ext中的JAR包。由Java语言实现，父类加载器为null。</li><li><strong>应用程序类加载器</strong>：负责加载用户路径ClassPath下的类库。由Java语言实现，父类加载器为ExtClassLoader。</li></ul><p>类加载器加载Class大致要经过如下8个步骤：</p><ol><li>检测此Class是否载入过，即在缓冲区中是否有此Class，如果有直接进入第8步，否则进入第2步。</li><li>如果没有父类加载器，则要么Parent是根类加载器，要么本身就是根类加载器，则跳到第4步，如果父类加载器存在，则进入第3步。</li><li>请求使用父类加载器去载入目标类，如果载入成功则跳至第8步，否则接着执行第5步。</li><li>请求使用根类加载器去载入目标类，如果载入成功则跳至第8步，否则跳至第7步。</li><li>当前类加载器尝试寻找Class文件，如果找到则执行第6步，如果找不到则执行第7步。</li><li>从文件中载入Class，成功后跳至第8步。</li><li>抛出ClassNotFountException异常。</li><li>返回对应的java.lang.Class对象。</li></ol><h2 id="类加载机制："><a href="#类加载机制：" class="headerlink" title="类加载机制："></a>类加载机制：</h2><ul><li>全盘负责：所谓全盘负责，就是当一个类加载器负责加载某个Class时，该Class所依赖和引用其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入。</li><li>双亲委派：所谓的双亲委派，则是先让父类加载器试图加载该Class，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类。通俗的讲，就是某个特定的类加载器在接到加载类的请求时，首先将加载任务委托给父加载器，依次递归，如果父加载器可以完成类加载任务，就成功返回；只有父加载器无法完成此加载任务时，才自己去加载。</li><li>缓存机制。缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区中搜寻该Class，只有当缓存区中不存在该Class对象时，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓冲区中。这就是为很么修改了Class后，必须重新启动JVM，程序所做的修改才会生效的原因。</li></ul><p><strong>双亲委派机制</strong></p><p><img src="https://img-blog.csdnimg.cn/2020012615383646.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70#pic_center=300x300" alt=""></p><p>双亲委派机制要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器，但这里的父子关系是组合关系</p><blockquote><p>组合关系，是关联关系的一种，是比聚合关系强的关系。它要求普通的聚合关系中代表整体的对象负责代表部分对象的生命周期，组合关系是不能共享的。代表整体的对象需要负责保持部分对象和存活，在一些情况下将负责代表部分的对象湮灭掉。代表整体的对象可以将代表部分的对象传递给另一个对象，由后者负责此对象的生命周期。换言之，代表部分的对象在每一个时刻只能与一个对象发生组合关系，由后者排他地负责生命周期。部分和整体的生命周期一样。</p></blockquote><p>对于我们写出来的.class文件，即对应<strong>应用程序加载器</strong>，它在加载时，首先会向上委托，委托给他的父亲，即<strong>扩展类加载器</strong>，扩展类加载器继续向上委托，给<strong>启动类加载器</strong>，而启动类加载器没有父类，则在启动类加载器查找是否有这个类，有则加载，无则打回；然后在扩展类加载器中找，有则加载，无则打回；最后在应用程序类加载器中加载。</p><p>  <strong>双亲委派机制的优势</strong>：采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以避免类的重复加载，当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次。其次是考虑到安全因素，java核心api中定义类型不会被随意替换，假设通过网络传递一个名为java.lang.Integer的类，通过双亲委托模式传递到启动类加载器，而启动类加载器在核心Java API发现这个名字的类，发现该类已被加载，并不会重新加载网络传递的过来的java.lang.Integer，而直接返回已加载过的Integer.class，这样便可以防止核心API库被随意篡改。</p><p>我们以一个简单的代码为例：</p><p><img src="https://img-blog.csdnimg.cn/20200126151932356.png" alt=""></p><p>我们自己定义一个String类，注意==在java.lang包中也有一个系统自带的String类==，而我们定义的这个类，包名也叫做java.lang，运行结果怎么样呢 ？</p><p><img src="https://img-blog.csdnimg.cn/20200126152208405.png" alt=""></p><p>为啥会找不到main方法？<br>这里就要从双亲委托机制进行解释：我们定义的这个类在加载时首先是对应应用程序类加载器，它要向上委托，直到启动类加载器。</p><p>上面已经说过，启动类加载器加载的是位于jre/lib目录下的核心类库，其中就有String类，这个String类就在java.lang 中，所以我们自定义的这个String类在最上层的启动类加载器中被核心类库里的String类替换掉了！</p><p>参考文章：<a href="https://blog.csdn.net/m0_38075425/article/details/81627349" target="_blank" rel="noopener">https://blog.csdn.net/m0_38075425/article/details/81627349</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 类加载机制 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>类加载的过程</title>
+      <link href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B62%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B/"/>
+      <url>/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B62%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B/</url>
+      
+        <content type="html"><![CDATA[<p><img src="https://img-blog.csdnimg.cn/20200122204152483.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><ul><li>将类的.class文件中的二进制数据读入到内存中</li><li>将其放在运行时数据区的方法区内</li><li>然后再内存中创建一个java.lang.Class对象用来封装类在方法区内的数据结构</li></ul><p>简单地说，加载：在硬盘上查找并通过IO读入字节码文件</p><h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>目的：确保Class文件字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。<br>主要分为四个检验部分：</p><ol><li>文件格式验证：检验是否为class文件</li><li>元数据验证：验证是否符合Java语言规范</li><li>字节码验证：检验程序是否合法，符合逻辑</li><li>符号引用验证：保证该引用能够被访问到</li></ol><p>要注意，验证阶段是非常重要的，但并不是一定必要的，对于反复使用和验证过的代码，可以通过使用-Xverify：none来关闭大部分类验证，来缩短验证时间。</p><h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>为类变量分配内存，设置类变量初始值</p><p>要注意的是：</p><ul><li>内存分配仅包括类变量（static），不包括实例变量，实例变量会在对象实例化时随对象分配在Java堆中</li><li>初始值在通常情况下是0，并不是程序里的那个值。真正的赋值是在初始化时完成的。<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2>将<strong>符号引用</strong>替换为<strong>直接引用</strong>，该阶段会把一些<strong>静态方法</strong>替换为指向数据所存内存的指针或句柄等（<strong>直接引用</strong>），这是所谓的<strong>静态链接</strong>的过程（程序加载期间完成），<strong>动态链接</strong>时在程序运行期间完成的<strong>符号引用</strong>替换为<strong>直接引用</strong>。</li></ul><p><strong>符号引用</strong>：用符号来表示目标，符号可以是任意的字面量，要求无歧义</p><p>我们以字节码文档为例：</p><p>将一个简单的代码用javap命令生成字节码文件，内容如下</p><pre><code>package Test;public class Test {    public int computer(){        int a=1;        int b=2;        return a+b;    }    public static void main(String[] args) {        Test test = new Test();        int c = test.computer();        System.out.println(c);    }}</code></pre><p>```</p><pre><code>Classfile /C:/Users/董润泽/workspace/Java虚拟机/src/Test/Test.class  Last modified 2020-1-21; size 490 bytes  MD5 checksum 1015aa0bd5fd4af85cc23a21ef42a1af  Compiled from &quot;Test.java&quot;public class Test.Test  minor version: 0  major version: 52  flags: ACC_PUBLIC, ACC_SUPERConstant pool:   #1 = Methodref          #7.#18         // java/lang/Object.&quot;&lt;init&gt;&quot;:()V   #2 = Class              #19            // Test/Test   #3 = Methodref          #2.#18         // Test/Test.&quot;&lt;init&gt;&quot;:()V   #4 = Methodref          #2.#20         // Test/Test.computer:()I   #5 = Fieldref           #21.#22        // java/lang/System.out:Ljava/io/PrintStream;   #6 = Methodref          #23.#24        // java/io/PrintStream.println:(I)V   #7 = Class              #25            // java/lang/Object   #8 = Utf8               &lt;init&gt;   #9 = Utf8               ()V  #10 = Utf8               Code  #11 = Utf8               LineNumberTable  #12 = Utf8               computer  #13 = Utf8               ()I  #14 = Utf8               main  #15 = Utf8               ([Ljava/lang/String;)V  #16 = Utf8               SourceFile  #17 = Utf8               Test.java  #18 = NameAndType        #8:#9          // &quot;&lt;init&gt;&quot;:()V  #19 = Utf8               Test/Test  #20 = NameAndType        #12:#13        // computer:()I  #21 = Class              #26            // java/lang/System  #22 = NameAndType        #27:#28        // out:Ljava/io/PrintStream;  #23 = Class              #29            // java/io/PrintStream  #24 = NameAndType        #30:#31        // println:(I)V  #25 = Utf8               java/lang/Object  #26 = Utf8               java/lang/System  #27 = Utf8               out  #28 = Utf8               Ljava/io/PrintStream;  #29 = Utf8               java/io/PrintStream  #30 = Utf8               println  #31 = Utf8               (I)V{  public Test.Test();    descriptor: ()V    flags: ACC_PUBLIC    Code:      stack=1, locals=1, args_size=1         0: aload_0         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V         4: return      LineNumberTable:        line 3: 0  public int computer();    descriptor: ()I    flags: ACC_PUBLIC    Code:      stack=2, locals=3, args_size=1         0: iconst_1         1: istore_1         2: iconst_2         3: istore_2         4: iload_1         5: iload_2         6: iadd         7: ireturn      LineNumberTable:        line 5: 0        line 6: 2        line 7: 4  public static void main(java.lang.String[]);    descriptor: ([Ljava/lang/String;)V    flags: ACC_PUBLIC, ACC_STATIC    Code:      stack=2, locals=3, args_size=1         0: new           #2                  // class Test/Test         3: dup         4: invokespecial #3                  // Method &quot;&lt;init&gt;&quot;:()V         7: astore_1         8: aload_1         9: invokevirtual #4                  // Method computer:()I        12: istore_2        13: getstatic     #5                  // Field java/lang/System.out:Ljava/io/PrintStream;        16: iload_2        17: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V        20: return      LineNumberTable:        line 10: 0        line 11: 8        line 12: 13        line 13: 20}SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些“#数字”：</p><p><img src="https://img-blog.csdnimg.cn/20200122220623936.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><p>这其实就是生成的符号，对于后面的解释，例如“#7：#8”即指“#1”这个符号引用了“#7”和“#8”的内容</p><p>这即为符号引用</p><p><strong>直接引用</strong>：引用的是目标的一个地址</p><h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>对类的静态变量初始化为指定的值，执行静态代码块</p><p>同准备阶段的赋初始值不同！</p><p>在博客 <a href="https://drunze.github.io/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/" target="_blank" rel="noopener">类加载的时机</a>已介绍，可参考理解。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 类加载机制 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>类加载的时机</title>
       <link href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/"/>
       <url>/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/</url>
