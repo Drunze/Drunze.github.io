@@ -2,13 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Java虚拟机类加载机制（一））——类加载的时机 | Jacob</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="Java虚拟机类加载机制（一））——类加载的时机 | Jacob">
+  <title>类加载的时机 | Jacob</title>
+  <meta name="keywords" content=" 类加载机制 ">
+  <meta name="description" content="类加载的时机 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="虚拟机如何加载Class文件？Class文件里的信息进入虚拟机会发生怎样的变化？  虚拟机把描述类的数据从class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是类加载机制  类加载的时机类从被加载到内存到卸载出内存，生命周期：加载、连接（验证、准备、解析）、初始化、使用、卸载 初始化：  遇到new、getstatic、putstatic或">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java虚拟机类加载机制（一））——类加载的时机">
+<meta property="og:title" content="类加载的时机">
 <meta property="og:url" content="http://yoursite.com/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/index.html">
 <meta property="og:site_name" content="Jacob">
 <meta property="og:description" content="虚拟机如何加载Class文件？Class文件里的信息进入虚拟机会发生怎样的变化？  虚拟机把描述类的数据从class文件加载到内存，并对数据进行校验、转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型，这就是类加载机制  类加载的时机类从被加载到内存到卸载出内存，生命周期：加载、连接（验证、准备、解析）、初始化、使用、卸载 初始化：  遇到new、getstatic、putstatic或">
@@ -17,8 +17,9 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200122152617903.png">
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200122185027629.png">
 <meta property="article:published_time" content="2020-01-28T06:45:07.000Z">
-<meta property="article:modified_time" content="2020-01-28T07:08:59.676Z">
+<meta property="article:modified_time" content="2020-01-28T08:20:48.257Z">
 <meta property="article:author" content="Jacob">
+<meta property="article:tag" content="类加载机制">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://img-blog.csdnimg.cn/20200122152246616.png">
 
@@ -143,6 +144,14 @@
 <ul>
     <li><div class="all active">全部文章<small>(2)</small></div></li>
     
+        
+            
+            <li><div data-rel="JVM">JVM<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
 </ul>
 <div class="left-bottom">
     <div class="menus">
@@ -189,6 +198,10 @@
     </form>
     <div class="tags-list">
     
+    <li class="article-tag-list-item">
+        <a class="color1">类加载机制</a>
+    </li>
+    
     <div class="clearfix"></div>
 </div>
 
@@ -207,11 +220,11 @@
             <span class="post-date" title="2020-01-28 10:04:07">2020/01/28</span>
         </a>
         
-        <a  class=""
+        <a  class="JVM "
            href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/"
-           data-tag=""
+           data-tag="类加载机制"
            data-author="" >
-            <span class="post-title" title="Java虚拟机类加载机制（一））——类加载的时机">Java虚拟机类加载机制（一））——类加载的时机</span>
+            <span class="post-title" title="类加载的时机">类加载的时机</span>
             <span class="post-date" title="2020-01-28 14:45:07">2020/01/28</span>
         </a>
         
@@ -229,17 +242,29 @@
     <div class="pjax">
         <article id="post-JVM类加载机制1——类加载的时机" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Java虚拟机类加载机制（一））——类加载的时机</h1>
+        <h1 class="article-title">类加载的时机</h1>
     
     <div class="article-meta">
         
         
         
+        <span class="book">
+            
+                <a  data-rel="JVM">JVM</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">类加载机制</a>
+            
+        </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 15:08:59'>2020-01-28 14:45</time>
+        创建时间:<time class="date" title='更新时间: 2020-01-28 16:20:48'>2020-01-28 14:45</time>
         
     </div>
     <div class="article-meta">
@@ -355,12 +380,12 @@ public class NotInitialization {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Java虚拟机类加载机制（一））——类加载的时机</p>
+    <p><span class="copy-title">文章标题:</span>类加载的时机</p>
     <p><span class="copy-title">文章字数:</span><span class="post-count">554</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
     <p><span class="copy-title">发布时间:</span>2020-01-28, 14:45:07</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 15:08:59</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/" title="Java虚拟机类加载机制（一））——类加载的时机">http://yoursite.com/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/</a>
+    <p><span class="copy-title">最后更新:</span>2020-01-28, 16:20:48</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/" title="类加载的时机">http://yoursite.com/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
@@ -443,7 +468,7 @@ public class NotInitialization {
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': [],
+            'data': ['#类加载机制',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
