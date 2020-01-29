@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>类加载的过程 | Jacob</title>
-  <meta name="keywords" content=" 类加载机制 ">
-  <meta name="description" content="类加载的过程 | Jacob">
+  <title>方法调用（解析、动态分派、静态分派） | Jacob</title>
+  <meta name="keywords" content=" 字节码执行引擎 ">
+  <meta name="description" content="方法调用（解析、动态分派、静态分派） | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Java底层最重要的一部分就是jvm堆内存，它影响着Java的性能。 这篇博客主要介绍Java堆内存的分区及简单的Java调优。 一、Java堆内存首先看这张图：   堆中的分区 Java堆内存分为两部分：年轻代、老年代  其中，年轻代分两个部分：Eden、Survivor  内存分配  老年代的内存占堆内总内存的2&#x2F;3  年轻代占1&#x2F;3，在年轻代中，Eden分8&#x2F;10，From和To都是1&#x2F;10">
 <meta property="og:type" content="article">
@@ -326,9 +326,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-JVM类加载机制2——类加载的过程" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-JVM字节码执行引擎（二）——方法调用（解析、动态分派、静态分派）" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">类加载的过程</h1>
+        <h1 class="article-title">方法调用（解析、动态分派、静态分派）</h1>
     
     <div class="article-meta">
         
@@ -338,26 +338,26 @@
             
                 <a  data-rel="JVM">JVM</a>/
             
-                <a  data-rel="类加载机制">类加载机制</a>
+                <a  data-rel="字节码执行引擎">字节码执行引擎</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">类加载机制</a>
+            <a class="color3">字节码执行引擎</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 19:26:41'>2020-01-28 16:46</time>
+        创建时间:<time class="date" title='更新时间: 2020-01-29 11:17:22'>2020-01-28 18:58</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.1k</span>
+        <span>字数:1.7k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -387,7 +387,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#加载"><span class="toc-text">加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#验证"><span class="toc-text">验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#准备"><span class="toc-text">准备</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解析"><span class="toc-text">解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#初始化"><span class="toc-text">初始化</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#解析"><span class="toc-text">解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#分派"><span class="toc-text">分派</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-静态分派—（重载）"><span class="toc-text">1. 静态分派—（重载）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-动态分派—（重写）"><span class="toc-text">2. 动态分派—（重写）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#单分派与多分派"><span class="toc-text">单分派与多分派</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-静态分派"><span class="toc-text">1. 静态分派</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-动态分派"><span class="toc-text">2. 动态分派</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-总结"><span class="toc-text">3. 总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#动态分派的实现"><span class="toc-text">动态分派的实现</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -403,144 +403,111 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="https://img-blog.csdnimg.cn/20200122204152483.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<h2 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h2><ul>
-<li>将类的.class文件中的二进制数据读入到内存中</li>
-<li>将其放在运行时数据区的方法区内</li>
-<li>然后再内存中创建一个java.lang.Class对象用来封装类在方法区内的数据结构</li>
-</ul>
-<p>简单地说，加载：在硬盘上查找并通过IO读入字节码文件</p>
-<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>目的：确保Class文件字节流中包含的信息符合当前虚拟机的要求，并且不会危害虚拟机自身的安全。<br>主要分为四个检验部分：</p>
-<ol>
-<li>文件格式验证：检验是否为class文件</li>
-<li>元数据验证：验证是否符合Java语言规范</li>
-<li>字节码验证：检验程序是否合法，符合逻辑</li>
-<li>符号引用验证：保证该引用能够被访问到</li>
-</ol>
-<p>要注意，验证阶段是非常重要的，但并不是一定必要的，对于反复使用和验证过的代码，可以通过使用-Xverify：none来关闭大部分类验证，来缩短验证时间。</p>
-<h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>为类变量分配内存，设置类变量初始值</p>
-<p>要注意的是：</p>
+        <p>参考文章：</p>
+<p><a href="https://blog.csdn.net/wangdongli_1993/article/details/81428848" target="_blank" rel="noopener">JVM（十四）方法调用</a></p>
+<p><a href="https://blog.csdn.net/fan2012huan/article/details/51004615" target="_blank" rel="noopener" title="java方法调用之单分派与多分派（二）">java方法调用之单分派与多分派（二）</a></p>
+<p>方法调用阶段就是确定被调用方法的版本，即调用哪一个方法。</p>
+<h1 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h1><p>我们已经知道，class文件中需要调用的方法都是一个符号引用，而在方法调用中的解析阶段，就是要把一部分符号引用转化为直接引用。</p>
+<p>能在解析阶段将方法的符号引用转化成直接引用的的方法，必须在方法运行前就确定一个可调用的版本，并且这个版本在运行阶段是不可改变的。</p>
+<p>“编译期可知，运行期不可变”，符合这个规则的方法有静态方法和私有方法两大类。前者与所属的类直接关联，后者在外部不可以被访问。这两种方法都适合在解析调用，也就是把这些方法的符号引用转化成直接引用。</p>
+<p>与之对应5条调用方法的字节码指令：</p>
 <ul>
-<li>内存分配仅包括类变量（static），不包括实例变量，实例变量会在对象实例化时随对象分配在Java堆中</li>
-<li>初始值在通常情况下是0，并不是程序里的那个值。真正的赋值是在初始化时完成的。<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2>将<strong>符号引用</strong>替换为<strong>直接引用</strong>，该阶段会把一些<strong>静态方法</strong>替换为指向数据所存内存的指针或句柄等（<strong>直接引用</strong>），这是所谓的<strong>静态链接</strong>的过程（程序加载期间完成），<strong>动态链接</strong>时在程序运行期间完成的<strong>符号引用</strong>替换为<strong>直接引用</strong>。</li>
+<li><strong>invokestatic:调用静态方法</strong></li>
+<li><strong>invokespecial：调用实例构造器<init>方法，私有方法和父类方法</strong></li>
+<li><strong>invokevirtual：调用所有虚方法</strong></li>
+<li><strong>invokeinterface：调用接口方法，运行时确定一个实现此接口的对象</strong></li>
+<li><strong>invokedynamic:先在运行时动态解析出调用点限定符所引用的的方法，然后再执行此方法</strong></li>
 </ul>
-<p><strong>符号引用</strong>：用符号来表示目标，符号可以是任意的字面量，要求无歧义</p>
-<p>我们以字节码文档为例：</p>
-<p>将一个简单的代码用javap命令生成字节码文件，内容如下</p>
-<pre><code>package Test;
+<p>只有用invokestatic和invokespecial指令调用的方法（还有final修饰的方法），都可以在解析阶段确定调用版本，这些方法叫做非虚方法。</p>
+<p>剩下三个字节码指令调用的方法叫做虚方法（invokevirtual指令调用的final修饰的方法除外）</p>
+<p>解析调用是一个静态过程，编译期间就可以确定，解析阶段将符号引用转化为直接引用。</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127104051600.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>将代码转换为字节码文件：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127104142282.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>可以看到，确实是通过invokestatic命令调用sayhello方法。</p>
+<h1 id="分派"><a href="#分派" class="headerlink" title="分派"></a>分派</h1><h2 id="1-静态分派—（重载）"><a href="#1-静态分派—（重载）" class="headerlink" title="1. 静态分派—（重载）"></a>1. 静态分派—（重载）</h2><p>先看一段简单的代码：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127105004799.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>输出结果是什么？</p>
+<p>我们先来分析一下：</p>
+<p>首先引入两个概念：我们把代码中的Human成为变量的<strong>静态类型</strong>，把Man、Woman称为变量的<strong>实际类型</strong>。<br>静态类型和动态类型在程序中都可以发生一些变化，区别是静态类型的变化仅仅在使用时发生，变量本身的静态类型不会改变，并且最终的静态类型是在编译期可知的；而实际类型变化的结果在运行期才可确定，<strong>编译器在编译程序的时候不知道一个对象的实际类型是什么</strong>。</p>
+<p>现在再看代码，对于sd.sayHello(man);直观上看，它似乎传入的是Man类型的参数man，所以应该打印的是man的方法“man is saying hello”，</p>
+<p>但是要注意，man 的静态类型仍然是Human，实际类型才是man，所以，在编译阶段，Javac选择了sayHello(Human)作为调用目标。</p>
+<p>即最终输出：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127110639837.png" alt=""></p>
+<p>通过这个实例，我们可以看到，这里是通过静态类型来定位执行方法的版本，这样的分派动作称为<strong>静态分派</strong><br>静态分派于重载有很深的关系</p>
+<h2 id="2-动态分派—（重写）"><a href="#2-动态分派—（重写）" class="headerlink" title="2. 动态分派—（重写）"></a>2. 动态分派—（重写）</h2><p>先看代码：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127112750917.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>生成字节码文件：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127113823727.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>注意代码中的：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127114045571.png" alt=""></p>
+<p>对应字节码中的：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127114132633.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>invokevirtual指令的运行时解析过程大致分为：</p>
+<p>（1）找到操作数栈栈顶的第一个元素所指向的对象的实际类型。记作C。</p>
+<p>（2）如果在类型C中找到与常量描述符和简单名称相符的方法，就进行访问权限校验，通过则返回方法的直接引用，没有通过则抛出java.lang.IllegalAccessError异常</p>
+<p>（3）如果在类型中没有找到对应的方法，则按照继承关系从下往上对C的父类依此查找方法</p>
+<p>（4）若始终没有找到合适方法，抛出java.lang.AbstractMethodError异常。</p>
+<p>invokevirtual指令执行的时候先确定方法调用的对象的实际类型，所以会把两次方法调用的符号引用解析到不同的直接引用上，这个过程叫做<strong>动态分派</strong>，是方法重写的本质。</p>
+<p>代码结果为：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200127124154544.png" alt=""></p>
+<h2 id="单分派与多分派"><a href="#单分派与多分派" class="headerlink" title="单分派与多分派"></a>单分派与多分派</h2><p>先看一段代码：</p>
+<pre><code>public class Dispatcher {
+    static class QQ {}
+    static class _360 {}
 
-public class Test {
-    public int computer(){
-        int a=1;
-        int b=2;
-        return a+b;
+    public static class Father {
+        public void hardChoice(QQ arg) {
+            System.out.println(&quot;father choose QQ&quot;);
+        }
+        public void hardChoice(_360 arg) {
+            System.out.println(&quot;father choose _360&quot;);
+        }
+    }
+    public static class Son extends Father {
+        @Override
+        public void hardChoice(QQ arg) {
+            System.out.println(&quot;son choose QQ&quot;);
+        }
+        public void hardChoice(_360 arg) {
+            System.out.println(&quot;son choose 360&quot;);
+        }
     }
     public static void main(String[] args) {
-        Test test = new Test();
-        int c = test.computer();
-        System.out.println(c);
+        Father father = new Father();
+        Father son = new Son();
+        father.hardChoice(new _360());
+        son.hardChoice(new QQ());
     }
-}</code></pre><p>```</p>
-<pre><code>Classfile /C:/Users/董润泽/workspace/Java虚拟机/src/Test/Test.class
-  Last modified 2020-1-21; size 490 bytes
-  MD5 checksum 1015aa0bd5fd4af85cc23a21ef42a1af
-  Compiled from &quot;Test.java&quot;
-public class Test.Test
-  minor version: 0
-  major version: 52
-  flags: ACC_PUBLIC, ACC_SUPER
-Constant pool:
-   #1 = Methodref          #7.#18         // java/lang/Object.&quot;&lt;init&gt;&quot;:()V
-   #2 = Class              #19            // Test/Test
-   #3 = Methodref          #2.#18         // Test/Test.&quot;&lt;init&gt;&quot;:()V
-   #4 = Methodref          #2.#20         // Test/Test.computer:()I
-   #5 = Fieldref           #21.#22        // java/lang/System.out:Ljava/io/PrintStream;
-   #6 = Methodref          #23.#24        // java/io/PrintStream.println:(I)V
-   #7 = Class              #25            // java/lang/Object
-   #8 = Utf8               &lt;init&gt;
-   #9 = Utf8               ()V
-  #10 = Utf8               Code
-  #11 = Utf8               LineNumberTable
-  #12 = Utf8               computer
-  #13 = Utf8               ()I
-  #14 = Utf8               main
-  #15 = Utf8               ([Ljava/lang/String;)V
-  #16 = Utf8               SourceFile
-  #17 = Utf8               Test.java
-  #18 = NameAndType        #8:#9          // &quot;&lt;init&gt;&quot;:()V
-  #19 = Utf8               Test/Test
-  #20 = NameAndType        #12:#13        // computer:()I
-  #21 = Class              #26            // java/lang/System
-  #22 = NameAndType        #27:#28        // out:Ljava/io/PrintStream;
-  #23 = Class              #29            // java/io/PrintStream
-  #24 = NameAndType        #30:#31        // println:(I)V
-  #25 = Utf8               java/lang/Object
-  #26 = Utf8               java/lang/System
-  #27 = Utf8               out
-  #28 = Utf8               Ljava/io/PrintStream;
-  #29 = Utf8               java/io/PrintStream
-  #30 = Utf8               println
-  #31 = Utf8               (I)V
-{
-  public Test.Test();
-    descriptor: ()V
-    flags: ACC_PUBLIC
-    Code:
-      stack=1, locals=1, args_size=1
-         0: aload_0
-         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V
-         4: return
-      LineNumberTable:
-        line 3: 0
-
-  public int computer();
-    descriptor: ()I
-    flags: ACC_PUBLIC
-    Code:
-      stack=2, locals=3, args_size=1
-         0: iconst_1
-         1: istore_1
-         2: iconst_2
-         3: istore_2
-         4: iload_1
-         5: iload_2
-         6: iadd
-         7: ireturn
-      LineNumberTable:
-        line 5: 0
-        line 6: 2
-        line 7: 4
-
-  public static void main(java.lang.String[]);
-    descriptor: ([Ljava/lang/String;)V
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack=2, locals=3, args_size=1
-         0: new           #2                  // class Test/Test
-         3: dup
-         4: invokespecial #3                  // Method &quot;&lt;init&gt;&quot;:()V
-         7: astore_1
-         8: aload_1
-         9: invokevirtual #4                  // Method computer:()I
-        12: istore_2
-        13: getstatic     #5                  // Field java/lang/System.out:Ljava/io/PrintStream;
-        16: iload_2
-        17: invokevirtual #6                  // Method java/io/PrintStream.println:(I)V
-        20: return
-      LineNumberTable:
-        line 10: 0
-        line 11: 8
-        line 12: 13
-        line 13: 20
-}
-SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些“#数字”：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200122220623936.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>这其实就是生成的符号，对于后面的解释，例如“#7：#8”即指“#1”这个符号引用了“#7”和“#8”的内容</p>
-<p>这即为符号引用</p>
-<p><strong>直接引用</strong>：引用的是目标的一个地址</p>
-<h2 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h2><p>对类的静态变量初始化为指定的值，执行静态代码块</p>
-<p>同准备阶段的赋初始值不同！</p>
-<p>在博客 <a href="https://drunze.github.io/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B61%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E6%97%B6%E6%9C%BA/" target="_blank" rel="noopener">类加载的时机</a>已介绍，可参考理解。</p>
+}</code></pre><p>运行结果是什么？</p>
+<p><img src="https://img-blog.csdnimg.cn/20200129100434458.png" alt=""></p>
+<p>它的字节码文件：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200129103435680.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<p>我们分别从<strong>静态分派</strong>和<strong>动态分派</strong>的角度来分析</p>
+<h3 id="1-静态分派"><a href="#1-静态分派" class="headerlink" title="1. 静态分派"></a>1. 静态分派</h3><p>看字节码的</p>
+<pre><code>24: invokevirtual #8                  // Method 单分派多分派/Dispatcher$Father.hardChoice:(L单分派多分派/Dispatcher$_360;)V
+35: invokevirtual #11                 // Method 单分派多分派/Dispatcher$Father.hardChoice:(L单分派多分派/Dispatcher$QQ;)V</code></pre><p>对应的是代码的：</p>
+<pre><code>father.hardChoice(new _360());
+son.hardChoice(new QQ());</code></pre><p>可以看到，invokevirtual相同，调用的都是<strong>$Father.hardChoice</strong>方法，只是他们的参数不同。</p>
+<p>这说明他们的静态类型相同，都是Father。在选择目标方法时，根据两个<strong>宗量</strong>，是多分派的，即<strong>静态分派属于多分派类型</strong>。</p>
+<blockquote>
+<p>宗量：方法的接收者和方法的参数统称为方法的宗量。</p>
+</blockquote>
+<blockquote>
+<p>单分派：根据一个宗量对目标方法进行选择</p>
+</blockquote>
+<blockquote>
+<p>多分派：多于一个宗量对目标方法进行选择</p>
+</blockquote>
+<h3 id="2-动态分派"><a href="#2-动态分派" class="headerlink" title="2. 动态分派"></a>2. 动态分派</h3><p>当在执行</p>
+<pre><code>father.hardChoice(new _360());
+son.hardChoice(new QQ());</code></pre><p>发现son的实际类型是Son，所以转去调用Son的方法。在father中也执行了此过程，只不过，father的实际类型仍然是father。</p>
+<p>目标选择时只依据了一个宗量，是单分派的。因此，<strong>动态分派属于单分派类型</strong>。</p>
+<h3 id="3-总结"><a href="#3-总结" class="headerlink" title="3. 总结"></a>3. 总结</h3><p>静态分派关注了两个宗量，即<strong>静态类型和参数</strong>，（参数对比重载）</p>
+<p>而动态分派关注<strong>实际类型</strong>，（对比重写）</p>
+<p><strong>java语言是一个静态多分派，动态单分派的语言</strong></p>
+<h2 id="动态分派的实现"><a href="#动态分派的实现" class="headerlink" title="动态分派的实现"></a>动态分派的实现</h2><p>动态分派类似重写，动态分派是非常频繁的动作，运行时需要在元数据中搜索合适的目标方法，最常用的“稳定优化”手段就是建立一个虚方法表，存放各个方法实际入口地址。</p>
+<p>子类重写了方法，就会指向子类的方法地址。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -554,12 +521,12 @@ SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些�
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>类加载的过程</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.1k</span></p>
+    <p><span class="copy-title">文章标题:</span>方法调用（解析、动态分派、静态分派）</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.7k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 16:46:14</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 19:26:41</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B62%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B/" title="类加载的过程">http://yoursite.com/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B62%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B/</a>
+    <p><span class="copy-title">发布时间:</span>2020-01-28, 18:58:38</p>
+    <p><span class="copy-title">最后更新:</span>2020-01-29, 11:17:22</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%EF%BC%88%E8%A7%A3%E6%9E%90%E3%80%81%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE%E3%80%81%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%EF%BC%89/" title="方法调用（解析、动态分派、静态分派）">http://yoursite.com/2020/01/28/JVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E%EF%BC%88%E4%BA%8C%EF%BC%89%E2%80%94%E2%80%94%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%EF%BC%88%E8%A7%A3%E6%9E%90%E3%80%81%E5%8A%A8%E6%80%81%E5%88%86%E6%B4%BE%E3%80%81%E9%9D%99%E6%80%81%E5%88%86%E6%B4%BE%EF%BC%89/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
