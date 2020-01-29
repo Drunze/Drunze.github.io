@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>JVM底层结构 | Jacob</title>
-  <meta name="keywords" content=" JVM结构 ">
-  <meta name="description" content="JVM底层结构 | Jacob">
+  <title>Java通信——传文件、消息 | Jacob</title>
+  <meta name="keywords" content=" Java通信 ">
+  <meta name="description" content="Java通信——传文件、消息 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Java底层最重要的一部分就是jvm堆内存，它影响着Java的性能。 这篇博客主要介绍Java堆内存的分区及简单的Java调优。 一、Java堆内存首先看这张图：   堆中的分区 Java堆内存分为两部分：年轻代、老年代  其中，年轻代分两个部分：Eden、Survivor  内存分配  老年代的内存占堆内总内存的2&#x2F;3  年轻代占1&#x2F;3，在年轻代中，Eden分8&#x2F;10，From和To都是1&#x2F;10">
 <meta property="og:type" content="article">
@@ -358,9 +358,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-JVM底层结构" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Java通信——传文件" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">JVM底层结构</h1>
+        <h1 class="article-title">Java通信——传文件、消息</h1>
     
     <div class="article-meta">
         
@@ -368,28 +368,28 @@
         
         <span class="book">
             
-                <a  data-rel="JVM">JVM</a>/
+                <a  data-rel="Java">Java</a>/
             
-                <a  data-rel="JVM结构">JVM结构</a>
+                <a  data-rel="通信">通信</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">JVM结构</a>
+            <a class="color2">Java通信</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 19:26:43'>2020-01-28 19:03</time>
+        创建时间:<time class="date" title='更新时间: 2020-01-29 20:42:05'>2020-01-29 19:47</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:585</span>
+        <span>字数:1.9k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -419,7 +419,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#引言"><span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM虚拟机结构图"><span class="toc-text">JVM虚拟机结构图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JVM各组成部分："><span class="toc-text">JVM各组成部分：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#运行时数据区（内存模型"><span class="toc-text">运行时数据区（内存模型):</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#栈（线程栈）"><span class="toc-text">栈（线程栈）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方法区（元空间"><span class="toc-text">方法区（元空间)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#程序计数器"><span class="toc-text">程序计数器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#本地方法"><span class="toc-text">本地方法</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#服务器Server端"><span class="toc-text">服务器Server端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#接收普通消息"><span class="toc-text">接收普通消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收文件"><span class="toc-text">接收文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户机client端"><span class="toc-text">客户机client端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发送普通消息"><span class="toc-text">发送普通消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送文件"><span class="toc-text">发送文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#server"><span class="toc-text">server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client"><span class="toc-text">client</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -435,44 +435,245 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Java的优点：一次编写，处处执行，即跨平台。<br>Java如何做到跨平台呢？<br><img src="https://img-blog.csdnimg.cn/20191127121557147.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70#pic_center=400x500" alt=""></p>
-<p>首先看这张图片，我们写的Java代码，通过Javac编译成字节码文件，然后通过Java命令进入jvm。但是在不同的平台上机器码不一样，所以jvm一个宏观上的理解就是：从软件层面屏蔽不同操作系统在底层硬件与指令上的区别。</p>
-<h2 id="JVM虚拟机结构图"><a href="#JVM虚拟机结构图" class="headerlink" title="JVM虚拟机结构图"></a>JVM虚拟机结构图</h2><p><img src="https://img-blog.csdnimg.cn/20191127123045440.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<h2 id="JVM各组成部分："><a href="#JVM各组成部分：" class="headerlink" title="JVM各组成部分："></a>JVM各组成部分：</h2><ul>
-<li>运行时数据区（内存模型）</li>
-<li>类转载子系统</li>
-<li>字节码执行引擎</li>
-</ul>
-<h2 id="运行时数据区（内存模型"><a href="#运行时数据区（内存模型" class="headerlink" title="运行时数据区（内存模型):"></a>运行时数据区（内存模型):</h2><ul>
-<li>堆</li>
-<li>栈（线程栈）</li>
-<li>本地方法栈</li>
-<li>方法区（元空间）</li>
-<li>程序计数器</li>
-</ul>
-<h4 id="栈（线程栈）"><a href="#栈（线程栈）" class="headerlink" title="栈（线程栈）"></a>栈（线程栈）</h4><p>程序在运行时会有很多个线程，每产生一个新的线程，Java的线程栈就会给线程分配一段栈内存区。<br>栈帧：Java中方法在运行时，栈会给每一个方法分配一段栈帧内存区，里面放各自方法的局部变量。栈帧内存区存放在栈中。</p>
-<p>当方法执行完，栈帧中相应的内存区就被干掉</p>
-<p>栈的结构：FILO，在JVM中亦然，先调用的方法，分配栈帧内存区之后压栈，后调用的方法，先被干掉。</p>
-<p>以代码为例：</p>
-<p><img src="https://img-blog.csdnimg.cn/20191127130535518.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<p>在代码运行时，首先线程栈会给它分配一个栈内存区，然后执行main方法，这个栈内存区给main方法分配一个栈帧内存区，并压入栈底。main方法中调用Computer时，给computer方法分配一个栈帧内存区，当Computer方法执行完成之后，将为该方法分配的栈帧从栈中干掉。最后，main方法执行完成之后，将main方法对应的栈帧干掉。（FILO）</p>
-<p><strong>栈帧内部</strong></p>
+        <h1 id="服务器Server端"><a href="#服务器Server端" class="headerlink" title="服务器Server端"></a>服务器Server端</h1><p>首先，创建服务器，循环等待接入客户端</p>
+<pre><code>java.net.ServerSocket server = new java.net.ServerSocket(port);//创建服务器
+java.net.Socket client = server.accept();//客户端接入</code></pre><p>接入客户端之后，开始接受消息。</p>
+<p>在这里，接受的消息不只是一个简单的内容，还含有消息头，消息头中含有有关消息的规范。</p>
+<ol>
+<li>消息长度——一个int（4字节）</li>
+<li>消息类型——一个byte（1字节）</li>
+<li>目标用户号码——一个int（4字节）</li>
+</ol>
+<p>消息类型这里分为两种：</p>
 <ul>
-<li>局部变量表</li>
-<li>操作数栈</li>
-<li>动态链接</li>
-<li>方法出口</li>
+<li>1代表普通消息</li>
+<li>2代表文件</li>
 </ul>
-<h4 id="方法区（元空间"><a href="#方法区（元空间" class="headerlink" title="方法区（元空间)"></a>方法区（元空间)</h4><ul>
-<li>常量</li>
-<li>静态变量(new出来的对象放在堆里面)</li>
-<li>类元信息</li>
-</ul>
-<p>堆和方法区：</p>
-<p>堆中的对象的头会存放类的信息指针，指向方法区</p>
-<h4 id="程序计数器"><a href="#程序计数器" class="headerlink" title="程序计数器"></a>程序计数器</h4><p>记录程序执行的位置。行数。</p>
-<h4 id="本地方法"><a href="#本地方法" class="headerlink" title="本地方法"></a>本地方法</h4><p>每个线程独有，底层C语言与Java交互调用</p>
-<p><em>可能有些地方说的不清楚，若有疑问，下面留言。</em> </p>
+<h2 id="接收普通消息"><a href="#接收普通消息" class="headerlink" title="接收普通消息"></a>接收普通消息</h2><pre><code>byte[] data = new byte[totalLen-4-1-4];
+//从流中读取data.length个字节放入数组
+dins.readFully(data);
+String msg = new String(data);
+System.out.println(&quot;发送文本给：&quot;+destNum+&quot;内容是：&quot;+msg);</code></pre><p>这里注意readfully和read的区别：</p>
+<p><strong>网络通信中，当发送大的数据量时，有这样一种可能：一部<br>分数据已发送到对方，有一部分数据还在本地的网卡缓存中，如果调用 read()方法，可能会提前<br>返回而没有读取到足够的数据，在传送大块数据（如一次传送一个较大文件时）可能会出错，而<br>readFully()方法会一直等待，读取到数组长度的所有数据后，才会返回。</strong></p>
+<p>这里是个大坑，我之前传图片会出现传送之后，接受到的图片只显示一半。原因就在此。</p>
+<p>我用read进行了测试，结果生成的图片虽然大小一模一样，但是生成图片无法显示！！！</p>
+<h2 id="接收文件"><a href="#接收文件" class="headerlink" title="接收文件"></a>接收文件</h2><pre><code>//256个字节作为文件名大小
+System.out.println(&quot;发送文件给：&quot;+destNum);    //destnum为接收者
+byte[] data = new byte[256];
+dins.readFully(data);
+String fileName = new String (data).trim();
+System.out.println(&quot;读到文件名字是：&quot;+fileName);
+//读文件内容
+data = new byte[totalLen-4-1-4-256];
+dins.readFully(data);
+//保存在当前目录下
+FileOutputStream fous = new FileOutputStream(fileName);
+fous.write(data);
+fous.flush();    //保证可靠
+fous.close();</code></pre><p>关于flush：原文链接：<a href="https://blog.csdn.net/qq_38129062/article/details/87115620" target="_blank" rel="noopener">https://blog.csdn.net/qq_38129062/article/details/87115620</a></p>
+<p><strong>设想要给鱼缸换水，所以需要一个水泵，水泵是连接鱼缸和下水道的，咱们的任务就是将鱼缸里面水全抽干，这时，我们就可以把水管当做缓冲区。如果咱们一见鱼缸里面水抽干了就立马关了水泵，这时会发现水管里还有来不及通过水泵流向下水道的残留水，我们可以把抽水当做读数据，排水当做写数据，水管当做缓冲区，这样就容易明白了。</strong></p>
+<p><strong>那么这样一来我们如果中途调用close()方法，输出区也还是有数据的，就像水缸里有水，只是在缓冲区遗留了一部分，这时如果我们先调用flush()方法，就会强制把数据输出，缓存区就清空了，最后再关闭读写流调用close()就完成了。</strong></p>
+<p>收文件时，用了FileOutputStream，文件输出流，它把文件直接写在了当前目录下。<br>可以直接规定文件输出的位置：</p>
+<pre><code>FileOutputStream fous = new FileOutputStream(&quot;C:\\Users\\董润泽\\Desktop&quot;);</code></pre><h1 id="客户机client端"><a href="#客户机client端" class="headerlink" title="客户机client端"></a>客户机client端</h1><p>首先创建客户端并通过ip和主机端口连接到服务器</p>
+<pre><code>java.net.Socket client = new java.net.Socket(ip,port);</code></pre><p>然后获取输入流和输出流：</p>
+<pre><code>java.io.InputStream ins = client.getInputStream();
+OutputStream ous = client.getOutputStream();</code></pre><p>在while循环内持续发送信息</p>
+<h2 id="发送普通消息"><a href="#发送普通消息" class="headerlink" title="发送普通消息"></a>发送普通消息</h2><pre><code>byte[] strb = msg.getBytes();//得到消息的字节数
+int totalLen = 4+4+1+strb.length;
+System.out.println(&quot;发送总长为：&quot;+totalLen);
+dous.writeInt(totalLen);
+dous.writeByte(1);//类型1代表文本
+dous.writeInt(destNum);//写入目标用户号
+dous.write(strb);
+dous.flush();</code></pre><p>其中dous为数据输出流</p>
+<pre><code>private DataOutputStream dous;</code></pre><h2 id="发送文件"><a href="#发送文件" class="headerlink" title="发送文件"></a>发送文件</h2><pre><code>//根据文件名创建文件对象
+File file = new File(fileName);
+//根据文件对象构造一个输入流
+FileInputStream ins = new FileInputStream(file);
+int fileDataLen = ins.available(); //文件数据总长
+int totalLen = 4+1+4+256+fileDataLen; //得到了要发送数据包的总长
+dous.writeInt(totalLen);
+dous.writeByte(2);
+dous.writeInt(destNum);
+String shortFileName = file.getName();
+//写入文件名
+writeString(dous,shortFileName,256);
+byte[] fileData = new byte[fileDataLen];
+ins.read(fileData);//读入文件数据
+dous.write(fileData);//写到服务器的流中
+dous.flush();</code></pre><p>注意：发送文本和文件的正文前，首先要发出文件头！</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><h3 id="server"><a href="#server" class="headerlink" title="server"></a>server</h3><pre><code>package qq_Server_test;
+
+import java.io.DataInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+
+import org.omg.CORBA.portable.InputStream;
+
+public class Server {
+    public void setUpServer(int port) {
+        try {
+            java.net.ServerSocket server = new java.net.ServerSocket(port);
+            System.out.println(&quot;服务器创建完成&quot;);
+            while (true) {
+                java.net.Socket client = server.accept();
+                System.out.println(&quot;客户端已接入&quot;);
+                process(client);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void process(java.net.Socket client) {
+        try {
+            OutputStream ous = client.getOutputStream();
+            java.io.InputStream ins = client.getInputStream();
+            //将输入流包装成DataInputStream以便读取数据
+            DataInputStream dins = new DataInputStream(ins);
+            while(true){
+                //读取消息，消息以int开头
+                //1、读消息长度
+                int totalLen = dins.readInt();
+                System.out.println(&quot;发来消息长度为：&quot;+totalLen);
+                //2、读消息类型标识，读一个字节
+                byte flag = dins.readByte();
+                System.out.println(&quot;接收消息类型为：&quot;+flag);
+                //3、读取目标客户号码，一个 int
+                int destNum = dins.readInt();
+                System.out.println(&quot;目标用户号码为：&quot;+destNum);
+                //根据消息内容读取消息体
+                if(flag==1){//文本消息
+                    byte[] data = new byte[totalLen-4-1-4];
+                    //从流中读取data.length个字节放入数组
+                    dins.readFully(data);
+                    String msg = new String(data);
+                    System.out.println(&quot;发送文本给：&quot;+destNum+&quot;内容是：&quot;+msg);
+                }
+                else if(flag==2){//文件数据
+                    //256个字节作为文件名
+                    System.out.println(&quot;发送文件给：&quot;+destNum);
+                    byte[] data = new byte[256];
+                    dins.readFully(data);
+                    String fileName = new String (data).trim();
+                    System.out.println(&quot;读到文件名字是：&quot;+fileName);
+                    //读文件内容
+                    data = new byte[totalLen-4-1-4-256];
+                    dins.readFully(data);
+                    //保存在当前目录下
+                    FileOutputStream fous = new FileOutputStream(fileName+1);
+                    fous.write(data);
+                    fous.flush();
+                    fous.close();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] args) {
+        Server server = new Server();
+        server.setUpServer(9900);
+    }
+}</code></pre><h3 id="client"><a href="#client" class="headerlink" title="client"></a>client</h3><pre><code>package qq_client_test;
+
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.util.Scanner;
+
+import org.omg.CORBA.portable.InputStream;
+
+public class Client {
+    private DataOutputStream dous;//输出流对象
+
+    private void writeString(DataOutputStream out,String str,int len){
+    //向流中写入指定长度的字节，如果不足，就补0
+        try{
+            byte[] data = str.getBytes();
+            out.write(data);
+            while(len&gt;data.length){
+                out.writeByte(&apos;\0&apos;);
+                len--;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void sendTextMsg(String msg,int destNum){
+        //发送消息
+        try{
+            byte[] strb = msg.getBytes();//得到消息的字节数
+            int totalLen = 4+4+1+strb.length;
+            System.out.println(&quot;发送总长为：&quot;+totalLen);
+            dous.writeInt(totalLen);
+            dous.writeByte(1);//类型1代表文本
+            dous.writeInt(destNum);//写入目标用户号
+            dous.write(strb);
+            dous.flush();            
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void sendFileMsg(String fileName, int destNum){
+        try{
+            //根据文件名创建文件对象
+            File file = new File(fileName);
+            //根据文件对象构造一个输入流
+            FileInputStream ins = new FileInputStream(file);
+            int fileDataLen = ins.available(); //文件数据总长
+            int totalLen = 4+1+4+256+fileDataLen; //得到了要发送数据包的总长
+            dous.writeInt(totalLen);
+            dous.writeByte(2);
+            dous.writeInt(destNum);
+            String shortFileName = file.getName();
+            //写入文件名
+            writeString(dous,shortFileName,256);
+            byte[] fileData = new byte[fileDataLen];
+            ins.read(fileData);//读入文件数据
+            dous.write(fileData);//写到服务器的流中
+            dous.flush();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void conn2Server(String ip, int port){
+        try{
+            java.net.Socket client = new java.net.Socket(ip,port);
+            java.io.InputStream ins = client.getInputStream();
+            OutputStream ous = client.getOutputStream();
+            dous = new DataOutputStream(ous);
+            int testCount = 0;
+            while(true){
+                System.out.println(&quot;登陆服务器成功，选择要发的类型（1、聊天，2、文件）：&quot;);
+                java.util.Scanner sc = new Scanner(System.in);
+                int type = sc.nextInt();
+                if(type==1){
+                    sendTextMsg(&quot;abc聊天&quot;+testCount, 8888);
+                }
+                if(type==2){
+                    sendFileMsg(&quot;C:\\Users\\董润泽\\Desktop\\test1.jpg&quot;, 8888);
+                }
+                testCount++;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] args) {
+        Client client = new Client();
+        client.conn2Server(&quot;localhost&quot;, 9900);
+    }
+}</code></pre><p>运行结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200129204116198.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""><br><img src="https://img-blog.csdnimg.cn/20200129204122572.png" alt=""></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -486,12 +687,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>JVM底层结构</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">585</span></p>
+    <p><span class="copy-title">文章标题:</span>Java通信——传文件、消息</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.9k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 19:03:38</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 19:26:43</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/" title="JVM底层结构">http://yoursite.com/2020/01/28/JVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</a>
+    <p><span class="copy-title">发布时间:</span>2020-01-29, 19:47:57</p>
+    <p><span class="copy-title">最后更新:</span>2020-01-29, 20:42:05</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/29/Java%E9%80%9A%E4%BF%A1%E2%80%94%E2%80%94%E4%BC%A0%E6%96%87%E4%BB%B6/" title="Java通信——传文件、消息">http://yoursite.com/2020/01/29/Java%E9%80%9A%E4%BF%A1%E2%80%94%E2%80%94%E4%BC%A0%E6%96%87%E4%BB%B6/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
