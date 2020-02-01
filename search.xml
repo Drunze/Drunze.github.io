@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>NumPy</title>
+      <link href="/2020/01/31/NumPy/"/>
+      <url>/2020/01/31/NumPy/</url>
+      
+        <content type="html"><![CDATA[<h1 id="NumPy性能和python列表对比"><a href="#NumPy性能和python列表对比" class="headerlink" title="NumPy性能和python列表对比"></a>NumPy性能和python列表对比</h1><pre><code>import numpy as npmy_arr = np.arange(1000000)my_list = list(range(1000000))%time for _ in range(10): my_arr2 = my_arr*2%time for _ in range(10): my_list2 = [x*2 for x in my_list]</code></pre><p>结果</p><pre><code>Wall time: 16 msWall time: 636 ms</code></pre><h1 id="创建ndarray"><a href="#创建ndarray" class="headerlink" title="创建ndarray"></a>创建ndarray</h1><pre><code>data1 = [1,23,4.6,2]arr1 = np.array(data1)arr1data2 = [[1,2,3],        [4,5,6]]arr2 = np.array(data2)arr2print(arr2.ndim)print(arr2.shape)np.zeros((2,3))int_array = np.arange(10)calibers = np.array([.22, .270, .357, .380, .44, .50], dtype=np.float64)int_array.astype(calibers.dtype)</code></pre><h1 id="numpy数组的运算"><a href="#numpy数组的运算" class="headerlink" title="numpy数组的运算"></a>numpy数组的运算</h1><pre><code>arr = np.array([[1., 2., 3.],               [4., 5., 6.]])print(arr*arr)print(arr*arr == arr)</code></pre><p>结果</p><pre><code>[[ 1.  4.  9.] [16. 25. 36.]][[False  True  True] [ True  True  True]]</code></pre><h1 id="基本索引和切片"><a href="#基本索引和切片" class="headerlink" title="基本索引和切片"></a>基本索引和切片</h1><pre><code>arr = np.arange(10)print(arr)print(arr[5])arr[5:8]=12print(arr[5:8])print(arr)</code></pre><p>创建一个切片后，对切片进行操作，会改变原数组中的值</p><pre><code>arr_slice = arr[5:8]print(arr_slice)arr_slice[1] = 12345print(arr)</code></pre><p>结果：</p><pre><code>[12 12 12][    0     1     2     3     4    12 12345    12     8     9]</code></pre><p>若想要得到的是一个副本而不是视图，需要明确<strong>arr[5:8].copy()</strong></p><h1 id="布尔类型索引"><a href="#布尔类型索引" class="headerlink" title="布尔类型索引"></a>布尔类型索引</h1><pre><code>names = np.array([&apos;Bob&apos;, &apos;Joe&apos;, &apos;Will&apos;, &apos;Joe&apos;, &apos;Joe&apos;])data = np.random.randn(5,4)print(data)print(names == &apos;Bob&apos;)print(data[names == &apos;Bob&apos;])print(names != &apos;Bob&apos;)print(data[~(names == &apos;Bob&apos;)])</code></pre><p>结果：</p><pre><code>array([[-0.72559713,  0.5021692 , -0.40538323,  1.03159213],       [ 0.72144716,  0.9853986 , -1.90579109, -0.42454087],       [-0.35674934,  0.12369675,  1.71308068,  0.61302904],       [ 0.86463033, -0.97788801, -0.07978174, -0.44386613],       [ 1.47681259,  1.09531974, -0.16154207,  1.92472807]])array([ True, False, False, False, False])array([[-0.72559713,  0.5021692 , -0.40538323,  1.03159213]])array([[ 0.72144716,  0.9853986 , -1.90579109, -0.42454087],       [-0.35674934,  0.12369675,  1.71308068,  0.61302904],       [ 0.86463033, -0.97788801, -0.07978174, -0.44386613],       [ 1.47681259,  1.09531974, -0.16154207,  1.92472807]])</code></pre><h1 id="数组转置和轴对换"><a href="#数组转置和轴对换" class="headerlink" title="数组转置和轴对换"></a>数组转置和轴对换</h1><pre><code>arr = np.arange(16).reshape((2,2,4))print(arr)arr.transpose((1, 0, 2))</code></pre><p>结果：</p><pre><code>[[[ 0  1  2  3]  [ 4  5  6  7]] [[ 8  9 10 11]  [12 13 14 15]]]array([[[ 0,  1,  2,  3],        [ 8,  9, 10, 11]],       [[ 4,  5,  6,  7],        [12, 13, 14, 15]]])</code></pre><p>swapaxes返回源数据的视图</p><pre><code>print(arr.swapaxes(1,2))[[[ 0  4]  [ 1  5]  [ 2  6]  [ 3  7]] [[ 8 12]  [ 9 13]  [10 14]  [11 15]]]</code></pre><p>#将条件逻辑表述为数组运算</p><pre><code>x = np.array([1,2,3,4,5])y = np.array([4,6,8,9,0])cond = np.array([True,False,True,False,True])result = np.where(cond,x,y)print(result)</code></pre><p>结果：</p><pre><code>[1 6 3 9 5]</code></pre><p>where：当cond为真则x，否则为y</p><p>#数学和统计方法</p><ul><li>mean 算数平均数</li><li>std、var 标准差、方差</li><li>argmin，argmax 最小最大元素索引</li><li>cumsum 所有元素累计和</li><li>cumprod 所有元素累计积</li></ul><p>#排序</p><pre><code>np.sort(a, axis, kind, order)</code></pre><ol><li>a:要排序的数组</li><li>axis：按照排序数组的轴</li><li>kind默认为“quicksort”</li><li>order：若数组包含字段，则为要排序的字段</li></ol><p>#唯一化以及其他的集合逻辑<br>    names = np.array([‘Bob’, ‘Joe’, ‘Will’, ‘Joe’, ‘Joe’])<br>    print(np.unique(names))<br>结果：</p><pre><code>[&apos;Bob&apos; &apos;Joe&apos; &apos;Will&apos;]</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 数据挖掘 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> NumPy </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Java通信——传文件、消息</title>
       <link href="/2020/01/29/Java%E9%80%9A%E4%BF%A1%E2%80%94%E2%80%94%E4%BC%A0%E6%96%87%E4%BB%B6/"/>
       <url>/2020/01/29/Java%E9%80%9A%E4%BF%A1%E2%80%94%E2%80%94%E4%BC%A0%E6%96%87%E4%BB%B6/</url>
@@ -142,8 +167,8 @@
     
     <entry>
       <title>运行时栈帧结构</title>
-      <link href="/2020/01/28/JVJVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/"/>
-      <url>/2020/01/28/JVJVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/</url>
+      <link href="/2020/01/28/JVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/"/>
+      <url>/2020/01/28/JVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/</url>
       
         <content type="html"><![CDATA[<p>栈帧中包括：局部变量表、操作数栈、动态链接、方法出口。</p><p><img src="https://img-blog.csdnimg.cn/20200126175647510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p><h2 id="动态连接"><a href="#动态连接" class="headerlink" title="动态连接"></a>动态连接</h2><p>在<a href="https://blog.csdn.net/qq_44357371/article/details/104072447" target="_blank" rel="noopener">类加载的过程</a>中已介绍过类加载过程中的解析阶段，是将符号引用转换为直接引用，但是是静态的。<br>在与运行期间转化为直接引用就是动态连接。</p><p>其他部分可参考阅读</p><p><a href="https://blog.csdn.net/qq_44357371/article/details/103330641" target="_blank" rel="noopener">JVM底层结构</a></p><p><a href="https://blog.csdn.net/qq_44357371/article/details/104059180" target="_blank" rel="noopener">通过Java字节码深入理解Java执行过程及JVM底层结构</a></p>]]></content>
       
@@ -169,8 +194,8 @@
     
     <entry>
       <title>类加载器</title>
-      <link href="/2020/01/28/JVJVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B63%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/"/>
-      <url>/2020/01/28/JVJVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B63%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/</url>
+      <link href="/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B63%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/"/>
+      <url>/2020/01/28/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B63%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8/</url>
       
         <content type="html"><![CDATA[<blockquote><p>类加载器：实现 “ 通过类的全限定名来获取描述此类的二进制字节流 ” 的模块<br><img src="https://img-blog.csdnimg.cn/20200126141937329.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p></blockquote><h2 id="类加载器种类："><a href="#类加载器种类：" class="headerlink" title="类加载器种类："></a>类加载器种类：</h2><ul><li><strong>启动类加载器</strong>：负责加载支撑JVM运行的位于jre/lib目录下的核心类库（例如：String、Object类），在虚拟机启动时就会加载完，以支撑虚拟机的运行。对于hotspot，这个类加载器使用C++实现。</li><li><strong>扩展类加载器</strong>：负责加载支撑JVM运行的位于jre/lib/ext中的JAR包。由Java语言实现，父类加载器为null。</li><li><strong>应用程序类加载器</strong>：负责加载用户路径ClassPath下的类库。由Java语言实现，父类加载器为ExtClassLoader。</li></ul><p>类加载器加载Class大致要经过如下8个步骤：</p><ol><li>检测此Class是否载入过，即在缓冲区中是否有此Class，如果有直接进入第8步，否则进入第2步。</li><li>如果没有父类加载器，则要么Parent是根类加载器，要么本身就是根类加载器，则跳到第4步，如果父类加载器存在，则进入第3步。</li><li>请求使用父类加载器去载入目标类，如果载入成功则跳至第8步，否则接着执行第5步。</li><li>请求使用根类加载器去载入目标类，如果载入成功则跳至第8步，否则跳至第7步。</li><li>当前类加载器尝试寻找Class文件，如果找到则执行第6步，如果找不到则执行第7步。</li><li>从文件中载入Class，成功后跳至第8步。</li><li>抛出ClassNotFountException异常。</li><li>返回对应的java.lang.Class对象。</li></ol><h2 id="类加载机制："><a href="#类加载机制：" class="headerlink" title="类加载机制："></a>类加载机制：</h2><ul><li>全盘负责：所谓全盘负责，就是当一个类加载器负责加载某个Class时，该Class所依赖和引用其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入。</li><li>双亲委派：所谓的双亲委派，则是先让父类加载器试图加载该Class，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类。通俗的讲，就是某个特定的类加载器在接到加载类的请求时，首先将加载任务委托给父加载器，依次递归，如果父加载器可以完成类加载任务，就成功返回；只有父加载器无法完成此加载任务时，才自己去加载。</li><li>缓存机制。缓存机制将会保证所有加载过的Class都会被缓存，当程序中需要使用某个Class时，类加载器先从缓存区中搜寻该Class，只有当缓存区中不存在该Class对象时，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存入缓冲区中。这就是为很么修改了Class后，必须重新启动JVM，程序所做的修改才会生效的原因。</li></ul><p><strong>双亲委派机制</strong></p><p><img src="https://img-blog.csdnimg.cn/2020012615383646.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70#pic_center=300x300" alt=""></p><p>双亲委派机制要求除了顶层的启动类加载器外，其余的类加载器都应当有自己的父类加载器，但这里的父子关系是组合关系</p><blockquote><p>组合关系，是关联关系的一种，是比聚合关系强的关系。它要求普通的聚合关系中代表整体的对象负责代表部分对象的生命周期，组合关系是不能共享的。代表整体的对象需要负责保持部分对象和存活，在一些情况下将负责代表部分的对象湮灭掉。代表整体的对象可以将代表部分的对象传递给另一个对象，由后者负责此对象的生命周期。换言之，代表部分的对象在每一个时刻只能与一个对象发生组合关系，由后者排他地负责生命周期。部分和整体的生命周期一样。</p></blockquote><p>对于我们写出来的.class文件，即对应<strong>应用程序加载器</strong>，它在加载时，首先会向上委托，委托给他的父亲，即<strong>扩展类加载器</strong>，扩展类加载器继续向上委托，给<strong>启动类加载器</strong>，而启动类加载器没有父类，则在启动类加载器查找是否有这个类，有则加载，无则打回；然后在扩展类加载器中找，有则加载，无则打回；最后在应用程序类加载器中加载。</p><p>  <strong>双亲委派机制的优势</strong>：采用双亲委派模式的是好处是Java类随着它的类加载器一起具备了一种带有优先级的层次关系，通过这种层级关可以避免类的重复加载，当父亲已经加载了该类时，就没有必要子ClassLoader再加载一次。其次是考虑到安全因素，java核心api中定义类型不会被随意替换，假设通过网络传递一个名为java.lang.Integer的类，通过双亲委托模式传递到启动类加载器，而启动类加载器在核心Java API发现这个名字的类，发现该类已被加载，并不会重新加载网络传递的过来的java.lang.Integer，而直接返回已加载过的Integer.class，这样便可以防止核心API库被随意篡改。</p><p>我们以一个简单的代码为例：</p><p><img src="https://img-blog.csdnimg.cn/20200126151932356.png" alt=""></p><p>我们自己定义一个String类，注意==在java.lang包中也有一个系统自带的String类==，而我们定义的这个类，包名也叫做java.lang，运行结果怎么样呢 ？</p><p><img src="https://img-blog.csdnimg.cn/20200126152208405.png" alt=""></p><p>为啥会找不到main方法？<br>这里就要从双亲委托机制进行解释：我们定义的这个类在加载时首先是对应应用程序类加载器，它要向上委托，直到启动类加载器。</p><p>上面已经说过，启动类加载器加载的是位于jre/lib目录下的核心类库，其中就有String类，这个String类就在java.lang 中，所以我们自定义的这个String类在最上层的启动类加载器中被核心类库里的String类替换掉了！</p><p>参考文章：<a href="https://blog.csdn.net/m0_38075425/article/details/81627349" target="_blank" rel="noopener">https://blog.csdn.net/m0_38075425/article/details/81627349</a></p>]]></content>
       
