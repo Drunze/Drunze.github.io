@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>JAVA静态代理和动态代理</title>
+      <link href="/2020/02/04/JAVA%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/"/>
+      <url>/2020/02/04/JAVA%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
+      
+        <content type="html"><![CDATA[<p>参考文章：<a href="https://www.jianshu.com/p/9bcac608c714" target="_blank" rel="noopener">https://www.jianshu.com/p/9bcac608c714</a></p><h1 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h1><p>为其他对象提供一个代理以控制对某个对象的访问。代理类主要负责为委托了（真实对象）预处理消息、过滤消息、传递消息给委托类，代理类不现实具体服务，而是利用委托类来完成服务，并将执行结果封装处理。</p><p>代理类为被代理类预处理消息、过滤消息并在此之后将消息转发给被代理类，之后还能进行消息的后置处理。代理类和被代理类通常会存在关联关系(即上面提到的持有的被代理对象的引用)，代理类本身不实现服务，而是通过调用被代理类中的方法来提供服务。</p><h1 id="静态代理"><a href="#静态代理" class="headerlink" title="静态代理"></a>静态代理</h1><p>静态代理的模式：首先创建一个接口，然后被代理类实现这个接口，再创建一个代理类，代理类中创建一个被代理类对象的引用，然后代理类中完成被代理类的方法。</p><p>有点绕，只要记住一点：代理类主要负责预处理消息、过滤消息、传递消息，所以方法要在代理类中进行加工和调用。</p><p>下面来看代码：</p><p>1、创建接口</p><pre><code>public interface HelloInterface {    void sayHello();}</code></pre><p>2、创建被代理类实现接口：</p><pre><code>public class Hello implements HelloInterface{    public void sayHello() {        System.out.println(&quot;Hello&quot;);    }}</code></pre><p>3、创建代理类，在该类中，实现被代理类的引用以及方法调用和加工</p><pre><code>public class HelloProxy implements HelloInterface{    private HelloInterface helloInterface = (HelloInterface) new Hello();    public void sayHello() {        System.out.println(&quot;before invok&quot;);        helloInterface.sayHello();        System.out.println(&quot;after invok&quot;);    }}</code></pre><p>4、通过代理类对象，对目标方法进行调用</p><pre><code>public static void main(String[] args) {        HelloProxy hello = new HelloProxy();    }</code></pre><p>静态代理存在缺点：每个代理类只能为一个类服务，如果要代理的类很多，就需要编写大量的代理类。</p><p>例如，再来一个Bye类：</p><p>1、接口：</p><pre><code>public interface ByeInterface {    void sayBye();}</code></pre><p>2、接口实现</p><pre><code>public class Bye implements ByeInterface{    public void sayBye() {        System.out.println(&quot;GoodBye!&quot;);    }}</code></pre><p>3、代理类中引用方法</p><p>注意，这时候就会发现，原来的那个Hello代理不可以代理这个，必须要新建一个此方法的专属代理</p><pre><code>public class ByeProxy implements ByeInterface{    private ByeInterface byeInterface = (ByeInterface) new Bye();    public void sayBye(){        System.out.println(&quot;before invok&quot;);        byeInterface.sayBye();        System.out.println(&quot;after invok&quot;);    }}</code></pre><p>4、main方法也要new一个新代理的对象</p><pre><code>ByeProxy bye = new ByeProxy();bye.sayBye();</code></pre><p>结果：</p><p><img src="https://img-blog.csdnimg.cn/20200204111758538.png" alt=" "></p><h1 id="动态代理"><a href="#动态代理" class="headerlink" title="动态代理"></a>动态代理</h1><p>前两步相同：1、创建接口 ， 2、接口实现</p><p>3、代理：</p><pre><code>public class ProxyHandler implements InvocationHandler{    private Object object;    public ProxyHandler(Object object){        this.object = object;    }    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {        System.out.println(&quot;Before invok &quot;+method.getName());        method.invoke(object,args);        System.out.println(&quot;after invok &quot;+method.getName());        return null;    }}</code></pre><p>构建一个handler类来实现InvocationHandler接口</p><p>4、main</p><pre><code>public static void main(String[] args) {        HelloInterface hello = new Hello();        ByeInterface bye = new Bye();        InvocationHandler handler = new ProxyHandler(hello);        InvocationHandler handler2 = new ProxyHandler(bye);        HelloInterface proxyHello = (HelloInterface) Proxy.newProxyInstance(hello.getClass().getClassLoader(), hello.getClass().getInterfaces(), handler);        ByeInterface proxyBye = (ByeInterface) Proxy.newProxyInstance(bye.getClass().getClassLoader(), bye.getClass().getInterfaces(), handler2);        proxyHello.sayHello();        proxyBye.sayBye();    }</code></pre><p>结果：</p><p><img src="https://img-blog.csdnimg.cn/20200204113509359.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><p>动态代理的代理不需要新建。</p><p><img src="https://img-blog.csdnimg.cn/20200204141934502.png" alt=" "><br><img src="https://img-blog.csdnimg.cn/20200204141955282.png" alt=" "></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java </category>
+          
+          <category> JVM </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 静态、动态代理 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Pandas</title>
       <link href="/2020/02/01/pandas/"/>
       <url>/2020/02/01/pandas/</url>
@@ -14,6 +41,8 @@
       <categories>
           
           <category> 数据挖掘 </category>
+          
+          <category> pandas </category>
           
       </categories>
       
