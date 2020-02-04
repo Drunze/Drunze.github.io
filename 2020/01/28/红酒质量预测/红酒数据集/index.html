@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>运行时栈帧结构 | Jacob</title>
-  <meta name="keywords" content=" 字节码执行引擎 ">
-  <meta name="description" content="运行时栈帧结构 | Jacob">
+  <title>红酒质量预测 | Jacob</title>
+  <meta name="keywords" content=" 机器学习 ">
+  <meta name="description" content="红酒质量预测 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="NumPy性能和python列表对比import numpy as np my_arr &#x3D; np.arange(1000000) my_list &#x3D; list(range(1000000)) %time for _ in range(10): my_arr2 &#x3D; my_arr*2 %time for _ in range(10): my_list2 &#x3D; [x*2 for x in my_list]">
 <meta property="og:type" content="article">
@@ -448,9 +448,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-JVM字节码执行引擎1——运行时栈帧结构" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-红酒质量预测/红酒数据集" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">运行时栈帧结构</h1>
+        <h1 class="article-title">红酒质量预测</h1>
     
     <div class="article-meta">
         
@@ -458,28 +458,28 @@
         
         <span class="book">
             
-                <a  data-rel="JVM">JVM</a>/
+                <a  data-rel="机器学习">机器学习</a>/
             
-                <a  data-rel="字节码执行引擎">字节码执行引擎</a>
+                <a  data-rel="入门">入门</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color3">字节码执行引擎</a>
+            <a class="color5">机器学习</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 19:27:57'>2020-01-28 17:09</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-04 21:21:40'>2020-01-28 18:58</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:120</span>
+        <span>字数:1.3k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -509,7 +509,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#动态连接"><span class="toc-text">动态连接</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Random-Forest-Classifier"><span class="toc-text">Random Forest Classifier</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SVM-classifier"><span class="toc-text">SVM classifier</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Network"><span class="toc-text">Neural Network</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -525,13 +525,583 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>栈帧中包括：局部变量表、操作数栈、动态链接、方法出口。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200126175647510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<h2 id="动态连接"><a href="#动态连接" class="headerlink" title="动态连接"></a>动态连接</h2><p>在<a href="https://blog.csdn.net/qq_44357371/article/details/104072447" target="_blank" rel="noopener">类加载的过程</a>中已介绍过类加载过程中的解析阶段，是将符号引用转换为直接引用，但是是静态的。<br>在与运行期间转化为直接引用就是动态连接。</p>
-<p>其他部分可参考阅读</p>
-<p><a href="https://blog.csdn.net/qq_44357371/article/details/103330641" target="_blank" rel="noopener">JVM底层结构</a></p>
-<p><a href="https://blog.csdn.net/qq_44357371/article/details/104059180" target="_blank" rel="noopener">通过Java字节码深入理解Java执行过程及JVM底层结构</a></p>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm</span><br><span class="line"><span class="keyword">from</span> sklearn.neural_network <span class="keyword">import</span> MLPClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix,classification_report</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler, LabelEncoder</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br></pre></td></tr></table></figure>
 
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wine = pd.read_csv(<span class="string">"C:\\Users\\董润泽\\Desktop\\winequality-red.csv"</span>,sep=<span class="string">";"</span>)</span><br><span class="line">wine.head()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fixed acidity</th>
+      <th>volatile acidity</th>
+      <th>citric acid</th>
+      <th>residual sugar</th>
+      <th>chlorides</th>
+      <th>free sulfur dioxide</th>
+      <th>total sulfur dioxide</th>
+      <th>density</th>
+      <th>pH</th>
+      <th>sulphates</th>
+      <th>alcohol</th>
+      <th>quality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7.8</td>
+      <td>0.88</td>
+      <td>0.00</td>
+      <td>2.6</td>
+      <td>0.098</td>
+      <td>25.0</td>
+      <td>67.0</td>
+      <td>0.9968</td>
+      <td>3.20</td>
+      <td>0.68</td>
+      <td>9.8</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7.8</td>
+      <td>0.76</td>
+      <td>0.04</td>
+      <td>2.3</td>
+      <td>0.092</td>
+      <td>15.0</td>
+      <td>54.0</td>
+      <td>0.9970</td>
+      <td>3.26</td>
+      <td>0.65</td>
+      <td>9.8</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11.2</td>
+      <td>0.28</td>
+      <td>0.56</td>
+      <td>1.9</td>
+      <td>0.075</td>
+      <td>17.0</td>
+      <td>60.0</td>
+      <td>0.9980</td>
+      <td>3.16</td>
+      <td>0.58</td>
+      <td>9.8</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.info()</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;
+RangeIndex: 1599 entries, 0 to 1598
+Data columns (total 12 columns):
+fixed acidity           1599 non-null float64
+volatile acidity        1599 non-null float64
+citric acid             1599 non-null float64
+residual sugar          1599 non-null float64
+chlorides               1599 non-null float64
+free sulfur dioxide     1599 non-null float64
+total sulfur dioxide    1599 non-null float64
+density                 1599 non-null float64
+pH                      1599 non-null float64
+sulphates               1599 non-null float64
+alcohol                 1599 non-null float64
+quality                 1599 non-null int64
+dtypes: float64(11), int64(1)
+memory usage: 150.0 KB</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.isnull().sum()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>fixed acidity           0
+volatile acidity        0
+citric acid             0
+residual sugar          0
+chlorides               0
+free sulfur dioxide     0
+total sulfur dioxide    0
+density                 0
+pH                      0
+sulphates               0
+alcohol                 0
+quality                 0
+dtype: int64</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bins = (<span class="number">2</span>, <span class="number">6.5</span>, <span class="number">8</span>)</span><br><span class="line">group_names=[<span class="string">'bad'</span>, <span class="string">'good'</span>]</span><br><span class="line">wine[<span class="string">'quality'</span>] = pd.cut(wine[<span class="string">'quality'</span>], bins = bins, labels = group_names)</span><br><span class="line">wine[<span class="string">'quality'</span>].unique()</span><br></pre></td></tr></table></figure>
+
+
+<pre><code>---------------------------------------------------------------------------
+
+TypeError                                 Traceback (most recent call last)
+
+&lt;ipython-input-13-99255379e85c&gt; in &lt;module&gt;
+      1 bins = (2, 6.5, 8)
+      2 group_names=[&apos;bad&apos;, &apos;good&apos;]
+----&gt; 3 wine[&apos;quality&apos;] = pd.cut(wine[&apos;quality&apos;], bins = bins, labels = group_names)
+      4 wine[&apos;quality&apos;].unique()
+
+
+C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\reshape\tile.py in cut(x, bins, right, labels, retbins, precision, include_lowest, duplicates)
+    239                               include_lowest=include_lowest,
+    240                               dtype=dtype,
+--&gt; 241                               duplicates=duplicates)
+    242 
+    243     return _postprocess_for_cut(fac, bins, retbins, x_is_series,
+
+
+C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\reshape\tile.py in _bins_to_cuts(x, bins, right, labels, precision, include_lowest, dtype, duplicates)
+    342 
+    343     side = &apos;left&apos; if right else &apos;right&apos;
+--&gt; 344     ids = ensure_int64(bins.searchsorted(x, side=side))
+    345 
+    346     if include_lowest:
+
+
+TypeError: &apos;&lt;&apos; not supported between instances of &apos;float&apos; and &apos;str&apos;</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.head()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fixed acidity</th>
+      <th>volatile acidity</th>
+      <th>citric acid</th>
+      <th>residual sugar</th>
+      <th>chlorides</th>
+      <th>free sulfur dioxide</th>
+      <th>total sulfur dioxide</th>
+      <th>density</th>
+      <th>pH</th>
+      <th>sulphates</th>
+      <th>alcohol</th>
+      <th>quality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>bad</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7.8</td>
+      <td>0.88</td>
+      <td>0.00</td>
+      <td>2.6</td>
+      <td>0.098</td>
+      <td>25.0</td>
+      <td>67.0</td>
+      <td>0.9968</td>
+      <td>3.20</td>
+      <td>0.68</td>
+      <td>9.8</td>
+      <td>bad</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7.8</td>
+      <td>0.76</td>
+      <td>0.04</td>
+      <td>2.3</td>
+      <td>0.092</td>
+      <td>15.0</td>
+      <td>54.0</td>
+      <td>0.9970</td>
+      <td>3.26</td>
+      <td>0.65</td>
+      <td>9.8</td>
+      <td>bad</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11.2</td>
+      <td>0.28</td>
+      <td>0.56</td>
+      <td>1.9</td>
+      <td>0.075</td>
+      <td>17.0</td>
+      <td>60.0</td>
+      <td>0.9980</td>
+      <td>3.16</td>
+      <td>0.58</td>
+      <td>9.8</td>
+      <td>bad</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>bad</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">label_quality = LabelEncoder()</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine[<span class="string">'quality'</span>] = label_quality.fit_transform(wine[<span class="string">'quality'</span>])</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>fixed acidity</th>
+      <th>volatile acidity</th>
+      <th>citric acid</th>
+      <th>residual sugar</th>
+      <th>chlorides</th>
+      <th>free sulfur dioxide</th>
+      <th>total sulfur dioxide</th>
+      <th>density</th>
+      <th>pH</th>
+      <th>sulphates</th>
+      <th>alcohol</th>
+      <th>quality</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7.8</td>
+      <td>0.88</td>
+      <td>0.00</td>
+      <td>2.6</td>
+      <td>0.098</td>
+      <td>25.0</td>
+      <td>67.0</td>
+      <td>0.9968</td>
+      <td>3.20</td>
+      <td>0.68</td>
+      <td>9.8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7.8</td>
+      <td>0.76</td>
+      <td>0.04</td>
+      <td>2.3</td>
+      <td>0.092</td>
+      <td>15.0</td>
+      <td>54.0</td>
+      <td>0.9970</td>
+      <td>3.26</td>
+      <td>0.65</td>
+      <td>9.8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11.2</td>
+      <td>0.28</td>
+      <td>0.56</td>
+      <td>1.9</td>
+      <td>0.075</td>
+      <td>17.0</td>
+      <td>60.0</td>
+      <td>0.9980</td>
+      <td>3.16</td>
+      <td>0.58</td>
+      <td>9.8</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>7.4</td>
+      <td>0.70</td>
+      <td>0.00</td>
+      <td>1.9</td>
+      <td>0.076</td>
+      <td>11.0</td>
+      <td>34.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>7.4</td>
+      <td>0.66</td>
+      <td>0.00</td>
+      <td>1.8</td>
+      <td>0.075</td>
+      <td>13.0</td>
+      <td>40.0</td>
+      <td>0.9978</td>
+      <td>3.51</td>
+      <td>0.56</td>
+      <td>9.4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7.9</td>
+      <td>0.60</td>
+      <td>0.06</td>
+      <td>1.6</td>
+      <td>0.069</td>
+      <td>15.0</td>
+      <td>59.0</td>
+      <td>0.9964</td>
+      <td>3.30</td>
+      <td>0.46</td>
+      <td>9.4</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>7.3</td>
+      <td>0.65</td>
+      <td>0.00</td>
+      <td>1.2</td>
+      <td>0.065</td>
+      <td>15.0</td>
+      <td>21.0</td>
+      <td>0.9946</td>
+      <td>3.39</td>
+      <td>0.47</td>
+      <td>10.0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>7.8</td>
+      <td>0.58</td>
+      <td>0.02</td>
+      <td>2.0</td>
+      <td>0.073</td>
+      <td>9.0</td>
+      <td>18.0</td>
+      <td>0.9968</td>
+      <td>3.36</td>
+      <td>0.57</td>
+      <td>9.5</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>7.5</td>
+      <td>0.50</td>
+      <td>0.36</td>
+      <td>6.1</td>
+      <td>0.071</td>
+      <td>17.0</td>
+      <td>102.0</td>
+      <td>0.9978</td>
+      <td>3.35</td>
+      <td>0.80</td>
+      <td>10.5</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine[<span class="string">'quality'</span>].value_counts()</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>0    1382
+1     217
+Name: quality, dtype: int64</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(wine[<span class="string">'quality'</span>])</span><br></pre></td></tr></table></figure>
+
+
+
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x2076c534cc0&gt;</code></pre><p><img src="output_10_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#seperate the dataset as response variable and feature variable</span></span><br><span class="line">X = wine.drop(<span class="string">'quality'</span> , axis=<span class="number">1</span>)</span><br><span class="line">y = wine[<span class="string">'quality'</span>]</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Train and test splitting of data</span></span><br><span class="line">X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state = <span class="number">42</span>)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc = StandardScaler()</span><br><span class="line">X_train = sc.fit_transform(X_train)</span><br><span class="line">X_test = sc.transform(X_test)</span><br></pre></td></tr></table></figure>
+
+<h1 id="Random-Forest-Classifier"><a href="#Random-Forest-Classifier" class="headerlink" title="Random Forest Classifier"></a>Random Forest Classifier</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rfc = RandomForestClassifier(n_estimators=<span class="number">600</span>)</span><br><span class="line">rfc.fit(X_train,y_train)</span><br><span class="line">pred_rfc = rfc.predict(X_test)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(classification_report(y_test, pred_rfc))</span><br><span class="line">print(confusion_matrix(y_test,pred_rfc))</span><br><span class="line"><span class="comment">#对于坏酒，264对，9错</span></span><br><span class="line"><span class="comment">#好酒，13对，24错</span></span><br></pre></td></tr></table></figure>
+
+<pre><code>              precision    recall  f1-score   support
+
+           0       0.92      0.97      0.94       273
+           1       0.73      0.51      0.60        47
+
+    accuracy                           0.90       320
+   macro avg       0.82      0.74      0.77       320
+weighted avg       0.89      0.90      0.89       320
+
+[[264   9]
+ [ 23  24]]</code></pre><h1 id="SVM-classifier"><a href="#SVM-classifier" class="headerlink" title="SVM classifier"></a>SVM classifier</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">clf=svm.SVC()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line">pred_clf = clf.predict(X_test)</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(classification_report(y_test, pred_clf))</span><br><span class="line">print(confusion_matrix(y_test,pred_clf))</span><br></pre></td></tr></table></figure>
+
+<pre><code>              precision    recall  f1-score   support
+
+           0       0.88      0.98      0.93       273
+           1       0.71      0.26      0.37        47
+
+    accuracy                           0.88       320
+   macro avg       0.80      0.62      0.65       320
+weighted avg       0.86      0.88      0.85       320
+
+[[268   5]
+ [ 35  12]]</code></pre><h1 id="Neural-Network"><a href="#Neural-Network" class="headerlink" title="Neural Network"></a>Neural Network</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mlpc = MLPClassifier(hidden_layer_sizes=(<span class="number">11</span>,<span class="number">11</span>,<span class="number">11</span>),max_iter=<span class="number">500</span>)</span><br><span class="line">mlpc.fit(X_train,y_train)</span><br><span class="line">pred_mlpc = mlpc.predict(X_test)</span><br></pre></td></tr></table></figure>
+
+<pre><code>C:\ProgramData\Anaconda3\lib\site-packages\sklearn\neural_network\multilayer_perceptron.py:566: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (500) reached and the optimization hasn&apos;t converged yet.
+  % self.max_iter, ConvergenceWarning)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(classification_report(y_test, pred_clf))</span><br><span class="line">print(confusion_matrix(y_test,pred_clf))</span><br></pre></td></tr></table></figure>
+
+<pre><code>              precision    recall  f1-score   support
+
+           0       0.88      0.98      0.93       273
+           1       0.71      0.26      0.37        47
+
+    accuracy                           0.88       320
+   macro avg       0.80      0.62      0.65       320
+weighted avg       0.86      0.88      0.85       320
+
+[[268   5]
+ [ 35  12]]</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line">print(accuracy_score(y_test,pred_rfc))</span><br><span class="line">print(accuracy_score(y_test,pred_mlpc))</span><br><span class="line">print(accuracy_score(y_test,pred_clf))</span><br></pre></td></tr></table></figure>
+
+<pre><code>0.875
+0.884375
+0.875</code></pre>
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -544,12 +1114,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>运行时栈帧结构</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">120</span></p>
+    <p><span class="copy-title">文章标题:</span>红酒质量预测</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.3k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 17:09:57</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 19:27:57</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/" title="运行时栈帧结构">http://yoursite.com/2020/01/28/JVM%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%A7%E8%A1%8C%E5%BC%95%E6%93%8E1%E2%80%94%E2%80%94%E8%BF%90%E8%A1%8C%E6%97%B6%E6%A0%88%E5%B8%A7%E7%BB%93%E6%9E%84/</a>
+    <p><span class="copy-title">发布时间:</span>2020-01-28, 18:58:38</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-04, 21:21:40</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/%E7%BA%A2%E9%85%92%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B/%E7%BA%A2%E9%85%92%E6%95%B0%E6%8D%AE%E9%9B%86/" title="红酒质量预测">http://yoursite.com/2020/01/28/%E7%BA%A2%E9%85%92%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B/%E7%BA%A2%E9%85%92%E6%95%B0%E6%8D%AE%E9%9B%86/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
