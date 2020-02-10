@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>神经网络基础</title>
+      <link href="/2020/02/06/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/"/>
+      <url>/2020/02/06/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</url>
+      
+        <content type="html"><![CDATA[<h1 id="整体处理流程："><a href="#整体处理流程：" class="headerlink" title="整体处理流程："></a>整体处理流程：</h1><ul><li>初始化参数w、b</li><li>正向传播，计算损失函数J</li><li>反向传播，计算dw、db</li><li>梯度下降优化w、b</li><li>预测y</li></ul><h1 id="1-二分类问题"><a href="#1-二分类问题" class="headerlink" title="1.二分类问题"></a><strong>1.二分类问题</strong></h1><p>这一节主要讲了定义数据格式</p><p>例：</p><p>对于下面这张图片，把它看作64*64个像素点，那么对每个像素点，又可以分为红黄蓝三色：</p><p><img src="https://img-blog.csdnimg.cn/2020020610562129.png" alt=" "></p><p>我们可以得出需要的</p><p><img src="https://img-blog.csdnimg.cn/20200206110505637.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><p>而y=1/0 可以代表图片中有无猫</p><p><img src="https://img-blog.csdnimg.cn/20200206110730236.png" alt=" "></p><p><img src="https://img-blog.csdnimg.cn/20200206110931586.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><h1 id="2-logistic-regression"><a href="#2-logistic-regression" class="headerlink" title="2.logistic regression"></a><strong>2.logistic regression</strong></h1><p>上面的 Y^ = [0,1]表示的是一种概率。</p><p><img src="https://img-blog.csdnimg.cn/202002061618162.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><p>z趋于无穷大，y趋于1；z变小，y变小</p><p>控制z，即要获得w、b的值</p><p><img src="https://img-blog.csdnimg.cn/20200206162902528.png" alt=" "></p><p>符号惯例：θo 代表 b；其他的代表w（不同神经）</p><h1 id="3-logistic-regression损失函数-Loss-Function"><a href="#3-logistic-regression损失函数-Loss-Function" class="headerlink" title="3.logistic regression损失函数 Loss Function"></a><strong>3.logistic regression损失函数 Loss Function</strong></h1><p>一般经验来说是用平方错误衡量损失函数</p><p><img src="https://img-blog.csdnimg.cn/20200206171116302.png" alt=" "></p><p>但是，对于logistic regression 来说，一般不适用平方错误来作为Loss Function，这是因为上面的平方错误损失函数一般是非凸函数（non-convex），其在使用梯度下降算法的时候，容易得到局部最优解，而不是全局最优解。因此要选择凸函数。</p><p><img src="https://img-blog.csdnimg.cn/20200206171229963.png" alt=" "></p><p><img src="https://img-blog.csdnimg.cn/20200206171332982.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><h1 id="4-梯度下降法"><a href="#4-梯度下降法" class="headerlink" title="4.梯度下降法"></a><strong>4.梯度下降法</strong></h1><p>即以梯度下降的方式最小化代价函数cost function,最终得出w、b</p><p>每次迭代更新的修正表达式：</p><p><img src="https://img-blog.csdnimg.cn/20200206192504836.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><p>程序中分别用dw、db分别表示上面的偏导部分</p><h1 id="5-逻辑回归中的梯度下降法"><a href="#5-逻辑回归中的梯度下降法" class="headerlink" title="5.逻辑回归中的梯度下降法"></a><strong>5.逻辑回归中的梯度下降法</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207085458345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><p>最后是通过梯度下降法中的修正表达式，得出w1、w2、b的值</p><h1 id="6-m个样本的梯度下降"><a href="#6-m个样本的梯度下降" class="headerlink" title="6.m个样本的梯度下降"></a><strong>6.m个样本的梯度下降</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207092426643.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p><p>$$ \frac{\partial J}{\partial w} = \frac{1}{m}X(A-Y)^T\tag{7}$$</p><p>$$ \frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (a^{(i)}-y^{(i)})\tag{8}$$</p><h1 id="7-向量化"><a href="#7-向量化" class="headerlink" title="7.向量化"></a><strong>7.向量化</strong></h1><p>向量化就是把原始的for循环用矩阵来代替，使用numpy中的矩阵运算直接算出来。</p><p>单次迭代梯度下降算法流程：</p><pre><code>Z = np.dot(w.T,X) + bA = sigmoid(Z)dZ = A-Ydw = 1/m*np.dot(X,dZ.T)db = 1/m*np.sum(dZ)w = w - alpha*dwb = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于numpy说明" class="headerlink" title="8.关于numpy说明"></a><strong>8.关于numpy说明</strong></h1><p>当不确定矩阵的维度时，可以使用assert保证安全</p><pre><code>assert(a.shape == (5,1))</code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 吴恩达 Deep Learning </category>
+          
+          <category> 01.神经网络和深度学习 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 神经网络 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAVA静态代理和动态代理</title>
       <link href="/2020/02/04/JAVA%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/"/>
       <url>/2020/02/04/JAVA%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86/</url>
