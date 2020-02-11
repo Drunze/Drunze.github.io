@@ -6,26 +6,14 @@
   <meta name="keywords" content=" 神经网络 ">
   <meta name="description" content="02浅层神经网络 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="参考文章：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;29706138 1、神经网络表示 看着这张浅层神经网络的示意图 第一列为输入层，x1,x2,x3；第二列为隐藏层，第三列为输出层。我们把这个神经网络成为两层神经网络（输入层不计） 我们要注意的是每两层之间的计算和每一层的参数矩阵大小   输入层和隐藏层  w–&gt;(4,3),4代表隐藏层神经元个数，3代表输入层神经元个数">
 <meta property="og:type" content="article">
 <meta property="og:title" content="02浅层神经网络">
-<meta property="og:url" content="http://yoursite.com/2020/02/11/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%B5%85%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:url" content="http://yoursite.com/2020/02/11/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%B5%85%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/index.html">
 <meta property="og:site_name" content="Jacob">
-<meta property="og:description" content="参考文章：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;29706138 1、神经网络表示 看着这张浅层神经网络的示意图 第一列为输入层，x1,x2,x3；第二列为隐藏层，第三列为输出层。我们把这个神经网络成为两层神经网络（输入层不计） 我们要注意的是每两层之间的计算和每一层的参数矩阵大小   输入层和隐藏层  w–&gt;(4,3),4代表隐藏层神经元个数，3代表输入层神经元个数">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2020021109545357.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-57166f7b5bb26904e62433ffffd01e61_hd.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-722991018136c95bff18be8e2932d987_hd.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-6eb2bc22d2d7953ab4fb4115a2a33a96_hd.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-1615f9d56a1561b3aef3bc4deb895110_hd.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-58168196b7618a2dfe6b2f02a714fabb_hd.jpg">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200211104536645.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2020021110591783.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-88e08b98b1d6ee1acba5f79a326fbb82_hd.jpg">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2020021111032085.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
 <meta property="article:published_time" content="2020-02-11T01:41:10.000Z">
-<meta property="article:modified_time" content="2020-02-11T03:05:04.884Z">
+<meta property="article:modified_time" content="2020-02-11T12:04:33.353Z">
 <meta property="article:author" content="Jacob">
 <meta property="article:tag" content="神经网络">
 <meta name="twitter:card" content="summary">
@@ -150,7 +138,7 @@
 
 
 <ul>
-    <li><div class="all active">全部文章<small>(18)</small></div></li>
+    <li><div class="all active">全部文章<small>(16)</small></div></li>
     
         
             
@@ -250,11 +238,11 @@
     
         
             
-            <li><div data-rel="吴恩达DeepLearning"><i class="fold iconfont icon-right"></i>吴恩达DeepLearning<small>(5)</small></div>
+            <li><div data-rel="吴恩达DeepLearning"><i class="fold iconfont icon-right"></i>吴恩达DeepLearning<small>(3)</small></div>
                 
                     <ul class="sub hide">
                         
-                        <li><div data-rel="01.神经网络和深度学习">01.神经网络和深度学习<small>(5)</small></div>
+                        <li><div data-rel="01.神经网络和深度学习">01.神经网络和深度学习<small>(3)</small></div>
                             
                         </li>
                             
@@ -280,8 +268,8 @@
     </div>
     <div><a class="about  hasFriend  site_url"  href="/about">关于</a><a style="width: 50%"  class="friends">友链</a></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="18">
-<input type="hidden" id="yelog_site_word_count" value="18.4k">
+<input type="hidden" id="yelog_site_posts_number" value="16">
+<input type="hidden" id="yelog_site_word_count" value="16.3k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -488,22 +476,6 @@
             <span class="post-date" title="2020-02-11 09:41:10">2020/02/11</span>
         </a>
         
-        <a  class="吴恩达DeepLearning 01.神经网络和深度学习 "
-           href="/2020/02/11/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/03%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%20-%20%E5%89%AF%E6%9C%AC/"
-           data-tag="神经网络"
-           data-author="" >
-            <span class="post-title" title="02浅层神经网络">02浅层神经网络</span>
-            <span class="post-date" title="2020-02-11 09:41:10">2020/02/11</span>
-        </a>
-        
-        <a  class="吴恩达DeepLearning 01.神经网络和深度学习 "
-           href="/2020/02/11/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/03%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/"
-           data-tag="神经网络"
-           data-author="" >
-            <span class="post-title" title="02浅层神经网络">02浅层神经网络</span>
-            <span class="post-date" title="2020-02-11 09:41:10">2020/02/11</span>
-        </a>
-        
     </nav>
 </div>
     </div>
@@ -542,12 +514,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-11 11:05:04'>2020-02-11 09:41</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-11 20:04:33'>2020-02-11 09:41</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:683</span>
+        <span>字数:0</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -577,7 +549,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、神经网络表示"><span class="toc-text">1、神经网络表示</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、神经网络的输出"><span class="toc-text">2、神经网络的输出</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、向量化"><span class="toc-text">3、向量化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、激活函数"><span class="toc-text">4、激活函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、神经网络的梯度下降"><span class="toc-text">5、神经网络的梯度下降</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、随机初始化"><span class="toc-text">6、随机初始化</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -594,49 +566,6 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
-<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/29706138" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/29706138</a></p>
-<h1 id="1、神经网络表示"><a href="#1、神经网络表示" class="headerlink" title="1、神经网络表示"></a><strong>1、神经网络表示</strong></h1><p><img src="https://img-blog.csdnimg.cn/2020021109545357.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>看着这张浅层神经网络的示意图</p>
-<p>第一列为输入层，x1,x2,x3；第二列为隐藏层，第三列为输出层。我们把这个神经网络成为两层神经网络（输入层不计）</p>
-<p>我们要注意的是每两层之间的计算和每一层的参数矩阵大小</p>
-<p><img src="https://pic2.zhimg.com/80/v2-57166f7b5bb26904e62433ffffd01e61_hd.jpg" alt=""></p>
-<ul>
-<li><p>输入层和隐藏层</p>
-<ul>
-<li>w–&gt;(4,3),4代表隐藏层神经元个数，3代表输入层神经元个数</li>
-<li>b–&gt;(4,1)，4指隐藏层神经元数</li>
-</ul>
-</li>
-<li><p>隐藏层和输出层</p>
-<ul>
-<li>w–&gt;(1,4),1指输出层，4指隐藏层</li>
-<li>b–&gt;(1,1),1指输出层</li>
-</ul>
-</li>
-</ul>
-<p>在神经网络中，前一层是输入，后一层作为输出，两层之间，w参数矩阵大小为<strong>（N[out], N[in]）</strong>, b参数矩阵大小为<strong>（N[out], 1）</strong>,这里 <strong>z = wX + b</strong>,神经网络中w[i] = w.T</p>
-<p>在logistic regression 中，用<strong>（N[in], N[out]）</strong>表示参数矩阵大小，公式是 <strong>z = w.T***</strong>X + b**</p>
-<h1 id="2、神经网络的输出"><a href="#2、神经网络的输出" class="headerlink" title="2、神经网络的输出"></a><strong>2、神经网络的输出</strong></h1><p><img src="https://pic4.zhimg.com/80/v2-722991018136c95bff18be8e2932d987_hd.jpg" alt=""></p>
-<p>只需要四个公式来控制这个神经网络的输出</p>
-<p><img src="https://pic3.zhimg.com/80/v2-6eb2bc22d2d7953ab4fb4115a2a33a96_hd.jpg" alt=""></p>
-<h1 id="3、向量化"><a href="#3、向量化" class="headerlink" title="3、向量化"></a><strong>3、向量化</strong></h1><p>对于每一个神经元x，都需要计算上面的四个公式，如果用for循环，速度十分慢。所以向量化就是使用矩阵来代替for循环，提高效率</p>
-<p><img src="https://pic1.zhimg.com/80/v2-1615f9d56a1561b3aef3bc4deb895110_hd.jpg" alt=""></p>
-<p>对于m个样本，它的参数矩阵为： （n_x,m）</p>
-<h1 id="4、激活函数"><a href="#4、激活函数" class="headerlink" title="4、激活函数"></a><strong>4、激活函数</strong></h1><p><img src="https://pic4.zhimg.com/80/v2-58168196b7618a2dfe6b2f02a714fabb_hd.jpg" alt=""></p>
-<p><img src="https://img-blog.csdnimg.cn/20200211104536645.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>sigmoid函数和tanh函数比较：</p>
-<ul>
-<li><p>隐藏层：tanh函数的表现要好于sigmoid函数，因为tanh取值范围为 【-1，1】 ，输出分布在0值的附近，均值为0，从隐藏层到输出层数据起到了归一化（均值为0）的效果。<br>输出层：对于二分类任务的输出取值为 【0，1】 ，故一般会选择sigmoid函数。<br>然而sigmoid和tanh函数在当 |Z| 很大的时候，梯度会很小，在依据梯度的算法中，更新在后期会变得很慢。在实际应用中，要使 |Z| 尽可能的落在0值附近。</p>
-</li>
-<li><p>ReLU弥补了前两者的缺陷，当 Z&gt;0 时，梯度始终为1，从而提高神经网络基于梯度算法的运算速度。然而当 Z&lt;0 时，梯度一直为0，但是实际的运用中，该缺陷的影响不是很大。</p>
-</li>
-<li><p>Leaky ReLU保证在 Z&lt;0 的时候，梯度仍然不为0。</p>
-</li>
-</ul>
-<p>在选择激活函数的时候，如果在不知道该选什么的时候就选择ReLU，当然也没有固定答案，要依据实际问题在交叉验证集合中进行验证分析。</p>
-<h1 id="5、神经网络的梯度下降"><a href="#5、神经网络的梯度下降" class="headerlink" title="5、神经网络的梯度下降"></a><strong>5、神经网络的梯度下降</strong></h1><p><img src="https://img-blog.csdnimg.cn/2020021110591783.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p><img src="https://pic3.zhimg.com/80/v2-88e08b98b1d6ee1acba5f79a326fbb82_hd.jpg" alt=""></p>
-<h1 id="6、随机初始化"><a href="#6、随机初始化" class="headerlink" title="6、随机初始化"></a><strong>6、随机初始化</strong></h1><p><img src="https://img-blog.csdnimg.cn/2020021111032085.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -651,10 +580,10 @@
 
 <div class="article_copyright">
     <p><span class="copy-title">文章标题:</span>02浅层神经网络</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">683</span></p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">0</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
     <p><span class="copy-title">发布时间:</span>2020-02-11, 09:41:10</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-11, 11:05:04</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-11, 20:04:33</p>
     <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/11/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%B5%85%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/" title="02浅层神经网络">http://yoursite.com/2020/02/11/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%B5%85%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
