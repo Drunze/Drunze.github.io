@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>深入理解基于栈的字节码执行引擎及JVM底层结构 | Jacob</title>
-  <meta name="keywords" content=" JVM结构 , 字节码执行引擎 ">
-  <meta name="description" content="深入理解基于栈的字节码执行引擎及JVM底层结构 | Jacob">
+  <title>编程作业——初始化参数w | Jacob</title>
+  <meta name="keywords" content=" 神经网络 ">
+  <meta name="description" content="编程作业——初始化参数w | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="编程作业——正则化">
@@ -536,9 +536,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-JVM/通过Java字节码深入理解Java执行过程及JVM底层结构" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/02改善深层神经网络：超参数调试、正则化以及优化/编程作业——初始化参数w" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">深入理解基于栈的字节码执行引擎及JVM底层结构</h1>
+        <h1 class="article-title">编程作业——初始化参数w</h1>
     
     <div class="article-meta">
         
@@ -546,30 +546,28 @@
         
         <span class="book">
             
-                <a  data-rel="JVM">JVM</a>/
+                <a  data-rel="吴恩达DeepLearning">吴恩达DeepLearning</a>/
             
-                <a  data-rel="字节码执行引擎">字节码执行引擎</a>
+                <a  data-rel="02改善深层神经网络">02改善深层神经网络</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">JVM结构</a>
-            
-            <a class="color3">字节码执行引擎</a>
+            <a class="color5">神经网络</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-29 15:15:13'>2020-01-28 18:58</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-16 15:15:10'>2020-02-16 09:03</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:782</span>
+        <span>字数:1k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -599,7 +597,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#生成一个字节码文件"><span class="toc-text">生成一个字节码文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字节码分析"><span class="toc-text">字节码分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#一、computer方法："><span class="toc-text">一、computer方法：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-int-a-1"><span class="toc-text">&#x3D;&#x3D;代码 int a&#x3D;1&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-int-b-2"><span class="toc-text">代码 int b&#x3D;2</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-return-a-b"><span class="toc-text">代码 return a+b</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#二、main方法"><span class="toc-text">二、main方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#代码-Test-test-new-Test"><span class="toc-text">代码 Test test &#x3D; new Test()</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#导包、加载数据"><span class="toc-text">导包、加载数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Zero-initialization"><span class="toc-text">Zero initialization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#random-initialization"><span class="toc-text">random initialization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#He-initialization"><span class="toc-text">He initialization</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Conclusions"><span class="toc-text">Conclusions</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -615,57 +613,136 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在读本文时，可以参考我的另外两篇介绍jvm的博客。</p>
-<p><a href="https://blog.csdn.net/qq_44357371/article/details/103330641" target="_blank" rel="noopener">JVM底层结构</a></p>
-<p><a href="https://blog.csdn.net/qq_44357371/article/details/103192906" target="_blank" rel="noopener">Java堆内存介绍及简单性能调优</a></p>
-<h2 id="生成一个字节码文件"><a href="#生成一个字节码文件" class="headerlink" title="生成一个字节码文件"></a>生成一个字节码文件</h2><p>首先我们编写一个简单的Java文件</p>
-<p><img src="https://img-blog.csdnimg.cn/20200121101732904.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>在文件夹中找到这个文件，可以看到只有一个.java 文件</p>
-<p><img src="https://img-blog.csdnimg.cn/20200121101824654.png" alt=""></p>
-<p>在命令行使用Javac命令，生成.class文件</p>
-<p><img src="https://img-blog.csdnimg.cn/2020012110192682.png" alt=""></p>
-<p>使用Javap -c命令，生成字节码文件</p>
-<p><img src="https://img-blog.csdnimg.cn/20200121102035583.png" alt=""></p>
-<p><img src="https://img-blog.csdnimg.cn/20200121102059870.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>看到这个乱七八糟的代码，你可能会问，，这tm是什么鬼。</p>
-<p>下面通过<strong>JVM指令手册</strong>从Java底层对字节码进行分析</p>
-<h2 id="字节码分析"><a href="#字节码分析" class="headerlink" title="字节码分析"></a>字节码分析</h2><h3 id="一、computer方法："><a href="#一、computer方法：" class="headerlink" title="一、computer方法："></a>一、computer方法：</h3><p><img src="https://img-blog.csdnimg.cn/20200121103143498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<h4 id="代码-int-a-1"><a href="#代码-int-a-1" class="headerlink" title="==代码 int a=1=="></a>==代码 int a=1==</h4><p>iconst_1:将int型常量①压入操作数栈</p>
-<p>istore_2:将int类型的值存入局部变量①</p>
-<p>结合<strong>JVM虚拟机内存结构图</strong></p>
-<p><img src="https://img-blog.csdnimg.cn/20200121103907248.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>首先，给常量a在操作数栈中分配一个内存空间，即<strong>iconst_1</strong>对应<strong>int a</strong></p>
-<p>然后，把常量a的值变成1，并存进局部变量表，即<strong>istore_2</strong>对应<strong>a=1</strong></p>
-<h4 id="代码-int-b-2"><a href="#代码-int-b-2" class="headerlink" title="代码 int b=2"></a>代码 int b=2</h4><p>iconst_2:将int型常量②压入操作数栈</p>
-<p>istore_2:将int类型的值存入局部变量②</p>
-<p>同理，很容易理解</p>
-<h4 id="代码-return-a-b"><a href="#代码-return-a-b" class="headerlink" title="代码 return a+b"></a>代码 return a+b</h4><p>iload_1：从局部变量①中转载int类型值  即<strong>a的值1</strong></p>
-<p>iload_2：从局部变量②中装载int类型值  即<strong>b的值2</strong></p>
-<p>即把变量a的值1给装载出来，放在操作数栈</p>
-<p>把变量b的值2给装载出来，放在操作数栈</p>
-<p><img src="https://img-blog.csdnimg.cn/20200121105426146.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>iadd:执行int类型的加法</p>
-<p>即从操作数栈中依次弹出栈顶元素相加，最终生成的结果压回操作数栈    <strong>a+b</strong></p>
-<p>最后 ireturn:从当前方法返回int</p>
-<p>从操作数栈中弹出3</p>
-<p>即对应 <strong>return 3</strong></p>
-<h3 id="二、main方法"><a href="#二、main方法" class="headerlink" title="二、main方法"></a>二、main方法</h3><p><img src="https://img-blog.csdnimg.cn/20200121110948756.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<h4 id="代码-Test-test-new-Test"><a href="#代码-Test-test-new-Test" class="headerlink" title="代码 Test test = new Test()"></a>代码 Test test = new Test()</h4><p> new：创建一个对象</p>
-<p> 我们对比上面的 int a 可以知道，new出来的test 也是一个局部变量，它被存放在main方法对应的栈帧内存区的局部变量表中，<br> 但在jvm底层，对象创建之后放在堆中，</p>
-<p> 这样我们就可以发现栈和堆之间的一个联系。</p>
-<p> <strong>那么，这两个东西真的就是一样的嘛？</strong></p>
-<p> 其实，局部变量表中存放的是堆中对象对应的内存地址，即可以理解为它存放一个指向堆中对象的指针。</p>
-<p> <img src="https://img-blog.csdnimg.cn/20200121112345695.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p> 到这里，我们就可以通过字节码在jvm底层结构理解整个Java代码的执行过程。</p>
-<p> 最后还有一个问题</p>
-<p><img src="https://img-blog.csdnimg.cn/20200121112738874.png" alt="">)<img src="https://img-blog.csdnimg.cn/20200121112648124.png" alt="在这里插入图片描述"></p>
-<p>在执行main方法时，会跳出去转到computer方法中，在执行完computer方法后，它会再回到main方法中，但是，它回到哪了呢？</p>
-<p>方法出口就记录着返回的位置。</p>
-<p>同样，程序计数器？</p>
-<p><img src="https://img-blog.csdnimg.cn/20200121113147728.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>它记录着程序执行的位置，即行数</p>
-<p>设想，在Java代码执行时，经常会有多个线程。学过操作系统的就知道，cpu在运行时，经常会发生线程被抢占，被执行的线程挂起。那么，这个线程被挂起之后，它重新运行时，从哪开始呢？</p>
-<p>程序计数器就解决了这个问题。</p>
+        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
+<p><strong>对w初始化用 np.random.randn(shape) * <img src="https://img-blog.csdnimg.cn/20200216150807581.png" alt=""></strong></p>
+<h1 id="导包、加载数据"><a href="#导包、加载数据" class="headerlink" title="导包、加载数据"></a>导包、加载数据</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> sklearn</span><br><span class="line"><span class="keyword">import</span> sklearn.datasets</span><br><span class="line"><span class="keyword">from</span> init_utils <span class="keyword">import</span> sigmoid, relu, compute_loss, forward_propagation, backward_propagation</span><br><span class="line"><span class="keyword">from</span> init_utils <span class="keyword">import</span> update_parameters, predict, load_dataset, plot_decision_boundary, predict_dec</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br><span class="line">plt.rcParams[<span class="string">'figure.figsize'</span>] = (<span class="number">7.0</span>, <span class="number">4.0</span>) <span class="comment"># set default size of plots</span></span><br><span class="line">plt.rcParams[<span class="string">'image.interpolation'</span>] = <span class="string">'nearest'</span></span><br><span class="line">plt.rcParams[<span class="string">'image.cmap'</span>] = <span class="string">'gray'</span></span><br><span class="line"></span><br><span class="line">train_X, train_Y, test_X, test_Y = load_dataset()</span><br></pre></td></tr></table></figure>
+
+
+<p><img src="https://img-blog.csdnimg.cn/20200216150950475.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(X, Y, learning_rate = <span class="number">0.01</span>, num_iterations = <span class="number">15000</span>, print_cost = True, initialization = <span class="string">"he"</span>)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Implements a three-layer neural network: LINEAR-&gt;RELU-&gt;LINEAR-&gt;RELU-&gt;LINEAR-&gt;SIGMOID.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Arguments:</span></span><br><span class="line"><span class="string">    X -- input data, of shape (2, number of examples)</span></span><br><span class="line"><span class="string">    Y -- true "label" vector (containing 0 for red dots; 1 for blue dots), of shape (1, number of examples)</span></span><br><span class="line"><span class="string">    learning_rate -- learning rate for gradient descent </span></span><br><span class="line"><span class="string">    num_iterations -- number of iterations to run gradient descent</span></span><br><span class="line"><span class="string">    print_cost -- if True, print the cost every 1000 iterations</span></span><br><span class="line"><span class="string">    initialization -- flag to choose which initialization to use ("zeros","random" or "he")</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">    parameters -- parameters learnt by the model</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">        </span><br><span class="line">    grads = &#123;&#125;</span><br><span class="line">    costs = [] <span class="comment"># to keep track of the loss</span></span><br><span class="line">    m = X.shape[<span class="number">1</span>] <span class="comment"># number of examples</span></span><br><span class="line">    layers_dims = [X.shape[<span class="number">0</span>], <span class="number">10</span>, <span class="number">5</span>, <span class="number">1</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Initialize parameters dictionary.</span></span><br><span class="line">    <span class="keyword">if</span> initialization == <span class="string">"zeros"</span>:</span><br><span class="line">        parameters = initialize_parameters_zeros(layers_dims)</span><br><span class="line">    <span class="keyword">elif</span> initialization == <span class="string">"random"</span>:</span><br><span class="line">        parameters = initialize_parameters_random(layers_dims)</span><br><span class="line">    <span class="keyword">elif</span> initialization == <span class="string">"he"</span>:</span><br><span class="line">        parameters = initialize_parameters_he(layers_dims)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Loop (gradient descent)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, num_iterations):</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Forward propagation: LINEAR -&gt; RELU -&gt; LINEAR -&gt; RELU -&gt; LINEAR -&gt; SIGMOID.</span></span><br><span class="line">        a3, cache = forward_propagation(X, parameters)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Loss</span></span><br><span class="line">        cost = compute_loss(a3, Y)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Backward propagation.</span></span><br><span class="line">        grads = backward_propagation(X, Y, cache)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Update parameters.</span></span><br><span class="line">        parameters = update_parameters(parameters, grads, learning_rate)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Print the loss every 1000 iterations</span></span><br><span class="line">        <span class="keyword">if</span> print_cost <span class="keyword">and</span> i % <span class="number">1000</span> == <span class="number">0</span>:</span><br><span class="line">            print(<span class="string">"Cost after iteration &#123;&#125;: &#123;&#125;"</span>.format(i, cost))</span><br><span class="line">            costs.append(cost)</span><br><span class="line">            </span><br><span class="line">    <span class="comment"># plot the loss</span></span><br><span class="line">    plt.plot(costs)</span><br><span class="line">    plt.ylabel(<span class="string">'cost'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">'iterations (per hundreds)'</span>)</span><br><span class="line">    plt.title(<span class="string">"Learning rate ="</span> + str(learning_rate))</span><br><span class="line">    plt.show()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> parameters</span><br></pre></td></tr></table></figure>
+
+<h1 id="Zero-initialization"><a href="#Zero-initialization" class="headerlink" title="Zero initialization"></a>Zero initialization</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_parameters_zeros</span><span class="params">(layers_dims)</span>:</span></span><br><span class="line">    parameters = &#123;&#125;</span><br><span class="line">    L = len(layers_dims)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">1</span>, L):</span><br><span class="line">        parameters[<span class="string">'W'</span> + str(l)] = np.zeros((layers_dims[l], layers_dims[l<span class="number">-1</span>]))</span><br><span class="line">        parameters[<span class="string">'b'</span> + str(l)] = np.zeros((layers_dims[l], <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">return</span> parameters</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">parameters = model(train_X, train_Y, initialization = <span class="string">"zeros"</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"On the train set:"</span>)</span><br><span class="line">predictions_train = predict(train_X, train_Y, parameters)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"On the test set:"</span>)</span><br><span class="line">predictions_test = predict(test_X, test_Y, parameters)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Cost after iteration 0: 0.6931471805599453
+Cost after iteration 1000: 0.6931471805599453
+Cost after iteration 2000: 0.6931471805599453
+Cost after iteration 3000: 0.6931471805599453
+Cost after iteration 4000: 0.6931471805599453
+Cost after iteration 5000: 0.6931471805599453
+Cost after iteration 6000: 0.6931471805599453
+Cost after iteration 7000: 0.6931471805599453
+Cost after iteration 8000: 0.6931471805599453
+Cost after iteration 9000: 0.6931471805599453
+Cost after iteration 10000: 0.6931471805599455
+Cost after iteration 11000: 0.6931471805599453
+Cost after iteration 12000: 0.6931471805599453
+Cost after iteration 13000: 0.6931471805599453
+Cost after iteration 14000: 0.6931471805599453</code></pre><p><img src="https://img-blog.csdnimg.cn/2020021615100484.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<pre><code>On the train set:
+Accuracy: 0.5
+On the test set:
+Accuracy: 0.5</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.title(<span class="string">"Model with Zeros initialization"</span>)</span><br><span class="line">axes = plt.gca()</span><br><span class="line">axes.set_xlim([<span class="number">-1.5</span>,<span class="number">1.5</span>])</span><br><span class="line">axes.set_ylim([<span class="number">-1.5</span>,<span class="number">1.5</span>])</span><br><span class="line">plot_decision_boundary(<span class="keyword">lambda</span> x: predict_dec(parameters, x.T), train_X, train_Y)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200216151016277.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="random-initialization"><a href="#random-initialization" class="headerlink" title="random initialization"></a>random initialization</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_parameters_random</span><span class="params">(layers_dims)</span>:</span></span><br><span class="line">    np.random.seed(<span class="number">3</span>)</span><br><span class="line">    parameters = &#123;&#125;</span><br><span class="line">    L = len(layers_dims)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">1</span>, L):</span><br><span class="line">        parameters[<span class="string">'W'</span> + str(l)] = np.random.randn(layers_dims[l], layers_dims[l<span class="number">-1</span>]) * <span class="number">10</span></span><br><span class="line">        parameters[<span class="string">'b'</span> + str(l)] = np.zeros((layers_dims[l], <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parameters</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">parameters = model(train_X, train_Y, initialization = <span class="string">"random"</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"On the train set:"</span>)</span><br><span class="line">predictions_train = predict(train_X, train_Y, parameters)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"On the test set:"</span>)</span><br><span class="line">predictions_test = predict(test_X, test_Y, parameters)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Cost after iteration 0: inf
+Cost after iteration 1000: 0.6250982793959966
+Cost after iteration 2000: 0.5981216596703697
+Cost after iteration 3000: 0.5638417572298645
+Cost after iteration 4000: 0.5501703049199763
+Cost after iteration 5000: 0.5444632909664456
+Cost after iteration 6000: 0.5374513807000807
+Cost after iteration 7000: 0.4764042074074983
+Cost after iteration 8000: 0.39781492295092263
+Cost after iteration 9000: 0.3934764028765484
+Cost after iteration 10000: 0.3920295461882659
+Cost after iteration 11000: 0.38924598135108
+Cost after iteration 12000: 0.3861547485712325
+Cost after iteration 13000: 0.384984728909703
+Cost after iteration 14000: 0.3827828308349524</code></pre><p><img src="https://img-blog.csdnimg.cn/20200216151030134.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<pre><code>On the train set:
+Accuracy: 0.83
+On the test set:
+Accuracy: 0.86</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.title(<span class="string">"Model with large random initialization"</span>)</span><br><span class="line">axes = plt.gca()</span><br><span class="line">axes.set_xlim([<span class="number">-1.5</span>,<span class="number">1.5</span>])</span><br><span class="line">axes.set_ylim([<span class="number">-1.5</span>,<span class="number">1.5</span>])</span><br><span class="line">plot_decision_boundary(<span class="keyword">lambda</span> x: predict_dec(parameters, x.T), train_X, train_Y)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img-blog.csdnimg.cn/20200216151041871.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="He-initialization"><a href="#He-initialization" class="headerlink" title="He initialization"></a>He initialization</h1><p>This function is similar to the previous <code>initialize_parameters_random(...)</code>. The only difference is that instead of multiplying <code>np.random.randn(..,..)</code> by 10, you will multiply it by $\sqrt{\frac{2}{\text{dimension of the previous layer}}}$, which is what He initialization recommends for layers with a ReLU activation.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_parameters_he</span><span class="params">(layers_dims)</span>:</span></span><br><span class="line">    np.random.seed(<span class="number">3</span>)</span><br><span class="line">    parameters = &#123;&#125;</span><br><span class="line">    L = len(layers_dims) - <span class="number">1</span> <span class="comment"># integer representing the number of layers</span></span><br><span class="line">     </span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> range(<span class="number">1</span>, L + <span class="number">1</span>):</span><br><span class="line">        parameters[<span class="string">'W'</span> + str(l)] = np.random.randn(layers_dims[l], layers_dims[l<span class="number">-1</span>])*np.sqrt(<span class="number">2</span>/layers_dims[l<span class="number">-1</span>])</span><br><span class="line">        parameters[<span class="string">'b'</span> + str(l)] = np.zeros((layers_dims[l], <span class="number">1</span>))</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> parameters</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">parameters = model(train_X, train_Y, initialization = <span class="string">"he"</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"On the train set:"</span>)</span><br><span class="line">predictions_train = predict(train_X, train_Y, parameters)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"On the test set:"</span>)</span><br><span class="line">predictions_test = predict(test_X, test_Y, parameters)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Cost after iteration 0: 0.8830537463419761
+Cost after iteration 1000: 0.6879825919728063
+Cost after iteration 2000: 0.6751286264523371
+Cost after iteration 3000: 0.6526117768893807
+Cost after iteration 4000: 0.6082958970572937
+Cost after iteration 5000: 0.5304944491717495
+Cost after iteration 6000: 0.4138645817071793
+Cost after iteration 7000: 0.3117803464844441
+Cost after iteration 8000: 0.23696215330322556
+Cost after iteration 9000: 0.18597287209206828
+Cost after iteration 10000: 0.15015556280371808
+Cost after iteration 11000: 0.12325079292273548
+Cost after iteration 12000: 0.09917746546525937
+Cost after iteration 13000: 0.08457055954024274
+Cost after iteration 14000: 0.07357895962677366</code></pre><p><img src="https://img-blog.csdnimg.cn/20200216151050979.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<pre><code>On the train set:
+Accuracy: 0.9933333333333333
+On the test set:
+Accuracy: 0.96</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.title(<span class="string">"Model with He initialization"</span>)</span><br><span class="line">axes = plt.gca()</span><br><span class="line">axes.set_xlim([<span class="number">-1.5</span>,<span class="number">1.5</span>])</span><br><span class="line">axes.set_ylim([<span class="number">-1.5</span>,<span class="number">1.5</span>])</span><br><span class="line">plot_decision_boundary(<span class="keyword">lambda</span> x: predict_dec(parameters, x.T), train_X, train_Y)</span><br></pre></td></tr></table></figure>
+<p><img src="https://img-blog.csdnimg.cn/20200216151102834.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
+<h1 id="Conclusions"><a href="#Conclusions" class="headerlink" title="Conclusions"></a>Conclusions</h1><table> 
+    <tr>
+        <td>
+        **Model**
+        </td>
+        <td>
+        **Train accuracy**
+        </td>
+        <td>
+        **Problem/Comment**
+        </td>
+    </tr>
+        <td>
+        3-layer NN with zeros initialization
+        </td>
+        <td>
+        50%
+        </td>
+        <td>
+        fails to break symmetry
+        </td>
+    <tr>
+        <td>
+        3-layer NN with large random initialization
+        </td>
+        <td>
+        83%
+        </td>
+        <td>
+        too large weights 
+        </td>
+    </tr>
+    <tr>
+        <td>
+        3-layer NN with He initialization
+        </td>
+        <td>
+        99%
+        </td>
+        <td>
+        recommended method
+        </td>
+    </tr>
+</table> 
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -679,12 +756,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>深入理解基于栈的字节码执行引擎及JVM底层结构</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">782</span></p>
+    <p><span class="copy-title">文章标题:</span>编程作业——初始化参数w</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 18:58:38</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-29, 15:15:13</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/" title="深入理解基于栈的字节码执行引擎及JVM底层结构">http://yoursite.com/2020/01/28/JVM/%E9%80%9A%E8%BF%87Java%E5%AD%97%E8%8A%82%E7%A0%81%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B%E5%8F%8AJVM%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-16, 09:03:51</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-16, 15:15:10</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/16/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%82%E6%95%B0w/" title="编程作业——初始化参数w">http://yoursite.com/2020/02/16/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%82%E6%95%B0w/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
