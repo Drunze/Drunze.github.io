@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>红酒质量预测 | Jacob</title>
-  <meta name="keywords" content=" 机器学习 ">
-  <meta name="description" content="红酒质量预测 | Jacob">
+  <title>2优化算法 | Jacob</title>
+  <meta name="keywords" content=" 神经网络 ">
+  <meta name="description" content="2优化算法 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="导包123456789101112131415161718import timeimport numpy as npimport h5pyimport matplotlib.pyplot as pltimport scipyfrom PIL import Imagefrom scipy import ndimagefrom dnn_app_utils_v3 import *%matplotlib">
 <meta property="og:type" content="article">
@@ -581,9 +581,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-红酒质量预测/红酒数据集" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/02改善深层神经网络：超参数调试、正则化以及优化/2优化算法" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">红酒质量预测</h1>
+        <h1 class="article-title">2优化算法</h1>
     
     <div class="article-meta">
         
@@ -591,28 +591,28 @@
         
         <span class="book">
             
-                <a  data-rel="机器学习">机器学习</a>/
+                <a  data-rel="吴恩达DeepLearning">吴恩达DeepLearning</a>/
             
-                <a  data-rel="入门">入门</a>
+                <a  data-rel="02改善深层神经网络">02改善深层神经网络</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">机器学习</a>
+            <a class="color5">神经网络</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-04 21:21:40'>2020-01-28 18:58</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-17 17:09:55'>2020-02-17 17:08</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.3k</span>
+        <span>字数:1.9k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -642,7 +642,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Random-Forest-Classifier"><span class="toc-text">Random Forest Classifier</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SVM-classifier"><span class="toc-text">SVM classifier</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Neural-Network"><span class="toc-text">Neural Network</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、Mini-batch-梯度下降"><span class="toc-text">1、Mini-batch 梯度下降</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解"><span class="toc-text">理解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#不同size大小比较"><span class="toc-text">不同size大小比较</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Mini-batch-size选择："><span class="toc-text">Mini-batch size选择：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、指数加权平均"><span class="toc-text">2、指数加权平均</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#理解指数加权平均"><span class="toc-text">理解指数加权平均</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#指数加权平均的偏差修正"><span class="toc-text">指数加权平均的偏差修正</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、动量（Momentum）梯度下降法"><span class="toc-text">3、动量（Momentum）梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、RMSprop（root-mean-square-prop）"><span class="toc-text">4、RMSprop（root mean square prop）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、Adam优化算法"><span class="toc-text">5、Adam优化算法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、学习率衰减"><span class="toc-text">6、学习率衰减</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7、局部最优问题"><span class="toc-text">7、局部最优问题</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -658,583 +658,110 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.svm <span class="keyword">import</span> SVC</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> svm</span><br><span class="line"><span class="keyword">from</span> sklearn.neural_network <span class="keyword">import</span> MLPClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix,classification_report</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler, LabelEncoder</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br></pre></td></tr></table></figure>
+        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
+<p>参考文章： <a href="https://zhuanlan.zhihu.com/p/30034654" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30034654</a></p>
+<h1 id="1、Mini-batch-梯度下降"><a href="#1、Mini-batch-梯度下降" class="headerlink" title="1、Mini-batch 梯度下降"></a><strong>1、Mini-batch 梯度下降</strong></h1><h3 id="理解"><a href="#理解" class="headerlink" title="理解"></a><strong>理解</strong></h3><p>我们前面已经知道，向量化可以加快我们的模型处理速度。</p>
+<p>所以可以把训练样本放到矩阵中去：<img src="https://pic3.zhimg.com/80/v2-92a544803f558167f738fad3901ec8be_hd.png" alt=""><br><img src="https://pic1.zhimg.com/80/v2-87408265263077e872a8a8e6bff11554_hd.png" alt=""></p>
+<p>但是当训练样本数m非常大，在对整个训练集执行梯度下降算法时，必须处理完整个训练集，然后进行下一步梯度下降。如果在处理完m个训练集之前，就让一部分训练集进行梯度下降，算法的速度就会执行的更快。</p>
+<h3 id="不同size大小比较"><a href="#不同size大小比较" class="headerlink" title="不同size大小比较"></a><strong>不同size大小比较</strong></h3><p><img src="https://pic2.zhimg.com/80/v2-d7374a43267473cd13bfec8764a32471_hd.jpg" alt=""></p>
+<ul>
+<li><p><strong>batch梯度下降</strong></p>
+<ol>
+<li>对所有m个样本执行一次梯度下降，每一次迭代时间长</li>
+<li>Cost function 总是向减小的方向下降。</li>
+</ol>
+</li>
+<li><p><strong>随机梯度下降</strong></p>
+<ol>
+<li>对每一个训练样本执行一次梯度下降，但是丢失了向量化带来的计算加速；</li>
+<li>Cost function总体的趋势向最小值的方向下降，但是无法到达全局最小值点，呈现波动的形式。</li>
+</ol>
+</li>
+<li><p><strong>Mini-batch梯度下降</strong></p>
+<ol>
+<li>选择一个 <img src="https://www.zhihu.com/equation?tex=1%3Csize%3Cm" alt=""> 的合适的size进行Mini-batch梯度下降，可以实现快速学习，也应用了向量化带来的好处；</li>
+<li>Cost function的下降处于前两者之间。</li>
+</ol>
+</li>
+</ul>
+<h3 id="Mini-batch-size选择："><a href="#Mini-batch-size选择：" class="headerlink" title="Mini-batch size选择："></a><strong>Mini-batch size选择：</strong></h3><p><img src="https://pic1.zhimg.com/80/v2-2cdd92c6706eaf29b80694c1213804bc_hd.jpg" alt=""></p>
+<ul>
+<li>训练样本比较小(&lt;2000):<strong>batch梯度下降法</strong></li>
+<li>当训练样本比较大时，一般的mini-batch大小选择为：64-512，且batch大小为2的n次方</li>
+<li>要确保mimi-batch大小符合CPU/GPU内存</li>
+</ul>
+<h1 id="2、指数加权平均"><a href="#2、指数加权平均" class="headerlink" title="2、指数加权平均"></a><strong>2、指数加权平均</strong></h1><p><img src="https://www.zhihu.com/equation?tex=v_%7Bt%7D+%3D+%5Cbeta+v_%7Bt-1%7D%2B%281-%5Cbeta%29%5Ctheta_%7Bt%7D" alt=""></p>
+<p>对于下面这个关于天数和温度的散点图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-2969f0fa8cfb79021856d26e2c269306_hd.jpg" alt=""></p>
+<ul>
+<li>当 <img src="https://www.zhihu.com/equation?tex=%5Cbeta+%3D0.9" alt=""> 时，指数加权平均最后的结果如图中红色线所示；</li>
+<li>当 <img src="https://www.zhihu.com/equation?tex=%5Cbeta+%3D0.98" alt=""> 时，指数加权平均最后的结果如图中绿色线所示；</li>
+<li>当 <img src="https://www.zhihu.com/equation?tex=%5Cbeta+%3D0.5" alt=""> 时，指数加权平均最后的结果如下图中黄色线所示；</li>
+</ul>
+<p><img src="https://pic4.zhimg.com/80/v2-44d786b0b58dba00c780e398259a58a7_hd.jpg" alt=""></p>
+<p><strong>有个问题，是不是到最后一天的时候，温度还会受到第一天的影响？</strong></p>
+<h3 id="理解指数加权平均"><a href="#理解指数加权平均" class="headerlink" title="理解指数加权平均"></a><strong>理解指数加权平均</strong></h3><ul>
+<li>例子，当 <img src="https://www.zhihu.com/equation?tex=%5Cbeta+%3D0.9" alt=""> 时：</li>
+</ul>
+<p><img src="https://www.zhihu.com/equation?tex=v_%7B100%7D+%3D+0.9v_%7B99%7D%2B0.1%5Ctheta_%7B100%7D%5C%5Cv_%7B99%7D+%3D+0.9v_%7B98%7D%2B0.1%5Ctheta_%7B99%7D%5C%5Cv_%7B98%7D+%3D+0.9v_%7B97%7D%2B0.1%5Ctheta_%7B98%7D%5C%5C+%5Cldots" alt=""></p>
+<p>展开，有：</p>
+<p><img src="https://www.zhihu.com/equation?tex=v_%7B100%7D%3D0.1%5Ctheta_%7B100%7D%2B0.9%280.1%5Ctheta_%7B99%7D%2B0.9%280.1%5Ctheta_%7B98%7D%2B0.9v_%7B97%7D%29%29%5C%5C%3D0.1%5Ctheta_%7B100%7D%2B0.1%5Ctimes0.9%5Ctheta_%7B99%7D%2B0.1%5Ctimes%280.9%29%5E%7B2%7D%5Ctheta_%7B98%7D%2B0.1%5Ctimes%280.9%29%5E%7B3%7D%5Ctheta_%7B97%7D%2B%5Ccdots" alt=""></p>
+<p>上式中所有 θ 前面的系数相加起来为1或者接近于1，称之为偏差修正。</p>
+<p>总体来说存在， <img src="https://www.zhihu.com/equation?tex=%281-%5Cvarepsilon%29%5E%7B1%2F%5Cvarepsilon%7D%3D%5Cdfrac%7B1%7D%7Be%7D" alt=""> ，在我们的例子中， <img src="https://www.zhihu.com/equation?tex=1-%5Cvarepsilon%3D%5Cbeta%3D0.9" alt=""> ，即 <img src="https://www.zhihu.com/equation?tex=0.9%5E%7B10%7D%5Capprox+0.35%5Capprox%5Cdfrac%7B1%7D%7Be%7D" alt=""> 。相当于大约10天后，系数的峰值（这里是0.1）下降到原来的 <strong>1/e</strong> ，只关注了过去10天的天气。</p>
+<ul>
+<li>同样，对于 <img src="https://www.zhihu.com/equation?tex=%5Cbeta+%3D0.98" alt=""> ，0.98的50次方约等于1/e，所以这本质上是一个下降幅度很大的函数，可以看作平均了50天</li>
+</ul>
+<p><img src="https://www.zhihu.com/equation?tex=v_%7B0%7D+%3D0%5C%5C+v_%7B1%7D%3D+%5Cbeta+v_%7B0%7D%2B%281-%5Cbeta%29%5Ctheta_%7B1%7D%5C%5C+v_%7B2%7D%3D+%5Cbeta+v_%7B1%7D%2B%281-%5Cbeta%29%5Ctheta_%7B2%7D%5C%5C+v_%7B3%7D%3D+%5Cbeta+v_%7B2%7D%2B%281-%5Cbeta%29%5Ctheta_%7B3%7D%5C%5C+%5Cldots" alt=""></p>
+<ul>
+<li>在计算当前时刻的平均值，只需要前一天的平均值和当前时刻的值，所以在数据量非常大的情况下，指数加权平均在节约计算成本的方面是一种非常有效的方式，可以很大程度上减少计算机资源存储和内存的占用。</li>
+</ul>
+<h3 id="指数加权平均的偏差修正"><a href="#指数加权平均的偏差修正" class="headerlink" title="指数加权平均的偏差修正"></a><strong>指数加权平均的偏差修正</strong></h3><p>在我们执行指数加权平均的公式时，当 <img src="https://www.zhihu.com/equation?tex=%5Cbeta%3D0.98" alt=""> 时，我们得到的并不是图中的绿色曲线，而是下图中的紫色曲线，其起点比较低。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-e52c3c3cebde2ec15f3f055fcbca7faa_hd.jpg" alt=""></p>
+<p>这是因为受到初始值的影响过大</p>
+<p><img src="https://www.zhihu.com/equation?tex=v_%7B0%7D%3D0%5C%5Cv_%7B1%7D%3D0.98v_%7B0%7D%2B0.02%5Ctheta_%7B1%7D%3D0.02%5Ctheta_%7B1%7D%5C%5Cv_%7B2%7D%3D0.98v_%7B1%7D%2B0.02%5Ctheta_%7B2%7D%3D0.98%5Ctimes0.02%5Ctheta_%7B1%7D%2B0.02%5Ctheta_%7B2%7D%3D0.0196%5Ctheta_%7B1%7D%2B0.02%5Ctheta_%7B2%7D" alt=""></p>
+<p>若第一天的值θ1=40，那么<strong>v1 = 0.02*40 = 8</strong></p>
+<p><strong>偏差修正</strong></p>
+<p>在评估初期，使用：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-4bb00cbd9b7599735a1f9c6734c9ae88_hd.png" alt=""></p>
+<p>例：</p>
+<p>使用 <img src="https://www.zhihu.com/equation?tex=v_%7B1%7D%3D0.02%5Ctimes40%3D8" alt=""></p>
+<p>当 t=2 时：</p>
+<p><img src="https://www.zhihu.com/equation?tex=+1-%5Cbeta%5E%7Bt%7D%3D1-%280.98%29%5E%7B2%7D%3D0.0396" alt=""></p>
+<p><img src="https://www.zhihu.com/equation?tex=+%5Cdfrac%7Bv_%7B2%7D%7D%7B0.0396%7D%3D%5Cdfrac%7B0.0196%5Ctheta_%7B1%7D%2B0.02%5Ctheta_%7B2%7D%7D%7B0.0396%7D" alt=""></p>
+<p>偏差修正得到了绿色的曲线，在开始的时候，能够得到比紫色曲线更好的计算平均的效果。随着 <img src="https://www.zhihu.com/equation?tex=t" alt=""> 逐渐增大， <img src="https://www.zhihu.com/equation?tex=%5Cbeta%5E%7Bt%7D" alt=""> 接近于0，所以后面绿色的曲线和紫色的曲线逐渐重合了。</p>
+<p>但在实际中，可忽略偏差的影响。</p>
+<h1 id="3、动量（Momentum）梯度下降法"><a href="#3、动量（Momentum）梯度下降法" class="headerlink" title="3、动量（Momentum）梯度下降法"></a><strong>3、动量（Momentum）梯度下降法</strong></h1><p>核心就是利用指数加权平均，把b变小，即纵轴波动变小。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-4e37ac10a00135412175a0ba85103035_hd.jpg" alt=""></p>
+<p>如图所示，从外围的蓝色点开始要经过很多次上下波动最终才能到达中心的红色点，就是因为这种上下波动减慢了梯度下降法的速度。</p>
+<p>倘若我们加快学习速率α，就会导致紫色线的出现。如果减小α，虽然会减小波动，但是在横坐标上的移动也会减慢。</p>
+<p>我们希望在图中的纵轴方向梯度下降的缓慢一些，不要有如此大的上下波动，在横轴方向梯度下降的快速一些，使得能够更快的到达最小值点，而这里用动量梯度下降法既可以实现，如红色线所示。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-070324bcdbf16b9104872c2a63b21e3b_hd.jpg" alt=""></p>
+<p><strong>β的常用值为0.9</strong></p>
+<p>在我们进行动量梯度下降算法的时候，由于使用了指数加权平均的方法。原来在<strong>纵轴方向上的上下波动，经过平均以后，接近于0</strong>，纵轴上的波动变得非常的小；但在<strong>横轴方向上，所有的微分都指向横轴方向</strong>，因此其平均值仍然很大。最终实现红色线所示的梯度下降曲线。</p>
+<p><strong>算法本质解释</strong></p>
+<p>在对应上面的计算公式中，将Cost function想象为一个碗状，想象从顶部往下滚球，其中：</p>
+<p>微分项 <img src="https://www.zhihu.com/equation?tex=dw%2Cdb" alt=""> 想象为球提供的加速度；<br>动量项 <img src="https://www.zhihu.com/equation?tex=v_%7Bdw%7D%2Cv_%7Bdb%7D" alt=""> 相当于速度；<br>小球在向下滚动的过程中，因为加速度的存在使得速度会变快，但是由于 β 的存在，其值小于1，可以认为是摩擦力，所以球不会无限加速下去。</p>
+<h1 id="4、RMSprop（root-mean-square-prop）"><a href="#4、RMSprop（root-mean-square-prop）" class="headerlink" title="4、RMSprop（root mean square prop）"></a><strong>4、RMSprop（root mean square prop）</strong></h1><p><img src="https://pic4.zhimg.com/80/v2-d9b0e716021f96c12ec478c8d4629b4f_hd.jpg" alt=""></p>
+<p><img src="https://pic3.zhimg.com/80/v2-b65658c0e12dd65f73743b94eb0ac060_hd.png" alt=""></p>
+<p><img src="https://pic3.zhimg.com/80/v2-3aee4fdd16944225b3552c2053ee48ae_hd.png" alt=""></p>
+<p><img src="https://pic2.zhimg.com/80/v2-bbc08bc4695c041db0e585274b2faf5d_hd.png" alt=""></p>
+<p>先看最后两个计算w、b的公式：我们希望在横轴即w上变化加快，在纵轴即b波动变小，则要 <strong>Sdw</strong> 变小，要 <strong>Sdb</strong> 变大。</p>
+<p>刚好，上面的两个公式db的波动较大，就会导致Sdb变大，进而抑制其在纵轴的波动。</p>
+<p>这时候我们可以加大α提高速率。</p>
+<p>RMSprop将微分项进行平方，然后使用平方根进行梯度更新，同时为了确保算法不会除以0，平方根分母中在实际使用会加入一个很小的值如 <img src="https://www.zhihu.com/equation?tex=%5Cvarepsilon%3D10%5E%7B-8%7D" alt=""> 。</p>
+<h1 id="5、Adam优化算法"><a href="#5、Adam优化算法" class="headerlink" title="5、Adam优化算法"></a><strong>5、Adam优化算法</strong></h1><p>实质就是把动量梯度下降和RMSprop相结合</p>
+<p><img src="https://pic2.zhimg.com/80/v2-d8b2cbfd699148cde0450425b748e059_hd.png" alt=""></p>
+<p><img src="https://pic2.zhimg.com/80/v2-aa51ad83b3950a787ea3aa37733d7d91_hd.png" alt=""></p>
+<h1 id="6、学习率衰减"><a href="#6、学习率衰减" class="headerlink" title="6、学习率衰减"></a><strong>6、学习率衰减</strong></h1><p><img src="https://pic1.zhimg.com/80/v2-0b54853b610c36c030c124606cea1d5c_hd.jpg" alt=""></p>
+<p>如图所示，当学习速率不变时（蓝色），在到达最小值点时，会在一个较大的范围内波动，进而使误差比较大。而若让学习速率衰减（青色），到最小点时，会控制在一个较小的范围内波动</p>
+<p><img src="https://pic2.zhimg.com/80/v2-9e97dce643829f779e107d4c21995675_hd.png" alt=""></p>
+<h1 id="7、局部最优问题"><a href="#7、局部最优问题" class="headerlink" title="7、局部最优问题"></a><strong>7、局部最优问题</strong></h1><p>在低维度的情形下，我们可能会想象到一个Cost function 如左图所示，存在一些局部最小值点，在初始化参数的时候，如果初始值选取的不得当，会存在陷入局部最优点的可能性。</p>
+<p>但是，如果我们建立一个高维度的神经网络。通常梯度为零的点，并不是如左图中的局部最优点，而是右图中的鞍点（叫鞍点是因为其形状像马鞍的形状）。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-ec0c95cf84b7d2ca878bcd51b4485707_hd.jpg" alt=""></p>
+<p>在一个具有高维度空间的函数中，如果梯度为0，那么在每个方向，Cost function可能是凸函数，也有可能是凹函数。但如果参数维度为2万维，想要得到局部最优解，那么所有维度均需要是凹函数，其概率为 <img src="https://www.zhihu.com/equation?tex=2%5E%7B-20000%7D" alt=""> ，可能性非常的小。也就是说，在低维度中的局部最优点的情况，并不适用于高维度，在梯度为0的点更有可能是鞍点，而不是局部最小值点。</p>
+<p>在高纬度的情况下：</p>
+<p>几乎不可能陷入局部最小值点；<br>处于鞍点的停滞区会减缓学习过程，利用如Adam等算法进行改善。</p>
 
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wine = pd.read_csv(<span class="string">"C:\\Users\\董润泽\\Desktop\\winequality-red.csv"</span>,sep=<span class="string">";"</span>)</span><br><span class="line">wine.head()</span><br></pre></td></tr></table></figure>
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-<pre><code>.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}</code></pre><p></style></p>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>fixed acidity</th>
-      <th>volatile acidity</th>
-      <th>citric acid</th>
-      <th>residual sugar</th>
-      <th>chlorides</th>
-      <th>free sulfur dioxide</th>
-      <th>total sulfur dioxide</th>
-      <th>density</th>
-      <th>pH</th>
-      <th>sulphates</th>
-      <th>alcohol</th>
-      <th>quality</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>7.4</td>
-      <td>0.70</td>
-      <td>0.00</td>
-      <td>1.9</td>
-      <td>0.076</td>
-      <td>11.0</td>
-      <td>34.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>7.8</td>
-      <td>0.88</td>
-      <td>0.00</td>
-      <td>2.6</td>
-      <td>0.098</td>
-      <td>25.0</td>
-      <td>67.0</td>
-      <td>0.9968</td>
-      <td>3.20</td>
-      <td>0.68</td>
-      <td>9.8</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>7.8</td>
-      <td>0.76</td>
-      <td>0.04</td>
-      <td>2.3</td>
-      <td>0.092</td>
-      <td>15.0</td>
-      <td>54.0</td>
-      <td>0.9970</td>
-      <td>3.26</td>
-      <td>0.65</td>
-      <td>9.8</td>
-      <td>5</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>11.2</td>
-      <td>0.28</td>
-      <td>0.56</td>
-      <td>1.9</td>
-      <td>0.075</td>
-      <td>17.0</td>
-      <td>60.0</td>
-      <td>0.9980</td>
-      <td>3.16</td>
-      <td>0.58</td>
-      <td>9.8</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>7.4</td>
-      <td>0.70</td>
-      <td>0.00</td>
-      <td>1.9</td>
-      <td>0.076</td>
-      <td>11.0</td>
-      <td>34.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>5</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.info()</span><br></pre></td></tr></table></figure>
-
-<pre><code>&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;
-RangeIndex: 1599 entries, 0 to 1598
-Data columns (total 12 columns):
-fixed acidity           1599 non-null float64
-volatile acidity        1599 non-null float64
-citric acid             1599 non-null float64
-residual sugar          1599 non-null float64
-chlorides               1599 non-null float64
-free sulfur dioxide     1599 non-null float64
-total sulfur dioxide    1599 non-null float64
-density                 1599 non-null float64
-pH                      1599 non-null float64
-sulphates               1599 non-null float64
-alcohol                 1599 non-null float64
-quality                 1599 non-null int64
-dtypes: float64(11), int64(1)
-memory usage: 150.0 KB</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.isnull().sum()</span><br></pre></td></tr></table></figure>
-
-
-
-
-<pre><code>fixed acidity           0
-volatile acidity        0
-citric acid             0
-residual sugar          0
-chlorides               0
-free sulfur dioxide     0
-total sulfur dioxide    0
-density                 0
-pH                      0
-sulphates               0
-alcohol                 0
-quality                 0
-dtype: int64</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bins = (<span class="number">2</span>, <span class="number">6.5</span>, <span class="number">8</span>)</span><br><span class="line">group_names=[<span class="string">'bad'</span>, <span class="string">'good'</span>]</span><br><span class="line">wine[<span class="string">'quality'</span>] = pd.cut(wine[<span class="string">'quality'</span>], bins = bins, labels = group_names)</span><br><span class="line">wine[<span class="string">'quality'</span>].unique()</span><br></pre></td></tr></table></figure>
-
-
-<pre><code>---------------------------------------------------------------------------
-
-TypeError                                 Traceback (most recent call last)
-
-&lt;ipython-input-13-99255379e85c&gt; in &lt;module&gt;
-      1 bins = (2, 6.5, 8)
-      2 group_names=[&apos;bad&apos;, &apos;good&apos;]
-----&gt; 3 wine[&apos;quality&apos;] = pd.cut(wine[&apos;quality&apos;], bins = bins, labels = group_names)
-      4 wine[&apos;quality&apos;].unique()
-
-
-C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\reshape\tile.py in cut(x, bins, right, labels, retbins, precision, include_lowest, duplicates)
-    239                               include_lowest=include_lowest,
-    240                               dtype=dtype,
---&gt; 241                               duplicates=duplicates)
-    242 
-    243     return _postprocess_for_cut(fac, bins, retbins, x_is_series,
-
-
-C:\ProgramData\Anaconda3\lib\site-packages\pandas\core\reshape\tile.py in _bins_to_cuts(x, bins, right, labels, precision, include_lowest, dtype, duplicates)
-    342 
-    343     side = &apos;left&apos; if right else &apos;right&apos;
---&gt; 344     ids = ensure_int64(bins.searchsorted(x, side=side))
-    345 
-    346     if include_lowest:
-
-
-TypeError: &apos;&lt;&apos; not supported between instances of &apos;float&apos; and &apos;str&apos;</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.head()</span><br></pre></td></tr></table></figure>
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-<pre><code>.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}</code></pre><p></style></p>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>fixed acidity</th>
-      <th>volatile acidity</th>
-      <th>citric acid</th>
-      <th>residual sugar</th>
-      <th>chlorides</th>
-      <th>free sulfur dioxide</th>
-      <th>total sulfur dioxide</th>
-      <th>density</th>
-      <th>pH</th>
-      <th>sulphates</th>
-      <th>alcohol</th>
-      <th>quality</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>7.4</td>
-      <td>0.70</td>
-      <td>0.00</td>
-      <td>1.9</td>
-      <td>0.076</td>
-      <td>11.0</td>
-      <td>34.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>bad</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>7.8</td>
-      <td>0.88</td>
-      <td>0.00</td>
-      <td>2.6</td>
-      <td>0.098</td>
-      <td>25.0</td>
-      <td>67.0</td>
-      <td>0.9968</td>
-      <td>3.20</td>
-      <td>0.68</td>
-      <td>9.8</td>
-      <td>bad</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>7.8</td>
-      <td>0.76</td>
-      <td>0.04</td>
-      <td>2.3</td>
-      <td>0.092</td>
-      <td>15.0</td>
-      <td>54.0</td>
-      <td>0.9970</td>
-      <td>3.26</td>
-      <td>0.65</td>
-      <td>9.8</td>
-      <td>bad</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>11.2</td>
-      <td>0.28</td>
-      <td>0.56</td>
-      <td>1.9</td>
-      <td>0.075</td>
-      <td>17.0</td>
-      <td>60.0</td>
-      <td>0.9980</td>
-      <td>3.16</td>
-      <td>0.58</td>
-      <td>9.8</td>
-      <td>bad</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>7.4</td>
-      <td>0.70</td>
-      <td>0.00</td>
-      <td>1.9</td>
-      <td>0.076</td>
-      <td>11.0</td>
-      <td>34.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>bad</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">label_quality = LabelEncoder()</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine[<span class="string">'quality'</span>] = label_quality.fit_transform(wine[<span class="string">'quality'</span>])</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine.head(<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-<pre><code>.dataframe tbody tr th {
-    vertical-align: top;
-}
-
-.dataframe thead th {
-    text-align: right;
-}</code></pre><p></style></p>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>fixed acidity</th>
-      <th>volatile acidity</th>
-      <th>citric acid</th>
-      <th>residual sugar</th>
-      <th>chlorides</th>
-      <th>free sulfur dioxide</th>
-      <th>total sulfur dioxide</th>
-      <th>density</th>
-      <th>pH</th>
-      <th>sulphates</th>
-      <th>alcohol</th>
-      <th>quality</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>7.4</td>
-      <td>0.70</td>
-      <td>0.00</td>
-      <td>1.9</td>
-      <td>0.076</td>
-      <td>11.0</td>
-      <td>34.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>7.8</td>
-      <td>0.88</td>
-      <td>0.00</td>
-      <td>2.6</td>
-      <td>0.098</td>
-      <td>25.0</td>
-      <td>67.0</td>
-      <td>0.9968</td>
-      <td>3.20</td>
-      <td>0.68</td>
-      <td>9.8</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>7.8</td>
-      <td>0.76</td>
-      <td>0.04</td>
-      <td>2.3</td>
-      <td>0.092</td>
-      <td>15.0</td>
-      <td>54.0</td>
-      <td>0.9970</td>
-      <td>3.26</td>
-      <td>0.65</td>
-      <td>9.8</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>11.2</td>
-      <td>0.28</td>
-      <td>0.56</td>
-      <td>1.9</td>
-      <td>0.075</td>
-      <td>17.0</td>
-      <td>60.0</td>
-      <td>0.9980</td>
-      <td>3.16</td>
-      <td>0.58</td>
-      <td>9.8</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>7.4</td>
-      <td>0.70</td>
-      <td>0.00</td>
-      <td>1.9</td>
-      <td>0.076</td>
-      <td>11.0</td>
-      <td>34.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>7.4</td>
-      <td>0.66</td>
-      <td>0.00</td>
-      <td>1.8</td>
-      <td>0.075</td>
-      <td>13.0</td>
-      <td>40.0</td>
-      <td>0.9978</td>
-      <td>3.51</td>
-      <td>0.56</td>
-      <td>9.4</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>7.9</td>
-      <td>0.60</td>
-      <td>0.06</td>
-      <td>1.6</td>
-      <td>0.069</td>
-      <td>15.0</td>
-      <td>59.0</td>
-      <td>0.9964</td>
-      <td>3.30</td>
-      <td>0.46</td>
-      <td>9.4</td>
-      <td>0</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>7.3</td>
-      <td>0.65</td>
-      <td>0.00</td>
-      <td>1.2</td>
-      <td>0.065</td>
-      <td>15.0</td>
-      <td>21.0</td>
-      <td>0.9946</td>
-      <td>3.39</td>
-      <td>0.47</td>
-      <td>10.0</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>7.8</td>
-      <td>0.58</td>
-      <td>0.02</td>
-      <td>2.0</td>
-      <td>0.073</td>
-      <td>9.0</td>
-      <td>18.0</td>
-      <td>0.9968</td>
-      <td>3.36</td>
-      <td>0.57</td>
-      <td>9.5</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>7.5</td>
-      <td>0.50</td>
-      <td>0.36</td>
-      <td>6.1</td>
-      <td>0.071</td>
-      <td>17.0</td>
-      <td>102.0</td>
-      <td>0.9978</td>
-      <td>3.35</td>
-      <td>0.80</td>
-      <td>10.5</td>
-      <td>0</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wine[<span class="string">'quality'</span>].value_counts()</span><br></pre></td></tr></table></figure>
-
-
-
-
-<pre><code>0    1382
-1     217
-Name: quality, dtype: int64</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.countplot(wine[<span class="string">'quality'</span>])</span><br></pre></td></tr></table></figure>
-
-
-
-
-<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x2076c534cc0&gt;</code></pre><p><img src="output_10_1.png" alt="png"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#seperate the dataset as response variable and feature variable</span></span><br><span class="line">X = wine.drop(<span class="string">'quality'</span> , axis=<span class="number">1</span>)</span><br><span class="line">y = wine[<span class="string">'quality'</span>]</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Train and test splitting of data</span></span><br><span class="line">X_train, X_test, y_train, y_test=train_test_split(X, y, test_size=<span class="number">0.2</span>, random_state = <span class="number">42</span>)</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc = StandardScaler()</span><br><span class="line">X_train = sc.fit_transform(X_train)</span><br><span class="line">X_test = sc.transform(X_test)</span><br></pre></td></tr></table></figure>
-
-<h1 id="Random-Forest-Classifier"><a href="#Random-Forest-Classifier" class="headerlink" title="Random Forest Classifier"></a>Random Forest Classifier</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rfc = RandomForestClassifier(n_estimators=<span class="number">600</span>)</span><br><span class="line">rfc.fit(X_train,y_train)</span><br><span class="line">pred_rfc = rfc.predict(X_test)</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">print(classification_report(y_test, pred_rfc))</span><br><span class="line">print(confusion_matrix(y_test,pred_rfc))</span><br><span class="line"><span class="comment">#对于坏酒，264对，9错</span></span><br><span class="line"><span class="comment">#好酒，13对，24错</span></span><br></pre></td></tr></table></figure>
-
-<pre><code>              precision    recall  f1-score   support
-
-           0       0.92      0.97      0.94       273
-           1       0.73      0.51      0.60        47
-
-    accuracy                           0.90       320
-   macro avg       0.82      0.74      0.77       320
-weighted avg       0.89      0.90      0.89       320
-
-[[264   9]
- [ 23  24]]</code></pre><h1 id="SVM-classifier"><a href="#SVM-classifier" class="headerlink" title="SVM classifier"></a>SVM classifier</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">clf=svm.SVC()</span><br><span class="line">clf.fit(X_train, y_train)</span><br><span class="line">pred_clf = clf.predict(X_test)</span><br></pre></td></tr></table></figure>
-
-
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(classification_report(y_test, pred_clf))</span><br><span class="line">print(confusion_matrix(y_test,pred_clf))</span><br></pre></td></tr></table></figure>
-
-<pre><code>              precision    recall  f1-score   support
-
-           0       0.88      0.98      0.93       273
-           1       0.71      0.26      0.37        47
-
-    accuracy                           0.88       320
-   macro avg       0.80      0.62      0.65       320
-weighted avg       0.86      0.88      0.85       320
-
-[[268   5]
- [ 35  12]]</code></pre><h1 id="Neural-Network"><a href="#Neural-Network" class="headerlink" title="Neural Network"></a>Neural Network</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mlpc = MLPClassifier(hidden_layer_sizes=(<span class="number">11</span>,<span class="number">11</span>,<span class="number">11</span>),max_iter=<span class="number">500</span>)</span><br><span class="line">mlpc.fit(X_train,y_train)</span><br><span class="line">pred_mlpc = mlpc.predict(X_test)</span><br></pre></td></tr></table></figure>
-
-<pre><code>C:\ProgramData\Anaconda3\lib\site-packages\sklearn\neural_network\multilayer_perceptron.py:566: ConvergenceWarning: Stochastic Optimizer: Maximum iterations (500) reached and the optimization hasn&apos;t converged yet.
-  % self.max_iter, ConvergenceWarning)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">print(classification_report(y_test, pred_clf))</span><br><span class="line">print(confusion_matrix(y_test,pred_clf))</span><br></pre></td></tr></table></figure>
-
-<pre><code>              precision    recall  f1-score   support
-
-           0       0.88      0.98      0.93       273
-           1       0.71      0.26      0.37        47
-
-    accuracy                           0.88       320
-   macro avg       0.80      0.62      0.65       320
-weighted avg       0.86      0.88      0.85       320
-
-[[268   5]
- [ 35  12]]</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line">print(accuracy_score(y_test,pred_rfc))</span><br><span class="line">print(accuracy_score(y_test,pred_mlpc))</span><br><span class="line">print(accuracy_score(y_test,pred_clf))</span><br></pre></td></tr></table></figure>
-
-<pre><code>0.875
-0.884375
-0.875</code></pre>
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -1247,12 +774,12 @@ weighted avg       0.86      0.88      0.85       320
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>红酒质量预测</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.3k</span></p>
+    <p><span class="copy-title">文章标题:</span>2优化算法</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.9k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 18:58:38</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-04, 21:21:40</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/%E7%BA%A2%E9%85%92%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B/%E7%BA%A2%E9%85%92%E6%95%B0%E6%8D%AE%E9%9B%86/" title="红酒质量预测">http://yoursite.com/2020/01/28/%E7%BA%A2%E9%85%92%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B/%E7%BA%A2%E9%85%92%E6%95%B0%E6%8D%AE%E9%9B%86/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-17, 17:08:54</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-17, 17:09:55</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/17/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/2%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/" title="2优化算法">http://yoursite.com/2020/02/17/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/2%E4%BC%98%E5%8C%96%E7%AE%97%E6%B3%95/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
