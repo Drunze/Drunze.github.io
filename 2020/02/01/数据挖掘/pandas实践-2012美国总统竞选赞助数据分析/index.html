@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>01神经网络基础 | Jacob</title>
-  <meta name="keywords" content=" 神经网络 ">
-  <meta name="description" content="01神经网络基础 | Jacob">
+  <title>pandas实践-2012美国总统竞选赞助数据分析 | Jacob</title>
+  <meta name="keywords" content=" Pandas ">
+  <meta name="description" content="pandas实践-2012美国总统竞选赞助数据分析 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="123456789101112131415import numpy as npimport matplotlib.pyplot as pltimport scipy.ioimport mathimport sklearnimport sklearn.datasetsfrom opt_utils import load_params_and_grads, initialize_parameters">
 <meta property="og:type" content="article">
@@ -614,9 +614,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-吴恩达 深度学习/01神经网络和深度学习/01神经网络基础" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-数据挖掘/pandas实践-2012美国总统竞选赞助数据分析" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">01神经网络基础</h1>
+        <h1 class="article-title">pandas实践-2012美国总统竞选赞助数据分析</h1>
     
     <div class="article-meta">
         
@@ -624,28 +624,28 @@
         
         <span class="book">
             
-                <a  data-rel="吴恩达DeepLearning">吴恩达DeepLearning</a>/
+                <a  data-rel="数据挖掘">数据挖掘</a>/
             
-                <a  data-rel="01神经网络和深度学习">01神经网络和深度学习</a>
+                <a  data-rel="pandas">pandas</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">神经网络</a>
+            <a class="color2">Pandas</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-12 15:29:10'>2020-02-06 10:43</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-21 15:25:09'>2020-02-01 16:48</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:555</span>
+        <span>字数:810</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -675,7 +675,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#整体处理流程："><span class="toc-text">整体处理流程：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-二分类问题"><span class="toc-text">1.二分类问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-logistic-regression"><span class="toc-text">2.logistic regression</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-logistic-regression损失函数-Loss-Function"><span class="toc-text">3.logistic regression损失函数 Loss Function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-梯度下降法"><span class="toc-text">4.梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-逻辑回归中的梯度下降法"><span class="toc-text">5.逻辑回归中的梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-m个样本的梯度下降"><span class="toc-text">6.m个样本的梯度下降</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-向量化"><span class="toc-text">7.向量化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-关于numpy说明"><span class="toc-text">8.关于numpy说明</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#数据载入和总览"><span class="toc-text">数据载入和总览</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据清洗"><span class="toc-text">数据清洗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、缺失值处理"><span class="toc-text">1、缺失值处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、数据转换"><span class="toc-text">2、数据转换</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数据聚合与分组运算"><span class="toc-text">数据聚合与分组运算</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -691,55 +691,84 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
-<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/29688927" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/29688927</a></p>
-<h1 id="整体处理流程："><a href="#整体处理流程：" class="headerlink" title="整体处理流程："></a>整体处理流程：</h1><ul>
-<li>初始化参数w、b</li>
-<li>正向传播，计算损失函数J</li>
-<li>反向传播，计算dw、db</li>
-<li>梯度下降优化w、b</li>
-<li>预测y</li>
-</ul>
-<h1 id="1-二分类问题"><a href="#1-二分类问题" class="headerlink" title="1.二分类问题"></a><strong>1.二分类问题</strong></h1><p>这一节主要讲了定义数据格式</p>
-<p>例：</p>
-<p>对于下面这张图片，把它看作64*64个像素点，那么对每个像素点，又可以分为红黄蓝三色：</p>
-<p><img src="https://img-blog.csdnimg.cn/2020020610562129.png" alt=" "></p>
-<p>我们可以得出需要的</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110505637.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>而y=1/0 可以代表图片中有无猫</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110730236.png" alt=" "></p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110931586.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<h1 id="2-logistic-regression"><a href="#2-logistic-regression" class="headerlink" title="2.logistic regression"></a><strong>2.logistic regression</strong></h1><p>上面的 Y^ = [0,1]表示的是一种概率。</p>
-<p><img src="https://img-blog.csdnimg.cn/202002061618162.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>z趋于无穷大，y趋于1；z变小，y变小</p>
-<p>控制z，即要获得w、b的值</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206162902528.png" alt=" "></p>
-<p>符号惯例：θo 代表 b；其他的代表w（不同神经）</p>
-<h1 id="3-logistic-regression损失函数-Loss-Function"><a href="#3-logistic-regression损失函数-Loss-Function" class="headerlink" title="3.logistic regression损失函数 Loss Function"></a><strong>3.logistic regression损失函数 Loss Function</strong></h1><p>一般经验来说是用平方错误衡量损失函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171116302.png" alt=" "></p>
-<p>但是，对于logistic regression 来说，一般不适用平方错误来作为Loss Function，这是因为上面的平方错误损失函数一般是非凸函数（non-convex），其在使用梯度下降算法的时候，容易得到局部最优解，而不是全局最优解。因此要选择凸函数。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171229963.png" alt=" "></p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171332982.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<h1 id="4-梯度下降法"><a href="#4-梯度下降法" class="headerlink" title="4.梯度下降法"></a><strong>4.梯度下降法</strong></h1><p>即以梯度下降的方式最小化代价函数cost function,最终得出w、b</p>
-<p>每次迭代更新的修正表达式：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206192504836.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>程序中分别用dw、db分别表示上面的偏导部分</p>
-<h1 id="5-逻辑回归中的梯度下降法"><a href="#5-逻辑回归中的梯度下降法" class="headerlink" title="5.逻辑回归中的梯度下降法"></a><strong>5.逻辑回归中的梯度下降法</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207085458345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>最后是通过梯度下降法中的修正表达式，得出w1、w2、b的值</p>
-<h1 id="6-m个样本的梯度下降"><a href="#6-m个样本的梯度下降" class="headerlink" title="6.m个样本的梯度下降"></a><strong>6.m个样本的梯度下降</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207092426643.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>$$ \frac{\partial J}{\partial w} = \frac{1}{m}X(A-Y)^T\tag{7}$$</p>
-<p>$$ \frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (a^{(i)}-y^{(i)})\tag{8}$$</p>
-<h1 id="7-向量化"><a href="#7-向量化" class="headerlink" title="7.向量化"></a><strong>7.向量化</strong></h1><p>向量化就是把原始的for循环用矩阵来代替，使用numpy中的矩阵运算直接算出来。</p>
-<p>单次迭代梯度下降算法流程：</p>
-<pre><code>Z = np.dot(w.T,X) + b
-A = sigmoid(Z)
-dZ = A-Y
-dw = 1/m*np.dot(X,dZ.T)
-db = 1/m*np.sum(dZ)
+        <h1 id="数据载入和总览"><a href="#数据载入和总览" class="headerlink" title="数据载入和总览"></a>数据载入和总览</h1><pre><code>import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
-w = w - alpha*dw
-b = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于numpy说明" class="headerlink" title="8.关于numpy说明"></a><strong>8.关于numpy说明</strong></h1><p>当不确定矩阵的维度时，可以使用assert保证安全</p>
-<pre><code>assert(a.shape == (5,1))</code></pre>
+#导入文件
+data = pd.read_csv(&quot;C:\\Users\\董润泽\\Desktop\\P00000001-ALL.csv&quot;)
+#打印前五行
+print(data.head())
+#查看数据的信息，包括每个字段的名称、非空数量、字段的数据类型
+print(data.info())
+#用统计学指标快速描述数据的概要
+data.describe()</code></pre><p>各个值含义：</p>
+<pre><code>cand_nm – 接受捐赠的候选人姓名
+
+contbr_nm – 捐赠人姓名
+
+contbr_st – 捐赠人所在州
+
+contbr_employer – 捐赠人所在公司
+
+contbr_occupation – 捐赠人职业
+
+contb_receipt_amt – 捐赠数额（美元）
+
+contb_receipt_dt – 收到捐款的日期</code></pre><h1 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h1><h2 id="1、缺失值处理"><a href="#1、缺失值处理" class="headerlink" title="1、缺失值处理"></a>1、缺失值处理</h2><pre><code>data[&apos;contbr_employer&apos;].fillna(&apos;Not Provided&apos;)
+data[&apos;contbr_occupation&apos;].fillna(&apos;Not Provided&apos;)</code></pre><h2 id="2、数据转换"><a href="#2、数据转换" class="headerlink" title="2、数据转换"></a>2、数据转换</h2><pre><code>print(&apos;共有{}位候选人，分别是：&apos;.format(len(data[&apos;cand_nm&apos;].unique())))
+data[&apos;cand_nm&apos;].unique()</code></pre><p>结果：</p>
+<pre><code>共有13位候选人，分别是：
+array([&apos;Bachmann, Michelle&apos;, &apos;Romney, Mitt&apos;, &apos;Obama, Barack&apos;,
+       &quot;Roemer, Charles E. &apos;Buddy&apos; III&quot;, &apos;Pawlenty, Timothy&apos;,
+       &apos;Johnson, Gary Earl&apos;, &apos;Paul, Ron&apos;, &apos;Santorum, Rick&apos;,
+       &apos;Cain, Herman&apos;, &apos;Gingrich, Newt&apos;, &apos;McCotter, Thaddeus G&apos;,
+       &apos;Huntsman, Jon&apos;, &apos;Perry, Rick&apos;], dtype=object)</code></pre><p>-</p>
+<pre><code>#通过搜索引擎等途径，获取到每个总统候选人的所属党派，建立字典parties，候选人名字作为键，所属党派作为对应的值
+parties = {&apos;Bachmann, Michelle&apos;: &apos;Republican&apos;,
+           &apos;Cain, Herman&apos;: &apos;Republican&apos;,
+           &apos;Gingrich, Newt&apos;: &apos;Republican&apos;,
+           &apos;Huntsman, Jon&apos;: &apos;Republican&apos;,
+           &apos;Johnson, Gary Earl&apos;: &apos;Republican&apos;,
+           &apos;McCotter, Thaddeus G&apos;: &apos;Republican&apos;,
+           &apos;Obama, Barack&apos;: &apos;Democrat&apos;,
+           &apos;Paul, Ron&apos;: &apos;Republican&apos;,
+           &apos;Pawlenty, Timothy&apos;: &apos;Republican&apos;,
+           &apos;Perry, Rick&apos;: &apos;Republican&apos;,
+           &quot;Roemer, Charles E. &apos;Buddy&apos; III&quot;: &apos;Republican&apos;,
+           &apos;Romney, Mitt&apos;: &apos;Republican&apos;,
+           &apos;Santorum, Rick&apos;: &apos;Republican&apos;}
+
+#通过map映射函数，增加一列party存储党派信息
+data[&apos;party&apos;] = data[&apos;cand_nm&apos;].map(parties)
+#查看两个党派的情况
+data[&apos;party&apos;].value_counts()
+
+#按照职业汇总对赞助总金额进行排序
+#DataFrame.sort_values(by, ascending=True, inplace=False)
+#by是根据哪一列进行排序，可以传入多列；ascending=True是升序排序，False为降序；inplace=Ture则是修改原dataframe，默认为False
+data.groupby(&apos;contbr_occupation&apos;)[&apos;contb_receipt_amt&apos;].sum().sort_values(ascending=False)[:20]</code></pre><p>##3、数据筛选</p>
+<pre><code>#查看各候选人获得的赞助总金额
+data.groupby(&apos;cand_nm&apos;)[&apos;contb_receipt_amt&apos;].sum().sort_values(ascending=False)
+
+#选取候选人为Obama、Romney的子集数据
+data_vs = data[data[&apos;cand_nm&apos;].isin([&apos;Obama, Barack&apos;,&apos;Romney, Mitt&apos;])].copy()</code></pre><h1 id="数据聚合与分组运算"><a href="#数据聚合与分组运算" class="headerlink" title="数据聚合与分组运算"></a>数据聚合与分组运算</h1><p>##1、透视表(pivot_table)分析党派和职业</p>
+<pre><code>#按照党派、职业对赞助金额进行汇总，类似excel中的透视表操作，聚合函数为sum
+by_occupation = data.pivot_table(&apos;contb_receipt_amt&apos;,index=&apos;contbr_occupation&apos;,columns=&apos;party&apos;,aggfunc=&apos;sum&apos;)
+#过滤掉赞助金额小于200W的数据
+over_2mm = by_occupation[by_occupation.sum(1)&gt;2000000]
+over_2mm</code></pre><p>-</p>
+<p>#由于职业和雇主的处理非常相似，我们定义函数get_top_amounts()对两个字段进行分析处理</p>
+<pre><code>def get_top_amounts(group,key,n=5):
+#传入groupby分组后的对象，返回按照key字段汇总的排序前n的数据
+    totals = group.groupby(key)[&apos;contb_receipt_amt&apos;].sum()
+    return totals.sort_values(ascending=False)[:n]
+
+grouped = data_vs.groupby(&apos;cand_nm&apos;)
+grouped.apply(get_top_amounts,&apos;contbr_occupation&apos;,n=7)
+
+#同样的，使用get_top_amounts()对雇主进行分析处理
+grouped.apply(get_top_amounts,&apos;contbr_employer&apos;,n=10)</code></pre>
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -752,12 +781,12 @@ b = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于nump
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>01神经网络基础</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">555</span></p>
+    <p><span class="copy-title">文章标题:</span>pandas实践-2012美国总统竞选赞助数据分析</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">810</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-02-06, 10:43:34</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-12, 15:29:10</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/06/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="01神经网络基础">http://yoursite.com/2020/02/06/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-01, 16:48:03</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-21, 15:25:09</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/01/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/pandas%E5%AE%9E%E8%B7%B5-2012%E7%BE%8E%E5%9B%BD%E6%80%BB%E7%BB%9F%E7%AB%9E%E9%80%89%E8%B5%9E%E5%8A%A9%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" title="pandas实践-2012美国总统竞选赞助数据分析">http://yoursite.com/2020/02/01/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/pandas%E5%AE%9E%E8%B7%B5-2012%E7%BE%8E%E5%9B%BD%E6%80%BB%E7%BB%9F%E7%AB%9E%E9%80%89%E8%B5%9E%E5%8A%A9%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>

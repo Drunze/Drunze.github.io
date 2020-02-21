@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>01神经网络基础 | Jacob</title>
+  <title>3超参数调试、batch正则化、程序框架 | Jacob</title>
   <meta name="keywords" content=" 神经网络 ">
-  <meta name="description" content="01神经网络基础 | Jacob">
+  <meta name="description" content="3超参数调试、batch正则化、程序框架 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="123456789101112131415import numpy as npimport matplotlib.pyplot as pltimport scipy.ioimport mathimport sklearnimport sklearn.datasetsfrom opt_utils import load_params_and_grads, initialize_parameters">
 <meta property="og:type" content="article">
@@ -614,9 +614,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-吴恩达 深度学习/01神经网络和深度学习/01神经网络基础" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/02改善深层神经网络：超参数调试、正则化以及优化/3超参数调试、batch正则化、程序框架" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">01神经网络基础</h1>
+        <h1 class="article-title">3超参数调试、batch正则化、程序框架</h1>
     
     <div class="article-meta">
         
@@ -626,7 +626,7 @@
             
                 <a  data-rel="吴恩达DeepLearning">吴恩达DeepLearning</a>/
             
-                <a  data-rel="01神经网络和深度学习">01神经网络和深度学习</a>
+                <a  data-rel="02改善深层神经网络">02改善深层神经网络</a>
             
         </span>
         
@@ -640,12 +640,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-12 15:29:10'>2020-02-06 10:43</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-21 15:22:27'>2020-02-18 09:03</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:555</span>
+        <span>字数:1.6k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -675,7 +675,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#整体处理流程："><span class="toc-text">整体处理流程：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-二分类问题"><span class="toc-text">1.二分类问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-logistic-regression"><span class="toc-text">2.logistic regression</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-logistic-regression损失函数-Loss-Function"><span class="toc-text">3.logistic regression损失函数 Loss Function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-梯度下降法"><span class="toc-text">4.梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-逻辑回归中的梯度下降法"><span class="toc-text">5.逻辑回归中的梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-m个样本的梯度下降"><span class="toc-text">6.m个样本的梯度下降</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-向量化"><span class="toc-text">7.向量化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-关于numpy说明"><span class="toc-text">8.关于numpy说明</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、超参数调试处理"><span class="toc-text">1、超参数调试处理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、为超参数选择合适范围"><span class="toc-text">2、为超参数选择合适范围</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、超参数调试实践–Pandas-vs-Caviar"><span class="toc-text">3、超参数调试实践–Pandas vs. Caviar</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#网络中激活值的归一化"><span class="toc-text">网络中激活值的归一化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、在圣经网络中融入Batch-Norm"><span class="toc-text">5、在圣经网络中融入Batch Norm</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、Batch-Norm起作用原因"><span class="toc-text">6、Batch Norm起作用原因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7、在测试数据上使用batch-norm"><span class="toc-text">7、在测试数据上使用batch norm</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8、Softmax回归"><span class="toc-text">8、Softmax回归</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9、训练Softmax分类器"><span class="toc-text">9、训练Softmax分类器</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -692,54 +692,63 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
-<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/29688927" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/29688927</a></p>
-<h1 id="整体处理流程："><a href="#整体处理流程：" class="headerlink" title="整体处理流程："></a>整体处理流程：</h1><ul>
-<li>初始化参数w、b</li>
-<li>正向传播，计算损失函数J</li>
-<li>反向传播，计算dw、db</li>
-<li>梯度下降优化w、b</li>
-<li>预测y</li>
+<p>原文：<a href="https://zhuanlan.zhihu.com/p/30146018" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30146018</a></p>
+<h1 id="1、超参数调试处理"><a href="#1、超参数调试处理" class="headerlink" title="1、超参数调试处理"></a><strong>1、超参数调试处理</strong></h1><ul>
+<li>在机器学习领域，超参数比较少的情况下，我们之前利用设置网格点的方式来调试超参数；</li>
+<li>但在深度学习领域，超参数较多的情况下，不是设置规则的网格点，而是随机选择点进行调试。这样做是因为在我们处理问题的时候，是无法知道哪个超参数是更重要的，所以随机的方式去测试超参数点的性能，更为合理，这样可以探究更超参数的潜在价值。</li>
 </ul>
-<h1 id="1-二分类问题"><a href="#1-二分类问题" class="headerlink" title="1.二分类问题"></a><strong>1.二分类问题</strong></h1><p>这一节主要讲了定义数据格式</p>
+<p><img src="https://pic4.zhimg.com/80/v2-e7efb36483524c45c51c451c8b136493_hd.jpg" alt=""></p>
+<h1 id="2、为超参数选择合适范围"><a href="#2、为超参数选择合适范围" class="headerlink" title="2、为超参数选择合适范围"></a><strong>2、为超参数选择合适范围</strong></h1><p><strong>Scale均匀随机</strong></p>
+<p>在超参数选择的时候，一些超参数是在一个范围内进行均匀随机取值，如隐藏层神经元结点的个数、隐藏层的层数等。但是有一些超参数的选择做均匀随机取值是不合适的，这里需要按照一定的比例在不同的小范围内进行均匀随机取值，以学习率 <strong>α</strong> 的选择为例，在 <strong>0.001,…1</strong> 范围内进行选择：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-5f1dced5e43bc1c3e63676a066441374_hd.jpg" alt=""></p>
+<p>如上图所示，如果在 <strong>0.001,…1</strong> 的范围内进行进行均匀随机取值，则有90%的概率 选择范围在 <strong>0.1,…1</strong> 之间，而只有10%的概率才能选择到 <strong>0.001,…1</strong> 之间，显然是不合理的。</p>
+<p>所以在选择的时候，在不同比例范围内进行均匀随机取值，如 <strong>0.001,…0.001</strong> 、 <strong>0.001,…0.01</strong> 、 <strong>0.01,…0.1</strong> 、 <strong>0.1,…1</strong> 范围内选择。</p>
+<p>代码实现</p>
+<pre><code>r = -4 * np.random.rand()     # r in [-4,0]
+learning_rate = 10 ** r      # 10^{r}</code></pre><p>一般地，如果在 <img src="https://www.zhihu.com/equation?tex=10%5E%7Ba%7D%5Csim10%5E%7Bb%7D" alt=""> 之间的范围内进行按比例的选择，则 r∈[a,b] ， <img src="https://www.zhihu.com/equation?tex=%5Calpha+%3D+10%5E%7Br%7D" alt=""> 。</p>
+<p>同样，在使用指数加权平均的时候，超参数 β 也需要用上面这种方向进行选择。</p>
+<h1 id="3、超参数调试实践–Pandas-vs-Caviar"><a href="#3、超参数调试实践–Pandas-vs-Caviar" class="headerlink" title="3、超参数调试实践–Pandas vs. Caviar"></a><strong>3、超参数调试实践–Pandas vs. Caviar</strong></h1><p>在超参数调试的实际操作中，我们需要根据我们现有的计算资源来决定以什么样的方式去调试超参数，进而对模型进行改进。下面是不同情况下的两种方式：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-9db64788ca9dd9065937217bffba1cd1_hd.jpg" alt=""></p>
+<ul>
+<li>在计算资源有限的情况下，使用第一种，仅调试一个模型，每天不断优化；</li>
+<li>在计算资源充足的情况下，使用第二种，同时并行调试多个模型，选取其中最好的模型。</li>
+</ul>
+<h1 id="网络中激活值的归一化"><a href="#网络中激活值的归一化" class="headerlink" title="网络中激活值的归一化"></a><strong>网络中激活值的归一化</strong></h1><p>在Logistic Regression 中，将输入特征进行归一化，可以加速模型的训练。那么对于更深层次的神经网络，我们是否可以归一化隐藏层的输出 a[l] 或者经过激活函数前的 z[l] ，以便加速神经网络的训练过程？答案是肯定的。</p>
+<p>常用的方式是将隐藏层的经过激活函数前的 z[l] 进行归一化。</p>
+<p><strong>Batch Norm的实现</strong></p>
+<p><img src="https://pic3.zhimg.com/80/v2-b9def12d03c9b858f9c0e48dbfe9422d_hd.png" alt=""></p>
+<h1 id="5、在圣经网络中融入Batch-Norm"><a href="#5、在圣经网络中融入Batch-Norm" class="headerlink" title="5、在圣经网络中融入Batch Norm"></a><strong>5、在圣经网络中融入Batch Norm</strong></h1><p><img src="https://pic3.zhimg.com/80/v2-d8039b96e3fab8d90614b7713e1b7282_hd.jpg" alt=""></p>
+<p><img src="https://pic1.zhimg.com/80/v2-27bcb7a6db75a3d8bd55fd57fc0da793_hd.png" alt=""></p>
+<h1 id="6、Batch-Norm起作用原因"><a href="#6、Batch-Norm起作用原因" class="headerlink" title="6、Batch Norm起作用原因"></a><strong>6、Batch Norm起作用原因</strong></h1><p><strong>First Reason</strong></p>
+<p>首先Batch Norm 可以加速神经网络训练的原因和输入层的输入特征进行归一化，从而改变Cost function的形状，使得每一次梯度下降都可以更快的接近函数的最小值点，从而加速模型训练过程的原理是有相同的道理。</p>
+<p>只是Batch Norm 不是单纯的将输入的特征进行归一化，而是将各个隐藏层的激活函数的激活值进行的归一化，并调整到另外的分布。</p>
+<p><strong>Second Reason</strong></p>
+<p>Batch Norm 可以加速神经网络训练的另外一个原因是它可以使权重比网络更滞后或者更深层。</p>
+<p>下面是一个判别是否是猫的分类问题，假设第一训练样本的集合中的猫均是黑猫，而第二个训练样本集合中的猫是各种颜色的猫。如果我们将第二个训练样本直接输入到用第一个训练样本集合训练出的模型进行分类判别，那么我们在很大程度上是无法保证能够得到很好的判别结果。</p>
+<p>这是因为第一个训练集合中均是黑猫，而第二个训练集合中各色猫均有，虽然都是猫，但是很大程度上样本的分布情况是不同的，所以我们无法保证模型可以仅仅通过黑色猫的样本就可以完美的找到完整的决策边界。第二个样本集合相当于第一个样本的分布的改变，称为：Covariate shift。如下图所示：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-72b393411080e18a0bcc2b02c74bf6d8_hd.jpg" alt=""></p>
+<p>那么存在Covariate shift的问题如何应用在神经网络中？就是利用Batch Norm来实现。如下面的网络结构：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-2233827f3f5f56c486c763b4203ebf58_hd.jpg" alt=""></p>
+<p>网络的目的是通过不断的训练，最后输出一个更加接近于真实值的 y_hat 。现在以第2个隐藏层为输入来看：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-81ead15d0cbf78c9d037190d7ab118fd_hd.jpg" alt=""></p>
+<p><img src="https://pic4.zhimg.com/80/v2-fd080eef106a757e0dbbbc7e0e19fd76_hd.png" alt=""></p>
+<p><strong>Batch Norm 正则化效果</strong></p>
+<p>Batch Norm还有轻微的正则化效果。</p>
+<p>这是因为在使用Mini-batch梯度下降的时候，每次计算均值和偏差都是在一个Mini-batch上进行计算，而不是在整个数据样集上。这样就在均值和偏差上带来一些比较小的噪声。那么用均值和偏差计算得到的<img src="https://www.zhihu.com/equation?tex=%5Cwidetilde+z%5E%7B%5Bl%5D%7D" alt="">也将会加入一定的噪声。</p>
+<p>所以和Dropout相似，其在每个隐藏层的激活值上加入了一些噪声，（这里因为Dropout以一定的概率给神经元乘上0或者1）。所以和Dropout相似，Batch Norm 也有轻微的正则化效果。</p>
+<p>这里引入一个小的细节就是，如果使用Batch Norm ，那么使用大的Mini-batch如256，相比使用小的Mini-batch如64，会引入跟少的噪声，那么就会减少正则化的效果。</p>
+<h1 id="7、在测试数据上使用batch-norm"><a href="#7、在测试数据上使用batch-norm" class="headerlink" title="7、在测试数据上使用batch norm"></a><strong>7、在测试数据上使用batch norm</strong></h1><p><img src="https://pic2.zhimg.com/80/v2-25c18b55001698e68797cd398f6e8084_hd.png" alt=""></p>
+<h1 id="8、Softmax回归"><a href="#8、Softmax回归" class="headerlink" title="8、Softmax回归"></a><strong>8、Softmax回归</strong></h1><p><img src="https://pic1.zhimg.com/80/v2-0e04c04ae886a0826602715b43269ff5_hd.png" alt=""></p>
+<p>例如要识别这一组图片中的四个类别，即多分类问题，就要用到Softmax回归。</p>
+<p><strong>Softmax回归可以将多分类任务的输出转换为各个类别可能的概率，从而将最大的概率值所对应的类别作为输入样本的输出类别。</strong></p>
 <p>例：</p>
-<p>对于下面这张图片，把它看作64*64个像素点，那么对每个像素点，又可以分为红黄蓝三色：</p>
-<p><img src="https://img-blog.csdnimg.cn/2020020610562129.png" alt=" "></p>
-<p>我们可以得出需要的</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110505637.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>而y=1/0 可以代表图片中有无猫</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110730236.png" alt=" "></p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110931586.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<h1 id="2-logistic-regression"><a href="#2-logistic-regression" class="headerlink" title="2.logistic regression"></a><strong>2.logistic regression</strong></h1><p>上面的 Y^ = [0,1]表示的是一种概率。</p>
-<p><img src="https://img-blog.csdnimg.cn/202002061618162.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>z趋于无穷大，y趋于1；z变小，y变小</p>
-<p>控制z，即要获得w、b的值</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206162902528.png" alt=" "></p>
-<p>符号惯例：θo 代表 b；其他的代表w（不同神经）</p>
-<h1 id="3-logistic-regression损失函数-Loss-Function"><a href="#3-logistic-regression损失函数-Loss-Function" class="headerlink" title="3.logistic regression损失函数 Loss Function"></a><strong>3.logistic regression损失函数 Loss Function</strong></h1><p>一般经验来说是用平方错误衡量损失函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171116302.png" alt=" "></p>
-<p>但是，对于logistic regression 来说，一般不适用平方错误来作为Loss Function，这是因为上面的平方错误损失函数一般是非凸函数（non-convex），其在使用梯度下降算法的时候，容易得到局部最优解，而不是全局最优解。因此要选择凸函数。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171229963.png" alt=" "></p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171332982.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<h1 id="4-梯度下降法"><a href="#4-梯度下降法" class="headerlink" title="4.梯度下降法"></a><strong>4.梯度下降法</strong></h1><p>即以梯度下降的方式最小化代价函数cost function,最终得出w、b</p>
-<p>每次迭代更新的修正表达式：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206192504836.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>程序中分别用dw、db分别表示上面的偏导部分</p>
-<h1 id="5-逻辑回归中的梯度下降法"><a href="#5-逻辑回归中的梯度下降法" class="headerlink" title="5.逻辑回归中的梯度下降法"></a><strong>5.逻辑回归中的梯度下降法</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207085458345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>最后是通过梯度下降法中的修正表达式，得出w1、w2、b的值</p>
-<h1 id="6-m个样本的梯度下降"><a href="#6-m个样本的梯度下降" class="headerlink" title="6.m个样本的梯度下降"></a><strong>6.m个样本的梯度下降</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207092426643.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>$$ \frac{\partial J}{\partial w} = \frac{1}{m}X(A-Y)^T\tag{7}$$</p>
-<p>$$ \frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (a^{(i)}-y^{(i)})\tag{8}$$</p>
-<h1 id="7-向量化"><a href="#7-向量化" class="headerlink" title="7.向量化"></a><strong>7.向量化</strong></h1><p>向量化就是把原始的for循环用矩阵来代替，使用numpy中的矩阵运算直接算出来。</p>
-<p>单次迭代梯度下降算法流程：</p>
-<pre><code>Z = np.dot(w.T,X) + b
-A = sigmoid(Z)
-dZ = A-Y
-dw = 1/m*np.dot(X,dZ.T)
-db = 1/m*np.sum(dZ)
+<p><img src="https://pic4.zhimg.com/80/v2-066432f24abbc42211cd330feb2b3317_hd.jpg" alt=""></p>
+<p>可以看出Softmax通过向量 z[l] 计算出总和为1的四个概率。最后会输出概率最大的那一类</p>
+<p><img src="https://pic2.zhimg.com/80/v2-fa33a0eeac239892d525dfe0b12931ad_hd.jpg" alt=""></p>
+<h1 id="9、训练Softmax分类器"><a href="#9、训练Softmax分类器" class="headerlink" title="9、训练Softmax分类器"></a><strong>9、训练Softmax分类器</strong></h1><p>Loss Function：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-282c33f9aa4c9dad873a0b66c01f17f2_hd.png" alt=""></p>
+<p><img src="https://pic3.zhimg.com/80/v2-fb7d5ab992c6616387db96eb8e6d8da4_hd.png" alt=""></p>
 
-w = w - alpha*dw
-b = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于numpy说明" class="headerlink" title="8.关于numpy说明"></a><strong>8.关于numpy说明</strong></h1><p>当不确定矩阵的维度时，可以使用assert保证安全</p>
-<pre><code>assert(a.shape == (5,1))</code></pre>
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -752,12 +761,12 @@ b = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于nump
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>01神经网络基础</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">555</span></p>
+    <p><span class="copy-title">文章标题:</span>3超参数调试、batch正则化、程序框架</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.6k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-02-06, 10:43:34</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-12, 15:29:10</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/06/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="01神经网络基础">http://yoursite.com/2020/02/06/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-18, 09:03:51</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-21, 15:22:27</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/18/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/3%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81batch%E6%AD%A3%E5%88%99%E5%8C%96%E3%80%81%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/" title="3超参数调试、batch正则化、程序框架">http://yoursite.com/2020/02/18/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/3%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81batch%E6%AD%A3%E5%88%99%E5%8C%96%E3%80%81%E7%A8%8B%E5%BA%8F%E6%A1%86%E6%9E%B6/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
