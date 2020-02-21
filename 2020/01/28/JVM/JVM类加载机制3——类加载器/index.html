@@ -6,27 +6,28 @@
   <meta name="keywords" content=" 类加载机制 ">
   <meta name="description" content="类加载器 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="导包123456789101112131415161718import timeimport numpy as npimport h5pyimport matplotlib.pyplot as pltimport scipyfrom PIL import Imagefrom scipy import ndimagefrom dnn_app_utils_v3 import *%matplotlib">
+<meta name="description" content="123456789101112131415import numpy as npimport matplotlib.pyplot as pltimport scipy.ioimport mathimport sklearnimport sklearn.datasetsfrom opt_utils import load_params_and_grads, initialize_parameters">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深层神经网络编程作业2">
-<meta property="og:url" content="http://yoursite.com/2020/02/16/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A2/index.html">
+<meta property="og:title" content="编程作业——优化Optimization">
+<meta property="og:url" content="http://yoursite.com/2020/02/18/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A%E2%80%94%E2%80%94%E4%BC%98%E5%8C%96Optimization/index.html">
 <meta property="og:site_name" content="Jacob">
-<meta property="og:description" content="导包123456789101112131415161718import timeimport numpy as npimport h5pyimport matplotlib.pyplot as pltimport scipyfrom PIL import Imagefrom scipy import ndimagefrom dnn_app_utils_v3 import *%matplotlib">
+<meta property="og:description" content="123456789101112131415import numpy as npimport matplotlib.pyplot as pltimport scipy.ioimport mathimport sklearnimport sklearn.datasetsfrom opt_utils import load_params_and_grads, initialize_parameters">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213203651700.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213203743489.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2020021320380990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213203824165.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/2020021320392212.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213204018501.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213204253460.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213204753924.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213204847939.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213204930249.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20200213205006656.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
-<meta property="article:published_time" content="2020-02-16T09:11:47.000Z">
-<meta property="article:modified_time" content="2020-02-16T09:12:20.909Z">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-0372babb0724d9532d76fd74dc307cde_hd.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-00f6ca656fb6e19b865c4b0bef565920_hd.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-c0ca0a238d53dcd08a708e0634bd505a_hd.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-1a32c6000f98d67ab5ef11d7f231f517_hd.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-35d5633a827215aa8b9fe55aacdb6d21_hd.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-52aa8a3b8f709a715276859729270621_hd.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-18c0b816b7976c11fda0beb34083aa30_hd.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-dde014b8736da3c504a4f609ee221114_hd.png">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-18c0b816b7976c11fda0beb34083aa30_hd.png">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-dde014b8736da3c504a4f609ee221114_hd.png">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-6801ff58b728dacee105d72b48ca5c01_hd.png">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-4013d2ae18277dbcb69e1b1529fecd6d_hd.png">
+<meta property="article:published_time" content="2020-02-18T02:28:29.000Z">
+<meta property="article:modified_time" content="2020-02-18T02:43:02.850Z">
 <meta property="article:author" content="Jacob">
 <meta property="article:tag" content="神经网络">
 <meta name="twitter:card" content="summary">
