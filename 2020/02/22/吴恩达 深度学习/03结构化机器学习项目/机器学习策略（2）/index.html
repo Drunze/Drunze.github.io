@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>01神经网络基础 | Jacob</title>
+  <title>机器学习策略（2） | Jacob</title>
   <meta name="keywords" content=" 神经网络 ">
-  <meta name="description" content="01神经网络基础 | Jacob">
+  <meta name="description" content="机器学习策略（2） | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="参考文章：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;30393923 1、误差分析例： 在猫分类器中，假若你发现，有些狗的图片被识别成猫，并且这些狗的图片乍一看还真的像猫，那么试想，你是不是可以通过一些方法来专门解决狗的问题？但是问题的关键在于，这样做到底值不值得（因为要花费时间，并且有一无所获的风险）？ 两种情况（收集100个错误样例）：  1、假设100个样例中5个是狗，那么">
 <meta property="og:type" content="article">
@@ -636,9 +636,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-吴恩达 深度学习/01神经网络和深度学习/01神经网络基础" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/03结构化机器学习项目/机器学习策略（2）" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">01神经网络基础</h1>
+        <h1 class="article-title">机器学习策略（2）</h1>
     
     <div class="article-meta">
         
@@ -648,7 +648,7 @@
             
                 <a  data-rel="吴恩达DeepLearning">吴恩达DeepLearning</a>/
             
-                <a  data-rel="01神经网络和深度学习">01神经网络和深度学习</a>
+                <a  data-rel="03结构化机器学习项目">03结构化机器学习项目</a>
             
         </span>
         
@@ -662,12 +662,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-12 15:29:10'>2020-02-06 10:43</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-22 21:17:32'>2020-02-22 10:31</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:555</span>
+        <span>字数:2.9k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -697,7 +697,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#整体处理流程："><span class="toc-text">整体处理流程：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-二分类问题"><span class="toc-text">1.二分类问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-logistic-regression"><span class="toc-text">2.logistic regression</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-logistic-regression损失函数-Loss-Function"><span class="toc-text">3.logistic regression损失函数 Loss Function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-梯度下降法"><span class="toc-text">4.梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-逻辑回归中的梯度下降法"><span class="toc-text">5.逻辑回归中的梯度下降法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6-m个样本的梯度下降"><span class="toc-text">6.m个样本的梯度下降</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7-向量化"><span class="toc-text">7.向量化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8-关于numpy说明"><span class="toc-text">8.关于numpy说明</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、误差分析"><span class="toc-text">1、误差分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、清除错误标记的样本"><span class="toc-text">2、清除错误标记的样本</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、搭建系统"><span class="toc-text">3、搭建系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、不同分布上的训练和测试"><span class="toc-text">4、不同分布上的训练和测试</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、不同分布上的偏差和方差"><span class="toc-text">5、不同分布上的偏差和方差</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、解决数据分布不匹配问题"><span class="toc-text">6、解决数据分布不匹配问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7、迁移学习"><span class="toc-text">7、迁移学习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8、多任务学习"><span class="toc-text">8、多任务学习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9、端到端的深度学习"><span class="toc-text">9、端到端的深度学习</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -714,54 +714,137 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
-<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/29688927" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/29688927</a></p>
-<h1 id="整体处理流程："><a href="#整体处理流程：" class="headerlink" title="整体处理流程："></a>整体处理流程：</h1><ul>
-<li>初始化参数w、b</li>
-<li>正向传播，计算损失函数J</li>
-<li>反向传播，计算dw、db</li>
-<li>梯度下降优化w、b</li>
-<li>预测y</li>
+<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/30393923" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30393923</a></p>
+<h1 id="1、误差分析"><a href="#1、误差分析" class="headerlink" title="1、误差分析"></a><strong>1、误差分析</strong></h1><p>例：</p>
+<p>在猫分类器中，假若你发现，有些狗的图片被识别成猫，并且这些狗的图片乍一看还真的像猫，那么试想，你是不是可以通过一些方法来专门解决狗的问题？但是问题的关键在于，这样做到底值不值得（因为要花费时间，并且有一无所获的风险）？</p>
+<p>两种情况（收集100个错误样例）：</p>
+<ul>
+<li>1、假设100个样例中5个是狗，那么如果我们对数据集的错误标记做努力去改进模型的精度，那么可以提升的上限就是 5% ，即仅仅可以达到 9.5% 的错误率，这有时称为性能上限。那么这种情况下，可能这样耗时的努力方向就不是很值得的一件事情。</li>
+<li>2、假设100个样例中50个是狗，那么这种情况下，我们去改进数据集的错误标记，就是一个比较值得的改进方向，可以将模型的精确度提升至 95% 。</li>
 </ul>
-<h1 id="1-二分类问题"><a href="#1-二分类问题" class="headerlink" title="1.二分类问题"></a><strong>1.二分类问题</strong></h1><p>这一节主要讲了定义数据格式</p>
+<p><strong>方法：</strong></p>
+<ul>
+<li>修改那些被分类成猫的狗狗图片标签；</li>
+<li>修改那些被错误分类的大型猫科动物，如：狮子，豹子等；</li>
+<li>提升模糊图片的质量。</li>
+</ul>
+<p>为了并行的分析，建立表格来进行。以单个错误分类样本为对象，分析每个样本错误分类的原因。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-86d2d7c8fec128c33255cdd659f8f8fe_hd.jpg" alt=""></p>
+<p>最后，统计错误类型的百分比，这个分析步骤可以给我们一个粗略的估计，让我们大致确定是否值得去处理每个不同的错误类型。</p>
+<h1 id="2、清除错误标记的样本"><a href="#2、清除错误标记的样本" class="headerlink" title="2、清除错误标记的样本"></a><strong>2、清除错误标记的样本</strong></h1><p>下面的分类中的几个样本：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-7cd438bc8cc081d478982651eece606c_hd.jpg" alt=""></p>
+<p>存在训练集中人为标记错误的样本。</p>
+<p>做标记的人不小心错误，或按错分类键。那么像这种随机误差导致的标记错误，一般来说不管这些误差可能也没有问题。</p>
+<p>但是对于系统误差，会导致分类器出现错误，例如，工作人员一直把白色狗标记成猫。。</p>
+<p>dev、test集中错误标记的情况：</p>
+<p>如果在开发集和测试集中出现了错误标记的问题，我们可以在误差分析的过程中，增加错误标记这一原因，再对错误的数据进行分析，得出修正这些标记错误的价值。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-4eee1b87e2d407c8cb71d716fe647e0b_hd.jpg" alt=""></p>
+<p>修正开发、测试集上错误样例：</p>
+<ul>
+<li>对开发集和测试集上的数据进行检查，确保他们来自于相同的分布。使得我们以开发集为目标方向，更正确地将算法应用到测试集上。</li>
+<li>考虑算法分类错误的样本的同时也去考虑算法分类正确的样本。（通常难度比较大，很少这么做）</li>
+<li>训练集和开发/测试集来自不同的分布。</li>
+</ul>
+<h1 id="3、搭建系统"><a href="#3、搭建系统" class="headerlink" title="3、搭建系统"></a><strong>3、搭建系统</strong></h1><p>要快速建立一个基本的系统，然后进行迭代。而不是想的太多，一开始就建一个复杂的系统，难以入手。</p>
+<h1 id="4、不同分布上的训练和测试"><a href="#4、不同分布上的训练和测试" class="headerlink" title="4、不同分布上的训练和测试"></a><strong>4、不同分布上的训练和测试</strong></h1><p>以猫分类器为例:</p>
+<p>我们获取到的图片有两种：1、网上爬取的高清专业图片200000张，用户手机拍摄出来的不太专业的图片10000张，最终我们的目标是应用到用户手机上（不清晰、非专业）。</p>
+<p><strong>方法一：</strong></p>
+<p>将两组数据合并到一起，总共得到21万张图片样本。将这些样本随机分配到训练、开发、测试集中。</p>
+<ul>
+<li>好处：三个集合中的数据均来自于同一分布；</li>
+<li>坏处：我们设立开发集的目的是瞄准目标，而现在我们的目标绝大部分是为了去优化网上获取的高清晰度的照片，而不是我们真正的目标。</li>
+</ul>
+<p>该方法不是一个好的方法，不推荐。</p>
+<p><strong>方法二</strong></p>
+<p>训练集均是来自网上下载的20万张高清图片，当然也可以加上5000张手机非高清图片；对于开发和测试集都是手机非高清图片。</p>
+<ul>
+<li>好处：开发集全部来自手机图片，瞄准目标；</li>
+<li>坏处：训练集和开发、测试集来自不同的分布。</li>
+</ul>
+<p>从长期来看，这样的分布能够给我们带来更好的系统性能。</p>
+<h1 id="5、不同分布上的偏差和方差"><a href="#5、不同分布上的偏差和方差" class="headerlink" title="5、不同分布上的偏差和方差"></a><strong>5、不同分布上的偏差和方差</strong></h1><p>当训练集同测试集和开发集来自不同分布时，偏差和方差的判断方式同原来不一样。</p>
+<p>例如：</p>
+<p>猫分类器，人的误差为 0% ，即贝叶斯误差，那么若：</p>
+<ul>
+<li>training error： 1%</li>
+<li>Dev error： 10%</li>
+</ul>
+<p>如果测试、开发集和训练集来自相同分布，则我们可以判断高方差（过拟合）</p>
+<p>但是，如果来自不同分布，那么，测试集误差过高也可能是猫图片清晰度的问题等等，不能单纯简单的判断。</p>
+<p><strong>那么有没有方法来协助我们判断偏差、方差呢？ ——‘训练开发集’</strong></p>
+<p>训练开发集 同训练集来自于相同的分布，但是不同于训练过程，它不会跑向后传播。</p>
 <p>例：</p>
-<p>对于下面这张图片，把它看作64*64个像素点，那么对每个像素点，又可以分为红黄蓝三色：</p>
-<p><img src="https://img-blog.csdnimg.cn/2020020610562129.png" alt=" "></p>
-<p>我们可以得出需要的</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110505637.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>而y=1/0 可以代表图片中有无猫</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110730236.png" alt=" "></p>
-<p><img src="https://img-blog.csdnimg.cn/20200206110931586.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<h1 id="2-logistic-regression"><a href="#2-logistic-regression" class="headerlink" title="2.logistic regression"></a><strong>2.logistic regression</strong></h1><p>上面的 Y^ = [0,1]表示的是一种概率。</p>
-<p><img src="https://img-blog.csdnimg.cn/202002061618162.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>z趋于无穷大，y趋于1；z变小，y变小</p>
-<p>控制z，即要获得w、b的值</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206162902528.png" alt=" "></p>
-<p>符号惯例：θo 代表 b；其他的代表w（不同神经）</p>
-<h1 id="3-logistic-regression损失函数-Loss-Function"><a href="#3-logistic-regression损失函数-Loss-Function" class="headerlink" title="3.logistic regression损失函数 Loss Function"></a><strong>3.logistic regression损失函数 Loss Function</strong></h1><p>一般经验来说是用平方错误衡量损失函数</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171116302.png" alt=" "></p>
-<p>但是，对于logistic regression 来说，一般不适用平方错误来作为Loss Function，这是因为上面的平方错误损失函数一般是非凸函数（non-convex），其在使用梯度下降算法的时候，容易得到局部最优解，而不是全局最优解。因此要选择凸函数。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171229963.png" alt=" "></p>
-<p><img src="https://img-blog.csdnimg.cn/20200206171332982.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<h1 id="4-梯度下降法"><a href="#4-梯度下降法" class="headerlink" title="4.梯度下降法"></a><strong>4.梯度下降法</strong></h1><p>即以梯度下降的方式最小化代价函数cost function,最终得出w、b</p>
-<p>每次迭代更新的修正表达式：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200206192504836.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>程序中分别用dw、db分别表示上面的偏导部分</p>
-<h1 id="5-逻辑回归中的梯度下降法"><a href="#5-逻辑回归中的梯度下降法" class="headerlink" title="5.逻辑回归中的梯度下降法"></a><strong>5.逻辑回归中的梯度下降法</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207085458345.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>最后是通过梯度下降法中的修正表达式，得出w1、w2、b的值</p>
-<h1 id="6-m个样本的梯度下降"><a href="#6-m个样本的梯度下降" class="headerlink" title="6.m个样本的梯度下降"></a><strong>6.m个样本的梯度下降</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200207092426643.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=" "></p>
-<p>$$ \frac{\partial J}{\partial w} = \frac{1}{m}X(A-Y)^T\tag{7}$$</p>
-<p>$$ \frac{\partial J}{\partial b} = \frac{1}{m} \sum_{i=1}^m (a^{(i)}-y^{(i)})\tag{8}$$</p>
-<h1 id="7-向量化"><a href="#7-向量化" class="headerlink" title="7.向量化"></a><strong>7.向量化</strong></h1><p>向量化就是把原始的for循环用矩阵来代替，使用numpy中的矩阵运算直接算出来。</p>
-<p>单次迭代梯度下降算法流程：</p>
-<pre><code>Z = np.dot(w.T,X) + b
-A = sigmoid(Z)
-dZ = A-Y
-dw = 1/m*np.dot(X,dZ.T)
-db = 1/m*np.sum(dZ)
+<ul>
+<li>train error： 1%</li>
+<li>train-dev error： 9%</li>
+<li>dev error： 10%</li>
+</ul>
+<p>由于训练集和训练开发集来自于相同的分布，但是错误率相差很大，说明存在高方差（过拟合）</p>
+<p>例：</p>
+<ul>
+<li>train error： 1%</li>
+<li>train-dev error： 1.5%</li>
+<li>dev error： 10%</li>
+</ul>
+<p>训练开发集同开发集有较大的差异，说明是由于不同分布造成的，<strong>分布不匹配</strong>。</p>
+<p>下面通过一个后视镜语音检测的例子来说明。我们以该例子建立更加一般的表格。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-e73aa735dc3de823156b48d609f46364_hd.jpg" alt=""></p>
+<p>其中，<strong>横向分别是：普通语音识别数据、后视镜语音识别数据；纵向分别是：Human level、训练数据误差、未训练数据误差</strong>。表格中不同的位置分别代表不同的数据集。</p>
+<h1 id="6、解决数据分布不匹配问题"><a href="#6、解决数据分布不匹配问题" class="headerlink" title="6、解决数据分布不匹配问题"></a><strong>6、解决数据分布不匹配问题</strong></h1><p>如果通过上一节的误差分析，我们可以得知，模型最终在开发和测试集上的误差最终是由于数据分布不匹配而导致。那么这样的情况下如何解决？</p>
+<ul>
+<li>进行人工误差分析，尝试去了解训练集和开发测试集的具体差异在哪里。如：噪音等；</li>
+<li>尝试把训练数据变得更像开发集，或者收集更多的类似开发集和测试集的数据，如增加噪音；</li>
+</ul>
+<p>例如，在解决汽车噪声问题中，可以通过将噪声叠加在无噪声的音频中，模拟实际数据，是训练集同测试集更加接近。</p>
+<h1 id="7、迁移学习"><a href="#7、迁移学习" class="headerlink" title="7、迁移学习"></a><strong>7、迁移学习</strong></h1><p>迁移学习就是把一个神经网络训练到的知识运用到另一个中。</p>
+<p>例如对于一个识别花、鸟等图片的神经网络，可以把神经网络的输出层去掉，然后赋予随机权重，运用到放射诊断数据上训练。</p>
+<p><img src="https://pic2.zhimg.com/v2-e479451be79e560d14fdf50426de2aad_r.jpg" alt=""></p>
+<p><strong>迁移学习的意义：</strong></p>
+<p>迁移学习适合以下场合：迁移来源问题有很多数据，但是迁移目标问题却没有那么多的数据。</p>
+<p>假设图像识别任务中有1百万个样本，里面的数据相当多；但对与一些特定的图像识别问题，如放射科图像，也许只有一百个样本，所以对于放射学诊断问题的数据很少。所以从图像识别训练中学到的很多知识可以迁移，来帮助我们提升放射科识别任务的性能。</p>
+<p>同样一个例子是语音识别，可能在普通的语音识别中，我们有庞大的数据量来训练模型，所以模型从中学到了很多人类声音的特征。但是对于触发字检测任务，可能我们拥有的数据量很少，所以对于这种情况下，学习人类声音特征等知识就显得相当重要。所以迁移学习可以帮助我们建立一个很好的唤醒字检测系统。</p>
+<p>迁移学习有意义的情况：</p>
+<ul>
+<li>任务A和任务B有着相同的输入；</li>
+<li>任务A所拥有的数据要远远大于任务B（对于更有价值的任务B，任务A所拥有的数据要比B大很多）；</li>
+<li>任务A的低层特征学习对任务B有一定的帮助。</li>
+</ul>
+<h1 id="8、多任务学习"><a href="#8、多任务学习" class="headerlink" title="8、多任务学习"></a><strong>8、多任务学习</strong></h1><p>在迁移学习中，步骤是串行的，从任务𝐴里学习知识然后迁移到任务𝐵。在多任务学习中，是同时开始学习的，试图让单个神经网络同时做几件事情，然后希望这里每个任务都能帮到其他所有任务。 </p>
+<p><strong>自动驾驶的例子</strong>：</p>
+<p>假设在自动驾驶的例子中，我们需要检测的物体很多，如行人、汽车、交通灯等等。</p>
+<p>对于现在的任务，我们的目标值变成了一个向量的形式向量中的每一个值代表检测到是否有如行人、汽车、交通灯等，一张图片有多个标签。</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Chat+y%5E%7B%28i%29%7D%3D%5Cleft%5B+%5Cbegin%7Barray%7D%7Bl%7D+1%5C%5C+0%5C%5C+1%5C%5C+0+%5Cend%7Barray%7D+%5Cright%5D+%5Cleft%7C+%5Cbegin%7Barray%7D%7Bl%7D+Pedestrians%5C%5C+Cars%5C%5C+Road%5C+signs-Stop%5C%5C+Traffic%5C+lights+%5Cend%7Barray%7D+%5Cright." alt=""></p>
+<p>模型的神经网络结构如下图所示：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-69284cfc23139eba9f718d7242ce3009_hd.jpg" alt=""></p>
+<p>该问题的 Loss function：</p>
+<p><img src="https://www.zhihu.com/equation?tex=loss+%3D+%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7D%5Csum%5Climits_%7Bj%3D1%7D%5E%7B4%7DL%28%5Chat+y%5E%7B%28i%29%7D_%7Bj%7D%2Cy%5E%7B%28i%29%7D_%7Bj%7D%29%3D%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7D%5Csum%5Climits_%7Bj%3D1%7D%5E%7B4%7D%28y%5E%7B%28i%29%7D_%7Bj%7D%5Clog+%28%5Chat+y%5E%7B%28i%29%7D_%7Bj%7D%29%2B%281-y%5E%7B%28i%29%7D_%7Bj%7D%29%5Clog%281-%5Chat+y%5E%7B%28i%29%7D_%7Bj%7D%29%29" alt=""></p>
+<p>整个训练集的平均损失和之前分类猫的例子主要区别在于，现在你要对j = 1到4求和，这与 softmax 回归的主要区别在于，softmax 将单个标签分配给单个样本。</p>
+<p>对于这样的问题，我们就是在做多任务学习，因为我们建立单个神经网络，来解决多个问题。</p>
+<p>特定的对于一些问题，例如在我们的例子中，数据集中可能只标注了部分信息，如其中一张只标注了人，汽车和交通灯的标识没有标注。那么对于这样的数据集，我们依旧可以用多任务学习来训练模型。当然要注意这里Loss function求和的时候，只对带0、1标签的 j 进行求和。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-026ec0400199a7598cda399156a9fb92_hd.jpg" alt=""></p>
+<p><strong>多任务学习有意义的情况：</strong></p>
+<ul>
+<li>如果训练的一组任务可以共用低层特征；</li>
+<li>通常，对于每个任务大量的数据具有很大的相似性；（如，在迁移学习中由任务A“100万数据”迁移到任务B“1000数据”；多任务学习中，任务 A1、A2……An ，每个任务均有1000个数据，合起来就有1000n个数据，共同帮助任务的训练）</li>
+<li>可以训练一个足够大的神经网络并同时做好所有的任务。</li>
+</ul>
+<h1 id="9、端到端的深度学习"><a href="#9、端到端的深度学习" class="headerlink" title="9、端到端的深度学习"></a><strong>9、端到端的深度学习</strong></h1><p>相对于传统的一些数据处理系统或者学习系统，它们包含了多个阶段的处理过程，而端到端的深度学习则忽略了这些阶段，用单个神经网络来替代。</p>
+<p><strong>语音识别例子：</strong></p>
+<p>在少数据集的情况下传统的特征提取方式可能会取得好的效果；如果在有足够的大量数据集情况下，端到端的深度学习会发挥巨大的价值。</p>
+<p><img src="https://pic1.zhimg.com/v2-bdda015b423811a7c6bb7e55210c334c_r.jpg" alt=""></p>
+<p>优缺点：</p>
+<p>优点：</p>
+<ul>
+<li>端到端学习可以直接让数据“说话”；</li>
+<li>所需手工设计的组件更少。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>需要大量的数据；</li>
+<li>排除了可能有用的手工设计组件。</li>
+</ul>
+<p>应用端到端学习的 Key question：是否有足够的数据能够直接学习到从 x 映射到 y 的足够复杂的函数。</p>
 
-w = w - alpha*dw
-b = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于numpy说明" class="headerlink" title="8.关于numpy说明"></a><strong>8.关于numpy说明</strong></h1><p>当不确定矩阵的维度时，可以使用assert保证安全</p>
-<pre><code>assert(a.shape == (5,1))</code></pre>
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -774,12 +857,12 @@ b = b - alpha*db</code></pre><h1 id="8-关于numpy说明"><a href="#8-关于nump
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>01神经网络基础</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">555</span></p>
+    <p><span class="copy-title">文章标题:</span>机器学习策略（2）</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">2.9k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-02-06, 10:43:34</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-12, 15:29:10</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/06/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/" title="01神经网络基础">http://yoursite.com/2020/02/06/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%92%8C%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/01%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-22, 10:31:17</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-22, 21:17:32</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/22/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/03%E7%BB%93%E6%9E%84%E5%8C%96%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AE/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5%EF%BC%882%EF%BC%89/" title="机器学习策略（2）">http://yoursite.com/2020/02/22/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/03%E7%BB%93%E6%9E%84%E5%8C%96%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AE/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5%EF%BC%882%EF%BC%89/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
