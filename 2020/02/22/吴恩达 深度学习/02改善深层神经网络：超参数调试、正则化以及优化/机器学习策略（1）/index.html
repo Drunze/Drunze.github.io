@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Java通信——传文件、消息 | Jacob</title>
-  <meta name="keywords" content=" Java通信 ">
-  <meta name="description" content="Java通信——传文件、消息 | Jacob">
+  <title>机器学习策略（1） | Jacob</title>
+  <meta name="keywords" content=" 神经网络 ">
+  <meta name="description" content="机器学习策略（1） | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="123456789101112131415import numpy as npimport matplotlib.pyplot as pltimport scipy.ioimport mathimport sklearnimport sklearn.datasetsfrom opt_utils import load_params_and_grads, initialize_parameters">
 <meta property="og:type" content="article">
@@ -630,9 +630,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Java/Java通信——传文件" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/02改善深层神经网络：超参数调试、正则化以及优化/机器学习策略（1）" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Java通信——传文件、消息</h1>
+        <h1 class="article-title">机器学习策略（1）</h1>
     
     <div class="article-meta">
         
@@ -640,28 +640,28 @@
         
         <span class="book">
             
-                <a  data-rel="Java">Java</a>/
+                <a  data-rel="吴恩达DeepLearning">吴恩达DeepLearning</a>/
             
-                <a  data-rel="通信">通信</a>
+                <a  data-rel="03结构化机器学习项目">03结构化机器学习项目</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color2">Java通信</a>
+            <a class="color5">神经网络</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-29 20:42:05'>2020-01-29 19:47</time>
+        创建时间:<time class="date" title='更新时间: 2020-02-22 09:44:48'>2020-02-22 08:55</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.9k</span>
+        <span>字数:1.3k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -691,7 +691,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#服务器Server端"><span class="toc-text">服务器Server端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#接收普通消息"><span class="toc-text">接收普通消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#接收文件"><span class="toc-text">接收文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#客户机client端"><span class="toc-text">客户机client端</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#发送普通消息"><span class="toc-text">发送普通消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#发送文件"><span class="toc-text">发送文件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#代码"><span class="toc-text">代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#server"><span class="toc-text">server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#client"><span class="toc-text">client</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、正交化"><span class="toc-text">1、正交化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、单一数字评估指标"><span class="toc-text">2、单一数字评估指标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、满足和优化指标"><span class="toc-text">3、满足和优化指标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、训练、开发、测试集"><span class="toc-text">4、训练、开发、测试集</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、改变开发、测试集和评估指标"><span class="toc-text">5、改变开发、测试集和评估指标</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、与人类表现做比较"><span class="toc-text">6、与人类表现做比较</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#可避免偏差"><span class="toc-text">可避免偏差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#理解人类表现"><span class="toc-text">理解人类表现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结："><span class="toc-text">总结：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7、改善模型的表现"><span class="toc-text">7、改善模型的表现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本假设："><span class="toc-text">基本假设：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#减少可避免偏差"><span class="toc-text">减少可避免偏差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#减少方差"><span class="toc-text">减少方差</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -707,245 +707,74 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="服务器Server端"><a href="#服务器Server端" class="headerlink" title="服务器Server端"></a>服务器Server端</h1><p>首先，创建服务器，循环等待接入客户端</p>
-<pre><code>java.net.ServerSocket server = new java.net.ServerSocket(port);//创建服务器
-java.net.Socket client = server.accept();//客户端接入</code></pre><p>接入客户端之后，开始接受消息。</p>
-<p>在这里，接受的消息不只是一个简单的内容，还含有消息头，消息头中含有有关消息的规范。</p>
-<ol>
-<li>消息长度——一个int（4字节）</li>
-<li>消息类型——一个byte（1字节）</li>
-<li>目标用户号码——一个int（4字节）</li>
-</ol>
-<p>消息类型这里分为两种：</p>
+        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
+<p>原文：<a href="https://zhuanlan.zhihu.com/p/30246827" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/30246827</a></p>
+<h1 id="1、正交化"><a href="#1、正交化" class="headerlink" title="1、正交化"></a><strong>1、正交化</strong></h1><p>表示在机器学习模型简历的整个流程中，我们需要根据不同部分反应的问题，去做相应的调整，从而更加容易的判断出是在哪一个部分出现了问题，并作相应的解决措施。<br>正交化或正交性是一种系统设计属性，其确保修改算法的指令或部分不会对烯烃的其他部分产生或传播副作用。相互独立的验证使得算法变得更简单，减少了测试和开发的时间。<br>当在监督学习的模型中，以下的4个假设需要真实且是相互正交的：</p>
 <ul>
-<li>1代表普通消息</li>
-<li>2代表文件</li>
+<li>系统在训练集上表现得好</li>
 </ul>
-<h2 id="接收普通消息"><a href="#接收普通消息" class="headerlink" title="接收普通消息"></a>接收普通消息</h2><pre><code>byte[] data = new byte[totalLen-4-1-4];
-//从流中读取data.length个字节放入数组
-dins.readFully(data);
-String msg = new String(data);
-System.out.println(&quot;发送文本给：&quot;+destNum+&quot;内容是：&quot;+msg);</code></pre><p>这里注意readfully和read的区别：</p>
-<p><strong>网络通信中，当发送大的数据量时，有这样一种可能：一部<br>分数据已发送到对方，有一部分数据还在本地的网卡缓存中，如果调用 read()方法，可能会提前<br>返回而没有读取到足够的数据，在传送大块数据（如一次传送一个较大文件时）可能会出错，而<br>readFully()方法会一直等待，读取到数组长度的所有数据后，才会返回。</strong></p>
-<p>这里是个大坑，我之前传图片会出现传送之后，接受到的图片只显示一半。原因就在此。</p>
-<p>我用read进行了测试，结果生成的图片虽然大小一模一样，但是生成图片无法显示！！！</p>
-<h2 id="接收文件"><a href="#接收文件" class="headerlink" title="接收文件"></a>接收文件</h2><pre><code>//256个字节作为文件名大小
-System.out.println(&quot;发送文件给：&quot;+destNum);    //destnum为接收者
-byte[] data = new byte[256];
-dins.readFully(data);
-String fileName = new String (data).trim();
-System.out.println(&quot;读到文件名字是：&quot;+fileName);
-//读文件内容
-data = new byte[totalLen-4-1-4-256];
-dins.readFully(data);
-//保存在当前目录下
-FileOutputStream fous = new FileOutputStream(fileName);
-fous.write(data);
-fous.flush();    //保证可靠
-fous.close();</code></pre><p>关于flush：原文链接：<a href="https://blog.csdn.net/qq_38129062/article/details/87115620" target="_blank" rel="noopener">https://blog.csdn.net/qq_38129062/article/details/87115620</a></p>
-<p><strong>设想要给鱼缸换水，所以需要一个水泵，水泵是连接鱼缸和下水道的，咱们的任务就是将鱼缸里面水全抽干，这时，我们就可以把水管当做缓冲区。如果咱们一见鱼缸里面水抽干了就立马关了水泵，这时会发现水管里还有来不及通过水泵流向下水道的残留水，我们可以把抽水当做读数据，排水当做写数据，水管当做缓冲区，这样就容易明白了。</strong></p>
-<p><strong>那么这样一来我们如果中途调用close()方法，输出区也还是有数据的，就像水缸里有水，只是在缓冲区遗留了一部分，这时如果我们先调用flush()方法，就会强制把数据输出，缓存区就清空了，最后再关闭读写流调用close()就完成了。</strong></p>
-<p>收文件时，用了FileOutputStream，文件输出流，它把文件直接写在了当前目录下。<br>可以直接规定文件输出的位置：</p>
-<pre><code>FileOutputStream fous = new FileOutputStream(&quot;C:\\Users\\董润泽\\Desktop&quot;);</code></pre><h1 id="客户机client端"><a href="#客户机client端" class="headerlink" title="客户机client端"></a>客户机client端</h1><p>首先创建客户端并通过ip和主机端口连接到服务器</p>
-<pre><code>java.net.Socket client = new java.net.Socket(ip,port);</code></pre><p>然后获取输入流和输出流：</p>
-<pre><code>java.io.InputStream ins = client.getInputStream();
-OutputStream ous = client.getOutputStream();</code></pre><p>在while循环内持续发送信息</p>
-<h2 id="发送普通消息"><a href="#发送普通消息" class="headerlink" title="发送普通消息"></a>发送普通消息</h2><pre><code>byte[] strb = msg.getBytes();//得到消息的字节数
-int totalLen = 4+4+1+strb.length;
-System.out.println(&quot;发送总长为：&quot;+totalLen);
-dous.writeInt(totalLen);
-dous.writeByte(1);//类型1代表文本
-dous.writeInt(destNum);//写入目标用户号
-dous.write(strb);
-dous.flush();</code></pre><p>其中dous为数据输出流</p>
-<pre><code>private DataOutputStream dous;</code></pre><h2 id="发送文件"><a href="#发送文件" class="headerlink" title="发送文件"></a>发送文件</h2><pre><code>//根据文件名创建文件对象
-File file = new File(fileName);
-//根据文件对象构造一个输入流
-FileInputStream ins = new FileInputStream(file);
-int fileDataLen = ins.available(); //文件数据总长
-int totalLen = 4+1+4+256+fileDataLen; //得到了要发送数据包的总长
-dous.writeInt(totalLen);
-dous.writeByte(2);
-dous.writeInt(destNum);
-String shortFileName = file.getName();
-//写入文件名
-writeString(dous,shortFileName,256);
-byte[] fileData = new byte[fileDataLen];
-ins.read(fileData);//读入文件数据
-dous.write(fileData);//写到服务器的流中
-dous.flush();</code></pre><p>注意：发送文本和文件的正文前，首先要发出文件头！</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><h3 id="server"><a href="#server" class="headerlink" title="server"></a>server</h3><pre><code>package qq_Server_test;
-
-import java.io.DataInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.ServerSocket;
-
-import org.omg.CORBA.portable.InputStream;
-
-public class Server {
-    public void setUpServer(int port) {
-        try {
-            java.net.ServerSocket server = new java.net.ServerSocket(port);
-            System.out.println(&quot;服务器创建完成&quot;);
-            while (true) {
-                java.net.Socket client = server.accept();
-                System.out.println(&quot;客户端已接入&quot;);
-                process(client);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void process(java.net.Socket client) {
-        try {
-            OutputStream ous = client.getOutputStream();
-            java.io.InputStream ins = client.getInputStream();
-            //将输入流包装成DataInputStream以便读取数据
-            DataInputStream dins = new DataInputStream(ins);
-            while(true){
-                //读取消息，消息以int开头
-                //1、读消息长度
-                int totalLen = dins.readInt();
-                System.out.println(&quot;发来消息长度为：&quot;+totalLen);
-                //2、读消息类型标识，读一个字节
-                byte flag = dins.readByte();
-                System.out.println(&quot;接收消息类型为：&quot;+flag);
-                //3、读取目标客户号码，一个 int
-                int destNum = dins.readInt();
-                System.out.println(&quot;目标用户号码为：&quot;+destNum);
-                //根据消息内容读取消息体
-                if(flag==1){//文本消息
-                    byte[] data = new byte[totalLen-4-1-4];
-                    //从流中读取data.length个字节放入数组
-                    dins.readFully(data);
-                    String msg = new String(data);
-                    System.out.println(&quot;发送文本给：&quot;+destNum+&quot;内容是：&quot;+msg);
-                }
-                else if(flag==2){//文件数据
-                    //256个字节作为文件名
-                    System.out.println(&quot;发送文件给：&quot;+destNum);
-                    byte[] data = new byte[256];
-                    dins.readFully(data);
-                    String fileName = new String (data).trim();
-                    System.out.println(&quot;读到文件名字是：&quot;+fileName);
-                    //读文件内容
-                    data = new byte[totalLen-4-1-4-256];
-                    dins.readFully(data);
-                    //保存在当前目录下
-                    FileOutputStream fous = new FileOutputStream(fileName+1);
-                    fous.write(data);
-                    fous.flush();
-                    fous.close();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public static void main(String[] args) {
-        Server server = new Server();
-        server.setUpServer(9900);
-    }
-}</code></pre><h3 id="client"><a href="#client" class="headerlink" title="client"></a>client</h3><pre><code>package qq_client_test;
-
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.Scanner;
-
-import org.omg.CORBA.portable.InputStream;
-
-public class Client {
-    private DataOutputStream dous;//输出流对象
-
-    private void writeString(DataOutputStream out,String str,int len){
-    //向流中写入指定长度的字节，如果不足，就补0
-        try{
-            byte[] data = str.getBytes();
-            out.write(data);
-            while(len&gt;data.length){
-                out.writeByte(&apos;\0&apos;);
-                len--;
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void sendTextMsg(String msg,int destNum){
-        //发送消息
-        try{
-            byte[] strb = msg.getBytes();//得到消息的字节数
-            int totalLen = 4+4+1+strb.length;
-            System.out.println(&quot;发送总长为：&quot;+totalLen);
-            dous.writeInt(totalLen);
-            dous.writeByte(1);//类型1代表文本
-            dous.writeInt(destNum);//写入目标用户号
-            dous.write(strb);
-            dous.flush();            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    private void sendFileMsg(String fileName, int destNum){
-        try{
-            //根据文件名创建文件对象
-            File file = new File(fileName);
-            //根据文件对象构造一个输入流
-            FileInputStream ins = new FileInputStream(file);
-            int fileDataLen = ins.available(); //文件数据总长
-            int totalLen = 4+1+4+256+fileDataLen; //得到了要发送数据包的总长
-            dous.writeInt(totalLen);
-            dous.writeByte(2);
-            dous.writeInt(destNum);
-            String shortFileName = file.getName();
-            //写入文件名
-            writeString(dous,shortFileName,256);
-            byte[] fileData = new byte[fileDataLen];
-            ins.read(fileData);//读入文件数据
-            dous.write(fileData);//写到服务器的流中
-            dous.flush();
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void conn2Server(String ip, int port){
-        try{
-            java.net.Socket client = new java.net.Socket(ip,port);
-            java.io.InputStream ins = client.getInputStream();
-            OutputStream ous = client.getOutputStream();
-            dous = new DataOutputStream(ous);
-            int testCount = 0;
-            while(true){
-                System.out.println(&quot;登陆服务器成功，选择要发的类型（1、聊天，2、文件）：&quot;);
-                java.util.Scanner sc = new Scanner(System.in);
-                int type = sc.nextInt();
-                if(type==1){
-                    sendTextMsg(&quot;abc聊天&quot;+testCount, 8888);
-                }
-                if(type==2){
-                    sendFileMsg(&quot;C:\\Users\\董润泽\\Desktop\\test1.jpg&quot;, 8888);
-                }
-                testCount++;
-            }
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-    public static void main(String[] args) {
-        Client client = new Client();
-        client.conn2Server(&quot;localhost&quot;, 9900);
-    }
-}</code></pre><p>运行结果：</p>
-<p><img src="https://img-blog.csdnimg.cn/20200129204116198.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""><br><img src="https://img-blog.csdnimg.cn/20200129204122572.png" alt=""></p>
+<p>否则，使用<strong>更大的神经网络、更好的优化算法</strong></p>
+<ul>
+<li>系统在开发集上表现的好</li>
+</ul>
+<p>否则，使用<strong>正则化、更大的训练集</strong></p>
+<ul>
+<li>系统在测试集上表现得好</li>
+</ul>
+<p>否则，使用<strong>更大的开发集</strong></p>
+<ul>
+<li>在真是的系统环境中表现得好</li>
+</ul>
+<p>否则，<strong>修改开发测试集、修改代价函数</strong></p>
+<h1 id="2、单一数字评估指标"><a href="#2、单一数字评估指标" class="headerlink" title="2、单一数字评估指标"></a><strong>2、单一数字评估指标</strong></h1><p>在训练机器学习模型的时候，无论是调整超参数，还是尝试更好的优化算法，为问题设置一个单一数字评估指标，可以更好更快的评估模型。</p>
+<p>例：</p>
+<p>下面是分别训练的两个分类器的Precision、Recall以及F1 score。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-67bd35839c8d21ea2cbbd5b05f163c22_hd.jpg" alt=""></p>
+<p>由上表可以看出，以<strong>Precision</strong>为指标，则分类器A的分类效果好；以<strong>Recall</strong>为指标，则分类器B的分类效果好。所以在有两个及以上判定指标的时候，我们很难决定出A好还是B好。</p>
+<p>这里以Precision和Recall为基础，构成一个综合指标<strong>F1 Score</strong>，那么我们利用F1 Score便可以更容易的评判出分类器A的效果更好。</p>
+<p><img src="https://pic3.zhimg.com/80/v2-df2cc331a07e002c8343d7aa1e3ea714_hd.png" alt=""></p>
+<p><img src="https://pic2.zhimg.com/80/v2-0b5e8a714af9916bc7fc1c02b8558179_hd.png" alt=""></p>
+<p>例：</p>
+<p>下面是另外一个问题多种分类器在不同的国家中的分类错误率结果：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-d271693edd11c1e41ae10cfe83cfe9af_hd.jpg" alt=""></p>
+<p>模型在各个地区有不同的表现，这里用地区的平均值来对模型效果进行评估，转换为单一数字评估指标，就可以很容易的得出表现最好的模型。</p>
+<h1 id="3、满足和优化指标"><a href="#3、满足和优化指标" class="headerlink" title="3、满足和优化指标"></a><strong>3、满足和优化指标</strong></h1><p>假设有三个不同的分类器性能表现如下：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-e72c89d963bd6f7224d61073507dd16e_hd.jpg" alt=""></p>
+<p>有时对于某一问题，对模型的效果有一定的要求，如要求模型准确率尽可能的高，运行时间在 100ms 以内。这里以 Accuracy 为优化指标，以 Running time 为满足指标，我们可以从中选出B是满足条件的最好的分类器。</p>
+<p>一般的，如果要考虑N个指标，则选择一个指标为优化指标，其他N-1个指标都是满足指标：<br><img src="https://www.zhihu.com/equation?tex=N_%7Bmetric%7D%3A%5Cleft%5C%7B+%5Cbegin%7Barray%7D%7Bl%7D+1%5Cqquad+%5Cqquad+%5Cqquad+Optimizing%5C+metric%5C%5C+N_%7Bmetric%7D-1%5Cqquad+Satisificing%5C+metric+%5Cend%7Barray%7D+%5Cright." alt=""></p>
+<h1 id="4、训练、开发、测试集"><a href="#4、训练、开发、测试集" class="headerlink" title="4、训练、开发、测试集"></a><strong>4、训练、开发、测试集</strong></h1><p>训练、开发、测试集选择设置的一些规则和意见：</p>
+<ul>
+<li>训练、开发、测试集的设置会对产品带来非常大的影响；</li>
+<li>在选择开发集和测试集时要使二者来自同一分布，且从所有数据中随机选取；</li>
+<li>所选择的开发集和测试集中的数据，要与未来想要或者能够得到的数据类似，即模型数据和未来数据要具有相似性；</li>
+<li>设置的测试集只要足够大，使其能够在过拟合的系统中给出高方差的结果就可以，也许10000左右的数目足够；</li>
+<li>设置开发集只要足够使其能够检测不同算法、不同模型之间的优劣差异就可以，百万大数据中 1% 的大小就足够；</li>
+</ul>
+<h1 id="5、改变开发、测试集和评估指标"><a href="#5、改变开发、测试集和评估指标" class="headerlink" title="5、改变开发、测试集和评估指标"></a><strong>5、改变开发、测试集和评估指标</strong></h1><p>在针对某一问题我们设置开发集和评估指标后，这就像把目标定在某个位置，后面的过程就聚焦在该位置上。但有时候在这个项目的过程中，可能会发现目标的位置设置错了，所以要移动改变我们的目标。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-b66ef65d53c6e82de830901031cd10b5_hd.png" alt=""></p>
+<p><img src="https://pic2.zhimg.com/80/v2-808945d8bada8dda0aebedc835de906b_hd.png" alt=""></p>
+<p><img src="https://pic1.zhimg.com/80/v2-9d106605ab7a18a473d2e7c919abeea0_hd.png" alt=""></p>
+<h1 id="6、与人类表现做比较"><a href="#6、与人类表现做比较" class="headerlink" title="6、与人类表现做比较"></a><strong>6、与人类表现做比较</strong></h1><h3 id="可避免偏差"><a href="#可避免偏差" class="headerlink" title="可避免偏差"></a>可避免偏差</h3><p>假设针对两个问题分别具有相同的训练误差和交叉验证误差，如下所示：<br><img src="https://pic2.zhimg.com/80/v2-4b876324925dc62b78fb5f3db012d04d_hd.jpg" alt=""></p>
+<p><img src="https://pic4.zhimg.com/80/v2-be99e3962296aeb44890a59584052515_hd.png" alt=""></p>
+<h3 id="理解人类表现"><a href="#理解人类表现" class="headerlink" title="理解人类表现"></a>理解人类表现</h3><p><img src="https://pic4.zhimg.com/80/v2-85a31af4f0f9970b7407d10ed936e08d_hd.png" alt=""></p>
+<h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>对人类水平误差有一个大概的估计，可以让我们去估计贝叶斯误差，这样可以让我们更快的做出决定：减少偏差还是减少方差。</p>
+<p>而这个决策技巧通常都很有效果，直到系统的性能开始超越人类，那么我们对贝叶斯误差的估计就不再准确了，再从减少偏差和减少方差方面提升系统性能就会比较困难了。</p>
+<p><img src="https://pic1.zhimg.com/80/v2-4864c0e398d6c3e2e9b48b63a2cbbf10_hd.jpg" alt=""></p>
+<h1 id="7、改善模型的表现"><a href="#7、改善模型的表现" class="headerlink" title="7、改善模型的表现"></a><strong>7、改善模型的表现</strong></h1><h3 id="基本假设："><a href="#基本假设：" class="headerlink" title="基本假设："></a>基本假设：</h3><ul>
+<li>模型在训练集上有很好的表现；</li>
+<li>模型推广到开发和测试集啥会给你也有很好的表现。</li>
+</ul>
+<h3 id="减少可避免偏差"><a href="#减少可避免偏差" class="headerlink" title="减少可避免偏差"></a>减少可避免偏差</h3><ul>
+<li>训练更大的模型</li>
+<li>训练更长时间、训练更好的优化算法（Momentum、RMSprop、Adam）</li>
+<li>寻找更好的网络架构（RNN、CNN）、寻找更好的超参数</li>
+</ul>
+<h3 id="减少方差"><a href="#减少方差" class="headerlink" title="减少方差"></a>减少方差</h3><ul>
+<li>收集更多的数据</li>
+<li>正则化（L2、dropout、数据增强）</li>
+<li>寻找更好的网络架构（RNN、CNN）、寻找更好的超参数</li>
+</ul>
+<p><img src="https://pic4.zhimg.com/80/v2-33288b47102b78b3bda187170f931dbb_hd.jpg" alt=""></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -959,12 +788,12 @@ public class Client {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Java通信——传文件、消息</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.9k</span></p>
+    <p><span class="copy-title">文章标题:</span>机器学习策略（1）</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.3k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-29, 19:47:57</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-29, 20:42:05</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/29/Java/Java%E9%80%9A%E4%BF%A1%E2%80%94%E2%80%94%E4%BC%A0%E6%96%87%E4%BB%B6/" title="Java通信——传文件、消息">http://yoursite.com/2020/01/29/Java/Java%E9%80%9A%E4%BF%A1%E2%80%94%E2%80%94%E4%BC%A0%E6%96%87%E4%BB%B6/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-22, 08:55:48</p>
+    <p><span class="copy-title">最后更新:</span>2020-02-22, 09:44:48</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/22/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5%EF%BC%881%EF%BC%89/" title="机器学习策略（1）">http://yoursite.com/2020/02/22/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5%EF%BC%881%EF%BC%89/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
