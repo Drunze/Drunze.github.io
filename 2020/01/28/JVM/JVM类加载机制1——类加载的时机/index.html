@@ -6,30 +6,25 @@
   <meta name="keywords" content=" 类加载机制 ">
   <meta name="description" content="类加载的时机 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="参考文章：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;30393923 1、误差分析例： 在猫分类器中，假若你发现，有些狗的图片被识别成猫，并且这些狗的图片乍一看还真的像猫，那么试想，你是不是可以通过一些方法来专门解决狗的问题？但是问题的关键在于，这样做到底值不值得（因为要花费时间，并且有一无所获的风险）？ 两种情况（收集100个错误样例）：  1、假设100个样例中5个是狗，那么">
+<meta name="description" content="编译过程一、程序编译过程 词法分析 语法分析 中间代码产生 优化 目标代码生成  1、词法分析任务：输入源程序，对构成源程序的字符串进行扫描分解，识别出一个个单词 原则：构词规则 描述工具：正规式，有限自动机 例如：For 保留字 、 i 标识符 、 &#x3D; 运算符 、 1 常整数 2、语法分析任务： 在词法分析基础上，根据语法规则判断组合后能否组成一句话 原则： 语法规则 描述工具： 上下文无关文">
 <meta property="og:type" content="article">
-<meta property="og:title" content="机器学习策略（2）">
-<meta property="og:url" content="http://yoursite.com/2020/02/22/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/03%E7%BB%93%E6%9E%84%E5%8C%96%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E9%A1%B9%E7%9B%AE/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AD%96%E7%95%A5%EF%BC%882%EF%BC%89/index.html">
+<meta property="og:title" content="第一章编译过程、高级语言简介">
+<meta property="og:url" content="http://yoursite.com/2020/02/25/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/%E7%AC%AC%E4%B8%80%E7%AB%A0/index.html">
 <meta property="og:site_name" content="Jacob">
-<meta property="og:description" content="参考文章：https:&#x2F;&#x2F;zhuanlan.zhihu.com&#x2F;p&#x2F;30393923 1、误差分析例： 在猫分类器中，假若你发现，有些狗的图片被识别成猫，并且这些狗的图片乍一看还真的像猫，那么试想，你是不是可以通过一些方法来专门解决狗的问题？但是问题的关键在于，这样做到底值不值得（因为要花费时间，并且有一无所获的风险）？ 两种情况（收集100个错误样例）：  1、假设100个样例中5个是狗，那么">
+<meta property="og:description" content="编译过程一、程序编译过程 词法分析 语法分析 中间代码产生 优化 目标代码生成  1、词法分析任务：输入源程序，对构成源程序的字符串进行扫描分解，识别出一个个单词 原则：构词规则 描述工具：正规式，有限自动机 例如：For 保留字 、 i 标识符 、 &#x3D; 运算符 、 1 常整数 2、语法分析任务： 在词法分析基础上，根据语法规则判断组合后能否组成一句话 原则： 语法规则 描述工具： 上下文无关文">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-86d2d7c8fec128c33255cdd659f8f8fe_hd.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-7cd438bc8cc081d478982651eece606c_hd.jpg">
-<meta property="og:image" content="https://pic4.zhimg.com/80/v2-4eee1b87e2d407c8cb71d716fe647e0b_hd.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/80/v2-e73aa735dc3de823156b48d609f46364_hd.jpg">
-<meta property="og:image" content="https://pic2.zhimg.com/v2-e479451be79e560d14fdf50426de2aad_r.jpg">
-<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Chat+y%5E%7B(i)%7D%253D%5Cleft%5B+%5Cbegin%7Barray%7D%7Bl%7D+1%5C%5C+0%5C%5C+1%5C%5C+0+%5Cend%7Barray%7D+%5Cright%5D+%5Cleft%7C+%5Cbegin%7Barray%7D%7Bl%7D+Pedestrians%5C%5C+Cars%5C%5C+Road%5C+signs-Stop%5C%5C+Traffic%5C+lights+%5Cend%7Barray%7D+%5Cright.">
-<meta property="og:image" content="https://pic2.zhimg.com/80/v2-69284cfc23139eba9f718d7242ce3009_hd.jpg">
-<meta property="og:image" content="https://www.zhihu.com/equation?tex=loss+%253D+%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%253D1%7D%5E%7Bm%7D%5Csum%5Climits_%7Bj%253D1%7D%5E%7B4%7DL(%5Chat+y%5E%7B(i)%7D_%7Bj%7D%252Cy%5E%7B(i)%7D_%7Bj%7D)%253D%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%253D1%7D%5E%7Bm%7D%5Csum%5Climits_%7Bj%253D1%7D%5E%7B4%7D(y%5E%7B(i)%7D_%7Bj%7D%5Clog+(%5Chat+y%5E%7B(i)%7D_%7Bj%7D)%252B(1-y%5E%7B(i)%7D_%7Bj%7D)%5Clog(1-%5Chat+y%5E%7B(i)%7D_%7Bj%7D))">
-<meta property="og:image" content="https://pic3.zhimg.com/80/v2-026ec0400199a7598cda399156a9fb92_hd.jpg">
-<meta property="og:image" content="https://pic1.zhimg.com/v2-bdda015b423811a7c6bb7e55210c334c_r.jpg">
-<meta property="article:published_time" content="2020-02-22T02:31:17.000Z">
-<meta property="article:modified_time" content="2020-02-23T00:31:24.450Z">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-3c244e5738a7fe3b01e88a7f9821ea5a_720w.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200121103143498.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200122204152483.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-ef4a8e908dd2cc951416cae29666b638_720w.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20191127123045440.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-b72ad3748801812d0d1607f4da19abb3_720w.png">
+<meta property="article:published_time" content="2020-02-25T06:11:23.000Z">
+<meta property="article:modified_time" content="2020-02-25T08:32:14.931Z">
 <meta property="article:author" content="Jacob">
-<meta property="article:tag" content="神经网络">
+<meta property="article:tag" content="编译原理">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg">
+<meta name="twitter:image" content="https://pic4.zhimg.com/80/v2-3c244e5738a7fe3b01e88a7f9821ea5a_720w.png">
 
 
 <link rel="icon" href="/img/avatar.jpg">
@@ -150,7 +145,7 @@
 
 
 <ul>
-    <li><div class="all active">全部文章<small>(32)</small></div></li>
+    <li><div class="all active">全部文章<small>(34)</small></div></li>
     
         
             
@@ -292,6 +287,22 @@
             
         
     
+        
+            
+            <li><div data-rel="编译原理">编译原理<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="软件工程基础">软件工程基础<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
 </ul>
 <div class="left-bottom">
     <div class="menus">
@@ -304,8 +315,8 @@
     </div>
     <div><a class="about  hasFriend  site_url"  href="/about">关于</a><a style="width: 50%"  class="friends">友链</a></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="32">
-<input type="hidden" id="yelog_site_word_count" value="38.8k">
+<input type="hidden" id="yelog_site_posts_number" value="34">
+<input type="hidden" id="yelog_site_word_count" value="40.4k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -374,6 +385,14 @@
         <a class="color5">神经网络</a>
     </li>
     
+    <li class="article-tag-list-item">
+        <a class="color5">编译原理</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">软件工程</a>
+    </li>
+    
     <div class="clearfix"></div>
 </div>
 
@@ -406,14 +425,6 @@
            data-author="" >
             <span class="post-title" title="Pandas">Pandas</span>
             <span class="post-date" title="2020-02-01 09:58:53">2020/02/01</span>
-        </a>
-        
-        <a  class="机器学习 入门 "
-           href="/2020/01/28/%E7%BA%A2%E9%85%92%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B/%E7%BA%A2%E9%85%92%E6%95%B0%E6%8D%AE%E9%9B%86/"
-           data-tag="机器学习"
-           data-author="" >
-            <span class="post-title" title="红酒质量预测">红酒质量预测</span>
-            <span class="post-date" title="2020-01-28 18:58:38">2020/01/28</span>
         </a>
         
         <a  class="JVM JVM结构 "
@@ -638,6 +649,30 @@
            data-author="" >
             <span class="post-title" title="卷积神经网络基础">卷积神经网络基础</span>
             <span class="post-date" title="2020-02-23 21:12:17">2020/02/23</span>
+        </a>
+        
+        <a  class="编译原理 "
+           href="/2020/02/25/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/%E7%AC%AC%E4%B8%80%E7%AB%A0/"
+           data-tag="编译原理"
+           data-author="" >
+            <span class="post-title" title="第一章编译过程、高级语言简介">第一章编译过程、高级语言简介</span>
+            <span class="post-date" title="2020-02-25 14:11:23">2020/02/25</span>
+        </a>
+        
+        <a  class="软件工程基础 "
+           href="/2020/02/24/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%9F%BA%E7%A1%80/%E7%AC%AC%E4%B8%80%E7%AB%A0%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%9F%BA%E7%A1%80/"
+           data-tag="软件工程"
+           data-author="" >
+            <span class="post-title" title="第一章软件工程基础">第一章软件工程基础</span>
+            <span class="post-date" title="2020-02-24 10:51:59">2020/02/24</span>
+        </a>
+        
+        <a  class="机器学习 入门 "
+           href="/2020/01/28/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/%E7%BA%A2%E9%85%92%E8%B4%A8%E9%87%8F%E9%A2%84%E6%B5%8B/%E7%BA%A2%E9%85%92%E6%95%B0%E6%8D%AE%E9%9B%86/"
+           data-tag="机器学习"
+           data-author="" >
+            <span class="post-title" title="红酒质量预测">红酒质量预测</span>
+            <span class="post-date" title="2020-01-28 18:58:38">2020/01/28</span>
         </a>
         
     </nav>
@@ -882,7 +917,7 @@ public class NotInitialization {
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#NumPy','#Java通信','#Pandas','#机器学习','#JVM结构','#静态、动态代理','#字节码执行引擎','#类加载机制','#神经网络',],
+            'data': ['#NumPy','#Java通信','#Pandas','#机器学习','#JVM结构','#静态、动态代理','#字节码执行引擎','#类加载机制','#神经网络','#编译原理','#软件工程',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
