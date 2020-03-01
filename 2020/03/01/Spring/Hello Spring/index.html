@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>NumPy | Jacob</title>
-  <meta name="keywords" content=" NumPy ">
-  <meta name="description" content="NumPy | Jacob">
+  <title>Hello Spring | Jacob</title>
+  <meta name="keywords" content=" Spring , Hello World ">
+  <meta name="description" content="Hello Spring | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="本文介绍在IntelliJ IDEA中配置Spring环境及Spring的简单例子：Hello Spring 首先新建项目  命名后直接finish  系统会自动帮你下载所需要的包  然后在src目录下新建一个xml文件  在src目录下开始编写我们的hello world 123456789public class HelloWorld &amp;#123;    private String name">
 <meta property="og:type" content="article">
@@ -715,9 +715,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-数据挖掘/NumPy" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Spring/Hello Spring" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">NumPy</h1>
+        <h1 class="article-title">Hello Spring</h1>
     
     <div class="article-meta">
         
@@ -725,26 +725,28 @@
         
         <span class="book">
             
-                <a  data-rel="数据挖掘">数据挖掘</a>
+                <a  data-rel="Spring">Spring</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">NumPy</a>
+            <a class="color2">Spring</a>
+            
+            <a class="color2">Hello World</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-01 09:46:05'>2020-01-31 10:38</time>
+        创建时间:<time class="date" title='更新时间: 2020-03-01 12:16:34'>2020-03-01 11:30</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:659</span>
+        <span>字数:387</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -774,7 +776,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NumPy性能和python列表对比"><span class="toc-text">NumPy性能和python列表对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建ndarray"><span class="toc-text">创建ndarray</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#numpy数组的运算"><span class="toc-text">numpy数组的运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本索引和切片"><span class="toc-text">基本索引和切片</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布尔类型索引"><span class="toc-text">布尔类型索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数组转置和轴对换"><span class="toc-text">数组转置和轴对换</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -790,116 +792,43 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="NumPy性能和python列表对比"><a href="#NumPy性能和python列表对比" class="headerlink" title="NumPy性能和python列表对比"></a>NumPy性能和python列表对比</h1><pre><code>import numpy as np
-my_arr = np.arange(1000000)
-my_list = list(range(1000000))
-%time for _ in range(10): my_arr2 = my_arr*2
-%time for _ in range(10): my_list2 = [x*2 for x in my_list]</code></pre><p>结果</p>
-<pre><code>Wall time: 16 ms
-Wall time: 636 ms</code></pre><h1 id="创建ndarray"><a href="#创建ndarray" class="headerlink" title="创建ndarray"></a>创建ndarray</h1><pre><code>data1 = [1,23,4.6,2]
-arr1 = np.array(data1)
-arr1
+        <p>本文介绍在IntelliJ IDEA中配置Spring环境及Spring的简单例子：Hello Spring</p>
+<p>首先新建项目</p>
+<p><img src="https://pic2.zhimg.com/80/v2-5b7871a802c7dec025821bb4b345b329_720w.png" alt=""></p>
+<p>命名后直接finish</p>
+<p><img src="https://pic2.zhimg.com/80/v2-8c85f3ab68edb9380988eabe086c1b1f_720w.png" alt=""></p>
+<p>系统会自动帮你下载所需要的包</p>
+<p><img src="%EF%BC%8C%E7%B3%BB%E7%BB%9F%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%B8%AE%E4%BD%A0%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E5%8C%85" alt=""></p>
+<p>然后在src目录下新建一个xml文件</p>
+<p><img src="https://pic3.zhimg.com/80/v2-80347d7191d654299b0e4fcfc54ee24a_720w.png" alt=""></p>
+<p>在src目录下开始编写我们的hello world</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name=name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">sayHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello"</span>+name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-data2 = [[1,2,3],
-        [4,5,6]]
-arr2 = np.array(data2)
-arr2
-
-print(arr2.ndim)
-print(arr2.shape)
-
-np.zeros((2,3))
-
-int_array = np.arange(10)
-calibers = np.array([.22, .270, .357, .380, .44, .50], dtype=np.float64)
-int_array.astype(calibers.dtype)</code></pre><h1 id="numpy数组的运算"><a href="#numpy数组的运算" class="headerlink" title="numpy数组的运算"></a>numpy数组的运算</h1><pre><code>arr = np.array([[1., 2., 3.],
-               [4., 5., 6.]])
-print(arr*arr)
-print(arr*arr == arr)</code></pre><p>结果</p>
-<pre><code>[[ 1.  4.  9.]
- [16. 25. 36.]]
-[[False  True  True]
- [ True  True  True]]</code></pre><h1 id="基本索引和切片"><a href="#基本索引和切片" class="headerlink" title="基本索引和切片"></a>基本索引和切片</h1><pre><code>arr = np.arange(10)
-print(arr)
-print(arr[5])
-arr[5:8]=12
-print(arr[5:8])
-print(arr)</code></pre><p>创建一个切片后，对切片进行操作，会改变原数组中的值</p>
-<pre><code>arr_slice = arr[5:8]
-print(arr_slice)
-arr_slice[1] = 12345
-print(arr)</code></pre><p>结果：</p>
-<pre><code>[12 12 12]
-[    0     1     2     3     4    12 12345    12     8     9]</code></pre><p>若想要得到的是一个副本而不是视图，需要明确<strong>arr[5:8].copy()</strong></p>
-<h1 id="布尔类型索引"><a href="#布尔类型索引" class="headerlink" title="布尔类型索引"></a>布尔类型索引</h1><pre><code>names = np.array([&apos;Bob&apos;, &apos;Joe&apos;, &apos;Will&apos;, &apos;Joe&apos;, &apos;Joe&apos;])
-data = np.random.randn(5,4)
-print(data)
-print(names == &apos;Bob&apos;)
-print(data[names == &apos;Bob&apos;])
-print(names != &apos;Bob&apos;)
-print(data[~(names == &apos;Bob&apos;)])</code></pre><p>结果：</p>
-<pre><code>array([[-0.72559713,  0.5021692 , -0.40538323,  1.03159213],
-       [ 0.72144716,  0.9853986 , -1.90579109, -0.42454087],
-       [-0.35674934,  0.12369675,  1.71308068,  0.61302904],
-       [ 0.86463033, -0.97788801, -0.07978174, -0.44386613],
-       [ 1.47681259,  1.09531974, -0.16154207,  1.92472807]])
-
-array([ True, False, False, False, False])
-
-array([[-0.72559713,  0.5021692 , -0.40538323,  1.03159213]])
-
-array([[ 0.72144716,  0.9853986 , -1.90579109, -0.42454087],
-       [-0.35674934,  0.12369675,  1.71308068,  0.61302904],
-       [ 0.86463033, -0.97788801, -0.07978174, -0.44386613],
-       [ 1.47681259,  1.09531974, -0.16154207,  1.92472807]])</code></pre><h1 id="数组转置和轴对换"><a href="#数组转置和轴对换" class="headerlink" title="数组转置和轴对换"></a>数组转置和轴对换</h1><pre><code>arr = np.arange(16).reshape((2,2,4))
-print(arr)
-arr.transpose((1, 0, 2))</code></pre><p>结果：</p>
-<pre><code>[[[ 0  1  2  3]
-  [ 4  5  6  7]]
-
- [[ 8  9 10 11]
-  [12 13 14 15]]]
-
-array([[[ 0,  1,  2,  3],
-        [ 8,  9, 10, 11]],
-
-       [[ 4,  5,  6,  7],
-        [12, 13, 14, 15]]])</code></pre><p>swapaxes返回源数据的视图</p>
-<pre><code>print(arr.swapaxes(1,2))
-
-[[[ 0  4]
-  [ 1  5]
-  [ 2  6]
-  [ 3  7]]
-
- [[ 8 12]
-  [ 9 13]
-  [10 14]
-  [11 15]]]</code></pre><p>#将条件逻辑表述为数组运算</p>
-<pre><code>x = np.array([1,2,3,4,5])
-y = np.array([4,6,8,9,0])
-cond = np.array([True,False,True,False,True])
-
-result = np.where(cond,x,y)
-print(result)</code></pre><p>结果：</p>
-<pre><code>[1 6 3 9 5]</code></pre><p>where：当cond为真则x，否则为y</p>
-<p>#数学和统计方法</p>
 <ul>
-<li>mean 算数平均数</li>
-<li>std、var 标准差、方差</li>
-<li>argmin，argmax 最小最大元素索引</li>
-<li>cumsum 所有元素累计和</li>
-<li>cumprod 所有元素累计积</li>
+<li>用传统的方法：</li>
 </ul>
-<p>#排序</p>
-<pre><code>np.sort(a, axis, kind, order)</code></pre><ol>
-<li>a:要排序的数组</li>
-<li>axis：按照排序数组的轴</li>
-<li>kind默认为“quicksort”</li>
-<li>order：若数组包含字段，则为要排序的字段</li>
-</ol>
-<p>#唯一化以及其他的集合逻辑<br>    names = np.array([‘Bob’, ‘Joe’, ‘Will’, ‘Joe’, ‘Joe’])<br>    print(np.unique(names))<br>结果：</p>
-<pre><code>[&apos;Bob&apos; &apos;Joe&apos; &apos;Will&apos;]</code></pre>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">	HelloWorld hello = <span class="keyword">new</span> HelloWorld();</span><br><span class="line">	hello.setName(<span class="string">"Spring"</span>);</span><br><span class="line">	hello.sayHello();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用Spring框架</li>
+</ul>
+<p>首先在spring-config文件中进行配置：</p>
+<pre><code>&lt;bean id=&quot;helloWorld&quot; class=&quot;HelloWorld&quot;&gt;
+    &lt;property name=&quot;name&quot; value=&quot;Spring&quot;&gt;&lt;/property&gt;
+&lt;/bean&gt;</code></pre><p>这里可能不理解这些参数的含义，等看完main就知道了：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">//1.创建一个Spring 得Ioc容器对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"spring-config.xml"</span>);</span><br><span class="line">        <span class="comment">//2.从Ioc容器中获取bean实例</span></span><br><span class="line">        HelloWorld helloWorld = (HelloWorld) context.getBean(<span class="string">"helloWorld"</span>);</span><br><span class="line">        <span class="comment">//3.调用sayHello()方法</span></span><br><span class="line">        helloWorld.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：<br><img src="https://pic4.zhimg.com/80/v2-431165f7a7ed4b45d0c8f2a5c0c61f0e_720w.png" alt=""></p>
+<p>spring-config文件中的id就是Ioc容器获取的bean实例的id，name就是变量名，value就是set方法中传入的参数。</p>
+<p>我们再加一个setAge()</p>
+<p><img src="https://pic3.zhimg.com/80/v2-d0fd4de780286d923386a53ea673bda7_720w.png" alt=""></p>
+<p><img src="https://pic2.zhimg.com/80/v2-9bb3ca9dd24029ef1fd370313306bc2f_720w.png" alt=""></p>
+<p><img src="https://pic3.zhimg.com/80/v2-9b29d9f7c085f43af87e0ce6b327362f_720w.png" alt=""></p>
+<p><img src="https://pic2.zhimg.com/80/v2-085c1cb17b76fec648ff5681fc3ef823_720w.png" alt=""></p>
+<p>这时候我们再来看Spring</p>
+<p>它就是把所有的方法、值通过配置文件传给Ioc容器，这样在原本主函数中，属于某个对象的权力都转给了配置文件，实现了主函数（对象）同类之间的解耦。</p>
+<p>在MVC框架中，相当于将View层脱离了出来。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -912,12 +841,12 @@ print(result)</code></pre><p>结果：</p>
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>NumPy</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">659</span></p>
+    <p><span class="copy-title">文章标题:</span>Hello Spring</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">387</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-31, 10:38:27</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-01, 09:46:05</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/NumPy/" title="NumPy">http://yoursite.com/2020/01/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/NumPy/</a>
+    <p><span class="copy-title">发布时间:</span>2020-03-01, 11:30:23</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-01, 12:16:34</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/01/Spring/Hello%20Spring/" title="Hello Spring">http://yoursite.com/2020/03/01/Spring/Hello%20Spring/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>

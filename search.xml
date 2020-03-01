@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>Hello Spring</title>
+      <link href="/2020/03/01/Spring/Hello%20Spring/"/>
+      <url>/2020/03/01/Spring/Hello%20Spring/</url>
+      
+        <content type="html"><![CDATA[<p>本文介绍在IntelliJ IDEA中配置Spring环境及Spring的简单例子：Hello Spring</p><p>首先新建项目</p><p><img src="https://pic2.zhimg.com/80/v2-5b7871a802c7dec025821bb4b345b329_720w.png" alt=""></p><p>命名后直接finish</p><p><img src="https://pic2.zhimg.com/80/v2-8c85f3ab68edb9380988eabe086c1b1f_720w.png" alt=""></p><p>系统会自动帮你下载所需要的包</p><p><img src="%EF%BC%8C%E7%B3%BB%E7%BB%9F%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%B8%AE%E4%BD%A0%E4%B8%8B%E8%BD%BD%E6%89%80%E9%9C%80%E8%A6%81%E7%9A%84%E5%8C%85" alt=""></p><p>然后在src目录下新建一个xml文件</p><p><img src="https://pic3.zhimg.com/80/v2-80347d7191d654299b0e4fcfc54ee24a_720w.png" alt=""></p><p>在src目录下开始编写我们的hello world</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name=name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">sayHello</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"Hello"</span>+name);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>用传统的方法：</li></ul><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">HelloWorld hello = <span class="keyword">new</span> HelloWorld();</span><br><span class="line">hello.setName(<span class="string">"Spring"</span>);</span><br><span class="line">hello.sayHello();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>用Spring框架</li></ul><p>首先在spring-config文件中进行配置：</p><pre><code>&lt;bean id=&quot;helloWorld&quot; class=&quot;HelloWorld&quot;&gt;    &lt;property name=&quot;name&quot; value=&quot;Spring&quot;&gt;&lt;/property&gt;&lt;/bean&gt;</code></pre><p>这里可能不理解这些参数的含义，等看完main就知道了：</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ApplicationContext;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">main</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="comment">//1.创建一个Spring 得Ioc容器对象</span></span><br><span class="line">        ApplicationContext context = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"spring-config.xml"</span>);</span><br><span class="line">        <span class="comment">//2.从Ioc容器中获取bean实例</span></span><br><span class="line">        HelloWorld helloWorld = (HelloWorld) context.getBean(<span class="string">"helloWorld"</span>);</span><br><span class="line">        <span class="comment">//3.调用sayHello()方法</span></span><br><span class="line">        helloWorld.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>输出结果：<br><img src="https://pic4.zhimg.com/80/v2-431165f7a7ed4b45d0c8f2a5c0c61f0e_720w.png" alt=""></p><p>spring-config文件中的id就是Ioc容器获取的bean实例的id，name就是变量名，value就是set方法中传入的参数。</p><p>我们再加一个setAge()</p><p><img src="https://pic3.zhimg.com/80/v2-d0fd4de780286d923386a53ea673bda7_720w.png" alt=""></p><p><img src="https://pic2.zhimg.com/80/v2-9bb3ca9dd24029ef1fd370313306bc2f_720w.png" alt=""></p><p><img src="https://pic3.zhimg.com/80/v2-9b29d9f7c085f43af87e0ce6b327362f_720w.png" alt=""></p><p><img src="https://pic2.zhimg.com/80/v2-085c1cb17b76fec648ff5681fc3ef823_720w.png" alt=""></p><p>这时候我们再来看Spring</p><p>它就是把所有的方法、值通过配置文件传给Ioc容器，这样在原本主函数中，属于某个对象的权力都转给了配置文件，实现了主函数（对象）同类之间的解耦。</p><p>在MVC框架中，相当于将View层脱离了出来。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring </tag>
+            
+            <tag> Hello World </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>第一章编译过程、高级语言简介</title>
       <link href="/2020/02/25/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/%E7%AC%AC%E4%B8%80%E7%AB%A0/"/>
       <url>/2020/02/25/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/%E7%AC%AC%E4%B8%80%E7%AB%A0/</url>
