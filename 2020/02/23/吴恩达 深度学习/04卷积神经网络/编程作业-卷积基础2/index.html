@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>堆内存结构及简单性能调优 | Jacob</title>
-  <meta name="keywords" content=" JVM结构 ">
-  <meta name="description" content="堆内存结构及简单性能调优 | Jacob">
+  <title>编程作业-卷积基础2 | Jacob</title>
+  <meta name="keywords" content=" 卷积神经网络 ">
+  <meta name="description" content="编程作业-卷积基础2 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="12345678910111213import numpy as npimport h5pyimport matplotlib.pyplot as plt%matplotlib inlineplt.rcParams[&quot;figure.figsize&quot;] &#x3D; (5.0, 4.0)plt.rcParams[&quot;image.interpolation&quot;]&#x3D; &#39;nearest&#39;plt.rcParams[&#39;i">
 <meta property="og:type" content="article">
@@ -735,9 +735,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-JVM/堆内存结构及简单性能调优" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/04卷积神经网络/编程作业-卷积基础2" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">堆内存结构及简单性能调优</h1>
+        <h1 class="article-title">编程作业-卷积基础2</h1>
     
     <div class="article-meta">
         
@@ -745,28 +745,28 @@
         
         <span class="book">
             
-                <a  data-rel="JVM">JVM</a>/
+                <a  data-rel="DeepLearning">DeepLearning</a>/
             
-                <a  data-rel="JVM结构">JVM结构</a>
+                <a  data-rel="04卷积神经网络">04卷积神经网络</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">JVM结构</a>
+            <a class="color2">卷积神经网络</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 19:25:25'>2020-01-28 19:08</time>
+        创建时间:<time class="date" title='更新时间: 2020-03-02 22:48:37'>2020-02-23 22:41</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.6k</span>
+        <span>字数:1.2k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -796,7 +796,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、Java堆内存"><span class="toc-text">一、Java堆内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、性能调优"><span class="toc-text">二、性能调优</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#改变数据形状，转化为独热编码"><span class="toc-text">改变数据形状，转化为独热编码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#向前传播"><span class="toc-text">向前传播</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#计算损失"><span class="toc-text">计算损失</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -812,98 +812,78 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Java底层最重要的一部分就是jvm堆内存，它影响着Java的性能。</p>
-<p>这篇博客主要介绍Java堆内存的分区及简单的Java调优。</p>
-<h2 id="一、Java堆内存"><a href="#一、Java堆内存" class="headerlink" title="一、Java堆内存"></a>一、Java堆内存</h2><p>首先看这张图：</p>
-<p><img src="https://img-blog.csdnimg.cn/20191121235622158.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ul>
-<li>堆中的分区</li>
-<li>Java堆内存分为两部分：<strong>年轻代、老年代</strong></li>
-</ul>
-<p>其中，年轻代分两个部分：<strong>Eden、Survivor</strong></p>
-<ul>
-<li>内存分配</li>
-</ul>
-<pre><code>老年代的内存占堆内总内存的2/3
+        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> scipy</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> ndimage</span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">from</span> tensorflow.python.framework <span class="keyword">import</span> ops</span><br><span class="line"><span class="keyword">from</span> cnn_utils <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br><span class="line">np.random.seed(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
-年轻代占1/3，在年轻代中，Eden分8/10，From和To都是1/10
 
-例：堆中总共300M空间，那么老年代有200M，年轻代有100M</code></pre><ul>
-<li>运行时到底是什么个情况呢？</li>
-</ul>
-<p>当我们new一个对象之后，首先，这个对象就会被放入Eden区，直到Eden区内存被占满</p>
-<ul>
-<li>Eden满了之后：</li>
-<li>Eden满了后，就会触发垃圾回收机制gc，但是呢，在这个地方是minor gc。minor gc会回收Eden区的垃圾对象（没有任何指针引用程序的对象）</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/201911220014486.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="JVM虚拟机内部构造图"></p>
-<ul>
-<li>垃圾对象？</li>
-</ul>
-<p>可以理解为：当main函数结束时，栈帧区域会被销毁掉，然后局部变量也就被释放掉，那么指向堆中对象的指针也就被干掉了，最后，堆中的对象就是个垃圾对象。<strong>这里我们要注意一个点：查找垃圾对象的起始是从栈帧中开始的，然后查到的时一个局部变量</strong></p>
-<ul>
-<li>可达性分析算法？GC Root？</li>
-</ul>
-<p>在垃圾对象里面说了，堆中的对象是由局部变量指出的，那么我们就可以利用它来判断是不是垃圾对象，这里的局部变量就可以理解为GC Root。可达性分析算法就是以GC Root为起点，往下搜索，找到的对象就不是垃圾对象，找不到的就是垃圾对象。</p>
-<ul>
-<li>接着minor gc</li>
-</ul>
-<p>上面已经说了，minor gc只是针对Eden区的。然后，当进行一次minor gc后，Eden中的垃圾对象全部被干掉，剩下的非垃圾对象，要进入Survivor区中的From中，这时候，这些非垃圾对象的分代年龄就会加一。</p>
-<ul>
-<li>分代年龄？对象头？</li>
-</ul>
-<p>分代年龄存放在对象的对象头中，每经历一轮的垃圾回收，分代年龄就会加一<br>对象头：（<a href="https://blog.csdn.net/lkforce/article/details/81128115#1%EF%BC%8CMark%20Word" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/81128115#1%EF%BC%8CMark%20Word</a>）</p>
-<pre><code>1. Mark Word
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()</span><br></pre></td></tr></table></figure>
+<p><img src="https://pic4.zhimg.com/80/v2-e9b34c3777768c5c4aaf8e3ecf351e6e_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Example of a picture</span></span><br><span class="line">index = <span class="number">3</span></span><br><span class="line">plt.imshow(X_train_orig[index])</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"y = "</span> + str(np.squeeze(Y_train_orig[:, index])))</span><br></pre></td></tr></table></figure>
 
-2. 指向类的指针
+<pre><code>y = 5</code></pre><p><img src="https://pic2.zhimg.com/80/v2-9e811346d2c43810de21cb2e8f8d651e_720w.png" alt=""></p>
+<h1 id="改变数据形状，转化为独热编码"><a href="#改变数据形状，转化为独热编码" class="headerlink" title="改变数据形状，转化为独热编码"></a>改变数据形状，转化为独热编码</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">X_train = X_train_orig/<span class="number">255.</span></span><br><span class="line">X_test = X_test_orig/<span class="number">255.</span></span><br><span class="line">Y_train = convert_to_one_hot(Y_train_orig, <span class="number">6</span>).T</span><br><span class="line">Y_test = convert_to_one_hot(Y_test_orig, <span class="number">6</span>).T</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"number of training examples = "</span> + str(X_train.shape[<span class="number">0</span>]))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"number of test examples = "</span> + str(X_test.shape[<span class="number">0</span>]))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"X_train shape: "</span> + str(X_train.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Y_train shape: "</span> + str(Y_train.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"X_test shape: "</span> + str(X_test.shape))</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Y_test shape: "</span> + str(Y_test.shape))</span><br><span class="line">conv_layers = &#123;&#125;</span><br></pre></td></tr></table></figure>
 
-3. 数组长度（只有数组对象才有）</code></pre><ul>
-<li>然后Eden区再次满的时候，又会触发垃圾回收，再次将垃圾对象（包括刚刚放入from中变成新垃圾的对象）干掉，把Eden和From中非垃圾对象放入To中，并将年龄加一。</li>
-</ul>
-<p>当下次Eden再满的时候，又会把Eden和To中的非垃圾对象放入From中，年龄加一，以此不断循环……</p>
+<pre><code>number of training examples = 1080
+number of test examples = 120
+X_train shape: (1080, 64, 64, 3)
+Y_train shape: (1080, 6)
+X_test shape: (120, 64, 64, 3)
+Y_test shape: (120, 6)</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">creat_placeholders</span><span class="params">(n_H0, n_W0, n_C0, n_y)</span>:</span></span><br><span class="line">    X = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_H0, n_W0, n_C0])</span><br><span class="line">    Y = tf.placeholder(tf.float32, [<span class="literal">None</span>, n_y])</span><br><span class="line">    <span class="keyword">return</span> X, Y</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initialize_parameters</span><span class="params">()</span>:</span></span><br><span class="line">    tf.set_random_seed(<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    W1 = tf.get_variable(<span class="string">"W1"</span>, [<span class="number">4</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">8</span>], initializer=tf.contrib.layers.xavier_initializer(seed=<span class="number">0</span>))</span><br><span class="line">    W2 = tf.get_variable(<span class="string">"W2"</span>, [<span class="number">2</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">16</span>], initializer=tf.contrib.layers.xavier_initializer(seed=<span class="number">0</span>))</span><br><span class="line">    </span><br><span class="line">    parameters=&#123;<span class="string">"W1"</span>:W1,</span><br><span class="line">               <span class="string">"W2"</span>:W2&#125;</span><br><span class="line">    <span class="keyword">return</span> parameters</span><br></pre></td></tr></table></figure>
+
+<p>In TensorFlow, there are built-in functions that carry out the convolution steps for you.</p>
 <ul>
-<li>所以年龄有什么卵用？</li>
+<li><p><strong>tf.nn.conv2d(X,W1, strides = [1,s,s,1], padding = ‘SAME’):</strong> given an input $X$ and a group of filters $W1$, this function convolves $W1$’s filters on X. The third input ([1,f,f,1]) represents the strides for each dimension of the input (m, n_H_prev, n_W_prev, n_C_prev). You can read the full documentation <a href="https://www.tensorflow.org/api_docs/python/tf/nn/conv2d" target="_blank" rel="noopener">here</a></p>
+</li>
+<li><p><strong>tf.nn.max_pool(A, ksize = [1,f,f,1], strides = [1,s,s,1], padding = ‘SAME’):</strong> given an input A, this function uses a window of size (f, f) and strides of size (s, s) to carry out max pooling over each window. You can read the full documentation <a href="https://www.tensorflow.org/api_docs/python/tf/nn/max_pool" target="_blank" rel="noopener">here</a></p>
+</li>
+<li><p><strong>tf.nn.relu(Z1):</strong> computes the elementwise ReLU of Z1 (which can be any shape). You can read the full documentation <a href="https://www.tensorflow.org/api_docs/python/tf/nn/relu" target="_blank" rel="noopener">here.</a></p>
+</li>
+<li><p><strong>tf.contrib.layers.flatten(P)</strong>: given an input P, this function flattens each example into a 1D vector it while maintaining the batch-size. It returns a flattened tensor with shape [batch_size, k]. You can read the full documentation <a href="https://www.tensorflow.org/api_docs/python/tf/contrib/layers/flatten" target="_blank" rel="noopener">here.</a></p>
+</li>
+<li><p><strong>tf.contrib.layers.fully_connected(F, num_outputs):</strong> given a the flattened input F, it returns the output computed using a fully connected layer. You can read the full documentation <a href="https://www.tensorflow.org/api_docs/python/tf/contrib/layers/fully_connected" target="_blank" rel="noopener">here.</a></p>
+</li>
 </ul>
-<p>当进行的次数多了，直到年龄达到了15（可以改这个参数），这时候就会被移到老年代</p>
-<ul>
-<li>上面已经说过，老年代也有一定的大小，那么如果老年代满的时候怎么办呢？<br>这时候就会发生full gc</li>
+<p>In the last function above (<code>tf.contrib.layers.fully_connected</code>), the fully connected layer automatically initializes weights in the graph and keeps on training them as you train the model. Hence, you did not need to initialize those weights when initializing the parameters. </p>
+<p>Implement the <code>forward_propagation</code> function below to build the following model: <code>CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; CONV2D -&gt; RELU -&gt; MAXPOOL -&gt; FLATTEN -&gt; FULLYCONNECTED</code>. You should use the functions above. </p>
+<p>In detail, we will use the following parameters for all the steps:<br>     - Conv2D: stride 1, padding is “SAME”<br>     - ReLU<br>     - Max pool: Use an 8 by 8 filter size and an 8 by 8 stride, padding is “SAME”<br>     - Conv2D: stride 1, padding is “SAME”<br>     - ReLU<br>     - Max pool: Use a 4 by 4 filter size and a 4 by 4 stride, padding is “SAME”<br>     - Flatten the previous output.<br>     - FULLYCONNECTED (FC) layer: Apply a fully connected layer without an non-linear activation function. Do not call the softmax here. This will result in 6 neurons in the output layer, which then get passed later to a softmax. In TensorFlow, the softmax and cost function are lumped together into a single function, which you’ll call in a different function when computing the cost.</p>
+<h1 id="向前传播"><a href="#向前传播" class="headerlink" title="向前传播"></a>向前传播</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">forward_propagation</span><span class="params">(X, parameters)</span>:</span></span><br><span class="line">    W1 = parameters[<span class="string">"W1"</span>]</span><br><span class="line">    W2 = parameters[<span class="string">"W2"</span>]</span><br><span class="line">    </span><br><span class="line">    Z1 = tf.nn.conv2d(X, W1, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">"SAME"</span>)</span><br><span class="line">    </span><br><span class="line">    A1 = tf.nn.relu(Z1)</span><br><span class="line">    </span><br><span class="line">    P1 = tf.nn.max_pool(A1, ksize=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>], padding=<span class="string">"SAME"</span>)</span><br><span class="line">    </span><br><span class="line">    Z2 = tf.nn.conv2d(P1, W2, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">"SAME"</span>)</span><br><span class="line">    </span><br><span class="line">    A2 = tf.nn.relu(Z2)</span><br><span class="line">    </span><br><span class="line">    P2 = tf.nn.max_pool(A2, ksize=[<span class="number">1</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">1</span>], padding=<span class="string">"SAME"</span>)</span><br><span class="line">    </span><br><span class="line">    P2 = tf.contrib.layers.flatten(P2)</span><br><span class="line">    </span><br><span class="line">    Z3 = tf.contrib.layers.fully_connected(P2, <span class="number">6</span>, activation_fn=<span class="literal">None</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> Z3</span><br></pre></td></tr></table></figure>
+<h1 id="计算损失"><a href="#计算损失" class="headerlink" title="计算损失"></a>计算损失</h1><ul>
+<li><strong>tf.nn.softmax_cross_entropy_with_logits(logits = Z3, labels = Y):</strong> computes the softmax entropy loss. This function both computes the softmax activation function as well as the resulting loss. You can check the full documentation  <a href="https://www.tensorflow.org/api_docs/python/tf/nn/softmax_cross_entropy_with_logits" target="_blank" rel="noopener">here.</a></li>
+<li><strong>tf.reduce_mean:</strong> computes the mean of elements across dimensions of a tensor. Use this to sum the losses over all the examples to get the overall cost. You can check the full documentation <a href="https://www.tensorflow.org/api_docs/python/tf/reduce_mean" target="_blank" rel="noopener">here.</a></li>
 </ul>
-<p>下面我们以代码为例，查看运行时的各区情况：</p>
-<p>利用上篇微信红包中的main函数，使它进入死循环</p>
-<p>（对微信红包算法感兴趣的可以看：<a href="https://blog.csdn.net/qq_44357371/article/details/103115263" target="_blank" rel="noopener">https://blog.csdn.net/qq_44357371/article/details/103115263</a>）</p>
-<pre><code>public static void main(String[] args) {
-        while (true) {
-            test.thirdMethod(5, 20);
-        }
-    }</code></pre><p><img src="https://img-blog.csdnimg.cn/20191122011034389.gif" alt=""></p>
-<p>old就是代表老年区，我们可以看到Eden区是最快的，然后就发生垃圾回收……，和上面所述相符。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191122011342596.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>说实话，我想看old区被塞满的情况，可惜它增长的太慢了。。。</p>
-<ul>
-<li>接着full gc。STW？</li>
-</ul>
-<p>当发生full gc时，就会产生STW（stop world，，毁掉整个世界），（哈哈哈，没这么牛逼）。这时候呢，就会暂停所有的线程，让垃圾回收机制专心的回收垃圾。这样的话，用户端会卡掉。</p>
-<ul>
-<li>为什么要把线程停掉呢？</li>
-</ul>
-<p>考虑一种情况，如果在找垃圾时，刚好已经在某个链条上面了，这时候，如果线程把这条链给干掉了，那么后面的本来应该全部是垃圾的，但是gc没有把它们给找出来，所以停掉线程。</p>
-<h2 id="二、性能调优"><a href="#二、性能调优" class="headerlink" title="二、性能调优"></a>二、性能调优</h2><ul>
-<li>Jvm性能调优到底调的是什么？</li>
-</ul>
-<p>我们上面已经知道，minor gc发生时，对性能的影响不大，但是full gc发生时，对性能的影响是巨大的。所以调优就是要减少full gc发生的次数，减少STW出现次数；还有就是在发生了Full gc时，所有的线程停掉等待垃圾回收，所以，减少垃圾回收时间。</p>
-<p>下面举一个调优例子：</p>
-<p><img src="https://img-blog.csdnimg.cn/20191122013401603.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>首先分析：</p>
-<p>我们设置了堆的大小为3G，老年区就有2G，eden有800M，from和to各占100M</p>
-<p>线程在运行时，每秒产生60M的对象，用后直接干掉变垃圾，这样大概每13秒就会把Eden占满，触发minor gc。</p>
-<p>但是一个问题，在第13s产生的进程，会被直接移到survivor区，但是它的大小超过了survivor中一个区的一半，这时候触发==对象动态年龄判断机制==，直接进入老年代。</p>
-<p>但是着60M的对象，在下一秒就又变成了垃圾。。。这样算下来，大概5、6分钟就会使老年代触发full gc，这样的效率是极其低下的。</p>
-<p>所以呢，我们可以对这个系统进行一个调优：</p>
-<p>把这些参数改一下，我们可以尽量让垃圾在年轻代就被干掉。</p>
-<p><strong>总共3G，把old区设置为1G（因为没那么多要放的），这样，新生代就有了2G，这样，Eden分了1.6G，from和to分别200M</strong></p>
-<p>这时候，每秒60M的对象过来，最后那一秒在Eden区中传入survivor中，但是根据==对象动态年龄判断机制==，60M小于from或to的一半，不会被传进老年代，变成垃圾，直接被minor gc干死，所以基本上，老年代就不可能被放满，所以就极大的改善了性能！！！</p>
-<p>今晚收获巨大。jvm内容还多，路途且长，继续奋斗！</p>
-<p>图片来源：诸葛老师</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">compute_cost</span><span class="params">(Z3, Y)</span>:</span></span><br><span class="line">    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(logits=Z3, labels=Y))</span><br><span class="line">    <span class="keyword">return</span> cost</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">tf.reset_default_graph()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    np.random.seed(<span class="number">1</span>)</span><br><span class="line">    X, Y = create_placeholders(<span class="number">64</span>, <span class="number">64</span>, <span class="number">3</span>, <span class="number">6</span>)</span><br><span class="line">    parameters = initialize_parameters()</span><br><span class="line">    Z3 = forward_propagation(X, parameters)</span><br><span class="line">    cost = compute_cost(Z3, Y)</span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init)</span><br><span class="line">    a = sess.run(cost, &#123;X: np.random.randn(<span class="number">4</span>,<span class="number">64</span>,<span class="number">64</span>,<span class="number">3</span>), Y: np.random.randn(<span class="number">4</span>,<span class="number">6</span>)&#125;)</span><br><span class="line">    print(<span class="string">"cost = "</span> + str(a))</span><br></pre></td></tr></table></figure>
+
+<pre><code>cost = 4.66487</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(X_train, Y_train, X_test, Y_test, learning_rate = <span class="number">0.009</span>, </span></span></span><br><span class="line"><span class="function"><span class="params">         num_epochs = <span class="number">100</span>, minibatch_size = <span class="number">64</span>, print_cost = True)</span>:</span></span><br><span class="line">    </span><br><span class="line">    ops.reset_default_graph()</span><br><span class="line">    tf.set_random_seed(<span class="number">1</span>)</span><br><span class="line">    seed=<span class="number">3</span></span><br><span class="line">    (m, n_H0, n_W0, n_C0) = X_train.shape</span><br><span class="line">    n_y = Y_train.shape[<span class="number">1</span>]</span><br><span class="line">    costs = []</span><br><span class="line">    </span><br><span class="line">    X, Y = creat_placeholders(n_H0, n_W0, n_C0, n_y)</span><br><span class="line">    </span><br><span class="line">    parameters = initialize_parameters()</span><br><span class="line">    </span><br><span class="line">    Z3 = forward_propagation(X, parameters)</span><br><span class="line">    </span><br><span class="line">    cost = compute_cost(Z3, Y)</span><br><span class="line">    </span><br><span class="line">    optimizer = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(cost)</span><br><span class="line">    </span><br><span class="line">    init = tf.global_variables_initializer()</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">        sess.run(init)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> epoch <span class="keyword">in</span> range(num_epochs):</span><br><span class="line">            </span><br><span class="line">            minibatch_cost = <span class="number">0.</span></span><br><span class="line">            num_minibatches = int(m/minibatch_size)</span><br><span class="line">            seed = seed+<span class="number">1</span></span><br><span class="line">            minibatches = random_mini_batches(X_train, Y_train, minibatch_size, seed)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> minibatch <span class="keyword">in</span> minibatches:</span><br><span class="line">                (minibatch_X, minibatch_Y) = minibatch</span><br><span class="line">                _, temp_cost = sess.run([optimizer, cost], feed_dict=&#123;X:minibatch_X, Y:minibatch_Y&#125;)</span><br><span class="line">                minibatch_cost += temp_cost / num_minibatches</span><br><span class="line">                </span><br><span class="line">            <span class="keyword">if</span> print_cost == <span class="literal">True</span> <span class="keyword">and</span> epoch % <span class="number">5</span> == <span class="number">0</span>:</span><br><span class="line">                <span class="keyword">print</span> (<span class="string">"Cost after epoch %i: %f"</span> % (epoch, minibatch_cost))</span><br><span class="line">            <span class="keyword">if</span> print_cost == <span class="literal">True</span> <span class="keyword">and</span> epoch % <span class="number">1</span> == <span class="number">0</span>:</span><br><span class="line">                costs.append(minibatch_cost)</span><br><span class="line">                </span><br><span class="line">        <span class="comment"># plot the cost</span></span><br><span class="line">        plt.plot(np.squeeze(costs))</span><br><span class="line">        plt.ylabel(<span class="string">'cost'</span>)</span><br><span class="line">        plt.xlabel(<span class="string">'iterations (per tens)'</span>)</span><br><span class="line">        plt.title(<span class="string">"Learning rate ="</span> + str(learning_rate))</span><br><span class="line">        plt.show()</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Calculate the correct predictions</span></span><br><span class="line">        predict_op = tf.argmax(Z3, <span class="number">1</span>)</span><br><span class="line">        correct_prediction = tf.equal(predict_op, tf.argmax(Y, <span class="number">1</span>))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Calculate accuracy on the test set</span></span><br><span class="line">        accuracy = tf.reduce_mean(tf.cast(correct_prediction, <span class="string">"float"</span>))</span><br><span class="line">        print(accuracy)</span><br><span class="line">        train_accuracy = accuracy.eval(&#123;X: X_train, Y: Y_train&#125;)</span><br><span class="line">        test_accuracy = accuracy.eval(&#123;X: X_test, Y: Y_test&#125;)</span><br><span class="line">        print(<span class="string">"Train Accuracy:"</span>, train_accuracy)</span><br><span class="line">        print(<span class="string">"Test Accuracy:"</span>, test_accuracy)</span><br><span class="line">                </span><br><span class="line">        <span class="keyword">return</span> train_accuracy, test_accuracy, parameters</span><br></pre></td></tr></table></figure>
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_, _, parameters = model(X_train, Y_train, X_test, Y_test)</span><br></pre></td></tr></table></figure>
+
+<pre><code>Cost after epoch 0: 1.921332
+Cost after epoch 5: 1.904156
+Cost after epoch 10: 1.904309
+Cost after epoch 15: 1.904477
+Cost after epoch 20: 1.901876
+Cost after epoch 25: 1.784094
+Cost after epoch 30: 1.687814
+Cost after epoch 35: 1.617914
+Cost after epoch 40: 1.588563
+Cost after epoch 45: 1.564673
+Cost after epoch 50: 1.551985
+Cost after epoch 55: 1.512204
+Cost after epoch 60: 1.488463
+Cost after epoch 65: 1.368796
+Cost after epoch 70: 1.281402
+Cost after epoch 75: 1.209459
+Cost after epoch 80: 1.120872
+Cost after epoch 85: 1.098565
+Cost after epoch 90: 1.046483
+Cost after epoch 95: 1.007478</code></pre><p><img src="https://pic4.zhimg.com/80/v2-a7308412a60bb35adaa9939536ae5172_720w.png" alt=""></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -917,12 +897,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>堆内存结构及简单性能调优</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.6k</span></p>
+    <p><span class="copy-title">文章标题:</span>编程作业-卷积基础2</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.2k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 19:08:24</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 19:25:25</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" title="堆内存结构及简单性能调优">http://yoursite.com/2020/01/28/JVM/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</a>
+    <p><span class="copy-title">发布时间:</span>2020-02-23, 22:41:17</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-02, 22:48:37</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/23/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/04%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A-%E5%8D%B7%E7%A7%AF%E5%9F%BA%E7%A1%802/" title="编程作业-卷积基础2">http://yoursite.com/2020/02/23/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/04%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A-%E5%8D%B7%E7%A7%AF%E5%9F%BA%E7%A1%802/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>

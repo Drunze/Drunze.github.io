@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>堆内存结构及简单性能调优 | Jacob</title>
-  <meta name="keywords" content=" JVM结构 ">
-  <meta name="description" content="堆内存结构及简单性能调优 | Jacob">
+  <title>编程作业-卷积基础1 | Jacob</title>
+  <meta name="keywords" content=" 卷积神经网络 ">
+  <meta name="description" content="编程作业-卷积基础1 | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="12345678910111213import numpy as npimport h5pyimport matplotlib.pyplot as plt%matplotlib inlineplt.rcParams[&quot;figure.figsize&quot;] &#x3D; (5.0, 4.0)plt.rcParams[&quot;image.interpolation&quot;]&#x3D; &#39;nearest&#39;plt.rcParams[&#39;i">
 <meta property="og:type" content="article">
@@ -735,9 +735,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-JVM/堆内存结构及简单性能调优" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-吴恩达 深度学习/04卷积神经网络/编程作业-卷积基础1" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">堆内存结构及简单性能调优</h1>
+        <h1 class="article-title">编程作业-卷积基础1</h1>
     
     <div class="article-meta">
         
@@ -745,28 +745,28 @@
         
         <span class="book">
             
-                <a  data-rel="JVM">JVM</a>/
+                <a  data-rel="DeepLearning">DeepLearning</a>/
             
-                <a  data-rel="JVM结构">JVM结构</a>
+                <a  data-rel="04卷积神经网络">04卷积神经网络</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">JVM结构</a>
+            <a class="color2">卷积神经网络</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-01-28 19:25:25'>2020-01-28 19:08</time>
+        创建时间:<time class="date" title='更新时间: 2020-03-02 22:48:59'>2020-03-02 21:12</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.6k</span>
+        <span>字数:748</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -796,7 +796,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、Java堆内存"><span class="toc-text">一、Java堆内存</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、性能调优"><span class="toc-text">二、性能调优</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Zero-pad"><span class="toc-text">Zero pad</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单步卷积"><span class="toc-text">单步卷积</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#向前传播"><span class="toc-text">向前传播</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#向前池化"><span class="toc-text">向前池化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#向后传播"><span class="toc-text">向后传播</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#向后池化"><span class="toc-text">向后池化</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -812,98 +812,51 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Java底层最重要的一部分就是jvm堆内存，它影响着Java的性能。</p>
-<p>这篇博客主要介绍Java堆内存的分区及简单的Java调优。</p>
-<h2 id="一、Java堆内存"><a href="#一、Java堆内存" class="headerlink" title="一、Java堆内存"></a>一、Java堆内存</h2><p>首先看这张图：</p>
-<p><img src="https://img-blog.csdnimg.cn/20191121235622158.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述"></p>
-<ul>
-<li>堆中的分区</li>
-<li>Java堆内存分为两部分：<strong>年轻代、老年代</strong></li>
-</ul>
-<p>其中，年轻代分两个部分：<strong>Eden、Survivor</strong></p>
-<ul>
-<li>内存分配</li>
-</ul>
-<pre><code>老年代的内存占堆内总内存的2/3
+        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> h5py</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br><span class="line">plt.rcParams[<span class="string">"figure.figsize"</span>] = (<span class="number">5.0</span>, <span class="number">4.0</span>)</span><br><span class="line">plt.rcParams[<span class="string">"image.interpolation"</span>]= <span class="string">'nearest'</span></span><br><span class="line">plt.rcParams[<span class="string">'image.cmap'</span>] = <span class="string">'gray'</span></span><br><span class="line"></span><br><span class="line">%load_ext autoreload</span><br><span class="line">%autoreload <span class="number">2</span></span><br><span class="line"></span><br><span class="line">np.random.seed(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
-年轻代占1/3，在年轻代中，Eden分8/10，From和To都是1/10
+<h1 id="Zero-pad"><a href="#Zero-pad" class="headerlink" title="Zero pad"></a>Zero pad</h1><p><img src="https://pic2.zhimg.com/80/v2-bf291d3f772dcd4727364621695bb943_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">zero_pad</span><span class="params">(X, pad)</span>:</span></span><br><span class="line">    X_pad = np.pad(X, ((<span class="number">0</span>,<span class="number">0</span>), (pad,pad), (pad,pad),(<span class="number">0</span>,<span class="number">0</span>)), <span class="string">'constant'</span>, constant_values=(<span class="number">0</span>,<span class="number">0</span>))</span><br><span class="line">    <span class="keyword">return</span> X_pad</span><br></pre></td></tr></table></figure>
 
-例：堆中总共300M空间，那么老年代有200M，年轻代有100M</code></pre><ul>
-<li>运行时到底是什么个情况呢？</li>
-</ul>
-<p>当我们new一个对象之后，首先，这个对象就会被放入Eden区，直到Eden区内存被占满</p>
-<ul>
-<li>Eden满了之后：</li>
-<li>Eden满了后，就会触发垃圾回收机制gc，但是呢，在这个地方是minor gc。minor gc会回收Eden区的垃圾对象（没有任何指针引用程序的对象）</li>
-</ul>
-<p><img src="https://img-blog.csdnimg.cn/201911220014486.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt="JVM虚拟机内部构造图"></p>
-<ul>
-<li>垃圾对象？</li>
-</ul>
-<p>可以理解为：当main函数结束时，栈帧区域会被销毁掉，然后局部变量也就被释放掉，那么指向堆中对象的指针也就被干掉了，最后，堆中的对象就是个垃圾对象。<strong>这里我们要注意一个点：查找垃圾对象的起始是从栈帧中开始的，然后查到的时一个局部变量</strong></p>
-<ul>
-<li>可达性分析算法？GC Root？</li>
-</ul>
-<p>在垃圾对象里面说了，堆中的对象是由局部变量指出的，那么我们就可以利用它来判断是不是垃圾对象，这里的局部变量就可以理解为GC Root。可达性分析算法就是以GC Root为起点，往下搜索，找到的对象就不是垃圾对象，找不到的就是垃圾对象。</p>
-<ul>
-<li>接着minor gc</li>
-</ul>
-<p>上面已经说了，minor gc只是针对Eden区的。然后，当进行一次minor gc后，Eden中的垃圾对象全部被干掉，剩下的非垃圾对象，要进入Survivor区中的From中，这时候，这些非垃圾对象的分代年龄就会加一。</p>
-<ul>
-<li>分代年龄？对象头？</li>
-</ul>
-<p>分代年龄存放在对象的对象头中，每经历一轮的垃圾回收，分代年龄就会加一<br>对象头：（<a href="https://blog.csdn.net/lkforce/article/details/81128115#1%EF%BC%8CMark%20Word" target="_blank" rel="noopener">https://blog.csdn.net/lkforce/article/details/81128115#1%EF%BC%8CMark%20Word</a>）</p>
-<pre><code>1. Mark Word
 
-2. 指向类的指针
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">1</span>)</span><br><span class="line">x = np.random.randn(<span class="number">4</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">x_pad = zero_pad(x, <span class="number">2</span>)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"x.shape ="</span>, x.shape)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"x_pad.shape ="</span>, x_pad.shape)</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"x[1,1] ="</span>, x[<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line"><span class="keyword">print</span> (<span class="string">"x_pad[1,1] ="</span>, x_pad[<span class="number">1</span>,<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">fig, axarr = plt.subplots(<span class="number">1</span>, <span class="number">2</span>)</span><br><span class="line">axarr[<span class="number">0</span>].set_title(<span class="string">'x'</span>)</span><br><span class="line">axarr[<span class="number">0</span>].imshow(x[<span class="number">0</span>,:,:,<span class="number">0</span>])</span><br><span class="line">axarr[<span class="number">1</span>].set_title(<span class="string">'x_pad'</span>)</span><br><span class="line">axarr[<span class="number">1</span>].imshow(x_pad[<span class="number">0</span>,:,:,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
 
-3. 数组长度（只有数组对象才有）</code></pre><ul>
-<li>然后Eden区再次满的时候，又会触发垃圾回收，再次将垃圾对象（包括刚刚放入from中变成新垃圾的对象）干掉，把Eden和From中非垃圾对象放入To中，并将年龄加一。</li>
-</ul>
-<p>当下次Eden再满的时候，又会把Eden和To中的非垃圾对象放入From中，年龄加一，以此不断循环……</p>
-<ul>
-<li>所以年龄有什么卵用？</li>
-</ul>
-<p>当进行的次数多了，直到年龄达到了15（可以改这个参数），这时候就会被移到老年代</p>
-<ul>
-<li>上面已经说过，老年代也有一定的大小，那么如果老年代满的时候怎么办呢？<br>这时候就会发生full gc</li>
-</ul>
-<p>下面我们以代码为例，查看运行时的各区情况：</p>
-<p>利用上篇微信红包中的main函数，使它进入死循环</p>
-<p>（对微信红包算法感兴趣的可以看：<a href="https://blog.csdn.net/qq_44357371/article/details/103115263" target="_blank" rel="noopener">https://blog.csdn.net/qq_44357371/article/details/103115263</a>）</p>
-<pre><code>public static void main(String[] args) {
-        while (true) {
-            test.thirdMethod(5, 20);
-        }
-    }</code></pre><p><img src="https://img-blog.csdnimg.cn/20191122011034389.gif" alt=""></p>
-<p>old就是代表老年区，我们可以看到Eden区是最快的，然后就发生垃圾回收……，和上面所述相符。</p>
-<p><img src="https://img-blog.csdnimg.cn/20191122011342596.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>说实话，我想看old区被塞满的情况，可惜它增长的太慢了。。。</p>
-<ul>
-<li>接着full gc。STW？</li>
-</ul>
-<p>当发生full gc时，就会产生STW（stop world，，毁掉整个世界），（哈哈哈，没这么牛逼）。这时候呢，就会暂停所有的线程，让垃圾回收机制专心的回收垃圾。这样的话，用户端会卡掉。</p>
-<ul>
-<li>为什么要把线程停掉呢？</li>
-</ul>
-<p>考虑一种情况，如果在找垃圾时，刚好已经在某个链条上面了，这时候，如果线程把这条链给干掉了，那么后面的本来应该全部是垃圾的，但是gc没有把它们给找出来，所以停掉线程。</p>
-<h2 id="二、性能调优"><a href="#二、性能调优" class="headerlink" title="二、性能调优"></a>二、性能调优</h2><ul>
-<li>Jvm性能调优到底调的是什么？</li>
-</ul>
-<p>我们上面已经知道，minor gc发生时，对性能的影响不大，但是full gc发生时，对性能的影响是巨大的。所以调优就是要减少full gc发生的次数，减少STW出现次数；还有就是在发生了Full gc时，所有的线程停掉等待垃圾回收，所以，减少垃圾回收时间。</p>
-<p>下面举一个调优例子：</p>
-<p><img src="https://img-blog.csdnimg.cn/20191122013401603.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>首先分析：</p>
-<p>我们设置了堆的大小为3G，老年区就有2G，eden有800M，from和to各占100M</p>
-<p>线程在运行时，每秒产生60M的对象，用后直接干掉变垃圾，这样大概每13秒就会把Eden占满，触发minor gc。</p>
-<p>但是一个问题，在第13s产生的进程，会被直接移到survivor区，但是它的大小超过了survivor中一个区的一半，这时候触发==对象动态年龄判断机制==，直接进入老年代。</p>
-<p>但是着60M的对象，在下一秒就又变成了垃圾。。。这样算下来，大概5、6分钟就会使老年代触发full gc，这样的效率是极其低下的。</p>
-<p>所以呢，我们可以对这个系统进行一个调优：</p>
-<p>把这些参数改一下，我们可以尽量让垃圾在年轻代就被干掉。</p>
-<p><strong>总共3G，把old区设置为1G（因为没那么多要放的），这样，新生代就有了2G，这样，Eden分了1.6G，from和to分别200M</strong></p>
-<p>这时候，每秒60M的对象过来，最后那一秒在Eden区中传入survivor中，但是根据==对象动态年龄判断机制==，60M小于from或to的一半，不会被传进老年代，变成垃圾，直接被minor gc干死，所以基本上，老年代就不可能被放满，所以就极大的改善了性能！！！</p>
-<p>今晚收获巨大。jvm内容还多，路途且长，继续奋斗！</p>
-<p>图片来源：诸葛老师</p>
+<pre><code>x.shape = (4, 3, 3, 2)
+x_pad.shape = (4, 7, 7, 2)
+x[1,1] = [[ 0.90085595 -0.68372786]
+ [-0.12289023 -0.93576943]
+ [-0.26788808  0.53035547]]
+x_pad[1,1] = [[ 0.  0.]
+ [ 0.  0.]
+ [ 0.  0.]
+ [ 0.  0.]
+ [ 0.  0.]
+ [ 0.  0.]
+ [ 0.  0.]]
+
+
+
+
+
+&lt;matplotlib.image.AxesImage at 0x151c1be9da0&gt;</code></pre><p><img src="https://pic2.zhimg.com/80/v2-a7885f5cc3a1a15001683a4baf7fc8fd_720w.png" alt=""></p>
+<h1 id="单步卷积"><a href="#单步卷积" class="headerlink" title="单步卷积"></a>单步卷积</h1><p><img src="https://pic1.zhimg.com/80/v2-f8c9fe261f8712d088e472d3c1db7936_720w.png" alt=""></p>
+<p><img src="https://pic4.zhimg.com/80/v2-9dd1ceb8167ada889b7b7a628a9f75ee_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv_single_step</span><span class="params">(a_slice_prev, W, b)</span>:</span></span><br><span class="line">    s = np.multiply(a_slice_prev, W)</span><br><span class="line">    Z = np.sum(s)</span><br><span class="line">    Z = Z+float(b)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> Z</span><br></pre></td></tr></table></figure>
+<h1 id="向前传播"><a href="#向前传播" class="headerlink" title="向前传播"></a>向前传播</h1><p><img src="https://pic3.zhimg.com/80/v2-81e5f38937744e608b96d0324b7cca86_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv_forward</span><span class="params">(A_prev, W, b, hparameters)</span>:</span></span><br><span class="line">    (m, n_H_prev, n_W_prev, n_C_prev) = A_prev.shape</span><br><span class="line">    </span><br><span class="line">    (f, f, n_C_prev, n_C) = W.shape</span><br><span class="line">    </span><br><span class="line">    stride = hparameters[<span class="string">"stride"</span>]</span><br><span class="line">    pad = hparameters[<span class="string">"pad"</span>]</span><br><span class="line">    </span><br><span class="line">    n_H = int((n_H_prev+<span class="number">2</span>*pad-f)/stride+<span class="number">1</span>)</span><br><span class="line">    n_W = int((n_W_prev+<span class="number">2</span>*pad-f)/stride+<span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    Z = np.zeros((m, n_H, n_W, n_C))</span><br><span class="line">    </span><br><span class="line">    A_prev_pad = zero_pad(A_prev, pad)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        a_prev_pad = A_prev_pad[i]</span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> range(n_H):</span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> range(n_W):</span><br><span class="line">                <span class="keyword">for</span> c <span class="keyword">in</span> range(n_C):</span><br><span class="line">                    </span><br><span class="line">                    vert_start = h*stride</span><br><span class="line">                    vert_end = vert_start+f</span><br><span class="line">                    horiz_start = w*stride</span><br><span class="line">                    horiz_end = horiz_start+f</span><br><span class="line">                    </span><br><span class="line">                    a_slice_prev = a_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]</span><br><span class="line">                    Z[i, h, w, c] = conv_single_step(a_slice_prev, W[:, :, :, c], b[<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, c])</span><br><span class="line">                    </span><br><span class="line">    <span class="keyword">assert</span>(Z.shape == (m, n_H, n_W, n_C))</span><br><span class="line">    </span><br><span class="line">    cache = (A_prev, W, b, hparameters)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> Z, cache</span><br></pre></td></tr></table></figure>
+<h1 id="向前池化"><a href="#向前池化" class="headerlink" title="向前池化"></a>向前池化</h1><p><img src="https://pic1.zhimg.com/80/v2-a4cb77c011f6f58254bfed2976631a67_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pool_forward</span><span class="params">(A_prev, hparameters, mode = <span class="string">"max"</span>)</span>:</span></span><br><span class="line">    (m, n_H_prev, n_W_prev, n_C_prev) = A_prev.shape</span><br><span class="line">    </span><br><span class="line">    f = hparameters[<span class="string">"f"</span>]</span><br><span class="line">    stride = hparameters[<span class="string">"stride"</span>]</span><br><span class="line">    </span><br><span class="line">    n_H = int(<span class="number">1</span>+(n_H_prev - f)/stride)</span><br><span class="line">    n_W = int(<span class="number">1</span>+(n_W_prev - f)/stride)</span><br><span class="line">    n_C = n_C_prev</span><br><span class="line">    </span><br><span class="line">    A = np.zeros((m, n_H, n_W, n_C))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> range(n_H):</span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> range(n_W):</span><br><span class="line">                <span class="keyword">for</span> c <span class="keyword">in</span> range(n_C):</span><br><span class="line">                    </span><br><span class="line">                    vert_start = n_H * stride</span><br><span class="line">                    vert_end = vert_start + f</span><br><span class="line">                    horiz_start = n_W * stride</span><br><span class="line">                    horiz_end = horiz_start + f</span><br><span class="line">                    </span><br><span class="line">                    a_prev_slice = A_prev[i, vert_start:vert_end, horiz_start:horiz_end, c]</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span> mode == <span class="string">"max"</span>:</span><br><span class="line">                        A[i, h, w, c] = np.max(a_prev_slice)</span><br><span class="line">                    <span class="keyword">elif</span> mode == <span class="string">"average"</span>:</span><br><span class="line">                        A[i, h, w, c] = np.average(a_prev_slice)</span><br><span class="line">                        </span><br><span class="line">    cache = (A_prev, hparameters)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">assert</span>(A.shape == (m, n_H, n_W, n_C))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> A, cache</span><br></pre></td></tr></table></figure>
+
+<h1 id="向后传播"><a href="#向后传播" class="headerlink" title="向后传播"></a>向后传播</h1><p><img src="https://pic2.zhimg.com/80/v2-df0aea3529767234042da2b0fa898e15_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">conv_backward</span><span class="params">(dZ, cache)</span>:</span></span><br><span class="line">    (A_prev, W, b, hparameters) = cache</span><br><span class="line">    (m, n_H_prev, n_W_prev, n_C_prev) = A_prev.shape</span><br><span class="line">    (f, f, n_C_prev, n_C) = W.shape</span><br><span class="line">    stride = hparameters[<span class="string">"stride"</span>]</span><br><span class="line">    pad = hparameters[<span class="string">"pad"</span>]</span><br><span class="line">    </span><br><span class="line">    (m, n_H, n_W, n_C) = dZ.shape</span><br><span class="line">    </span><br><span class="line">    dA_prev = np.zeros(A_prev.shape)</span><br><span class="line">    dW = np.zeros(W.shape)</span><br><span class="line">    db = np.zeros(b.shape)</span><br><span class="line">    </span><br><span class="line">    A_prev_pad = zero_pad(A_prev, pad)</span><br><span class="line">    dA_prev_pad = zero_pad(dA_prev, pad)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        a_prev_pad = A_prev_pad[i]</span><br><span class="line">        da_prev_pad = dA_prev_pad[i]</span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> range(n_H):</span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> range(n_W):</span><br><span class="line">                <span class="keyword">for</span> c <span class="keyword">in</span> range(n_C):</span><br><span class="line">                    </span><br><span class="line">                    vert_start = stride*h</span><br><span class="line">                    vert_end = vert_start+f</span><br><span class="line">                    horiz_start = stride*w</span><br><span class="line">                    horiz_end = horiz_start+f</span><br><span class="line">                    </span><br><span class="line">                    a_slice = a_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :]</span><br><span class="line">                    </span><br><span class="line">                    da_prev_pad[vert_start:vert_end, horiz_start:horiz_end, :] += W[:, :, :, c]*dZ[i, h, w, c]</span><br><span class="line">                    dW[:, :, :, c] += a_slice*dZ[i, h, w, c]</span><br><span class="line">                    db[:, :, :, c] += dZ[i, h, w, c]</span><br><span class="line">        dA_prev[i, :, :, :] = da_prev_pad[pad:-pad, pad:-pad, :]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">assert</span>(dA_prev.shape == (m, n_H_prev, n_W_prev, n_C_prev))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> dA_prev, dW, db</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic4.zhimg.com/80/v2-32b4fd274c2bbd803301dc39afdd4101_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_mask_from_window</span><span class="params">(x)</span>:</span></span><br><span class="line">    mask = (x==np.max(x))</span><br><span class="line">    <span class="keyword">return</span> mask</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic3.zhimg.com/80/v2-787c84737e4c238b1ae624d7528feb6f_720w.png" alt=""></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distribute_value</span><span class="params">(dz, shape)</span>:</span></span><br><span class="line">    (n_H, n_W)=shape</span><br><span class="line">    average=dz/(n_H*n_W)</span><br><span class="line">    a=np.ones(shape)*average</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> a</span><br></pre></td></tr></table></figure>
+
+<h1 id="向后池化"><a href="#向后池化" class="headerlink" title="向后池化"></a>向后池化</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pool_backward</span><span class="params">(dA, cache, mode=<span class="string">"max"</span>)</span>:</span></span><br><span class="line">    (A_prev, hparameters)= cache</span><br><span class="line">    stride=hparameters[<span class="string">"stride"</span>]</span><br><span class="line">    f=hparameters[<span class="string">"f"</span>]</span><br><span class="line">    m, n_H_prev, n_W_prev, n_C_prev = A_prev.shape</span><br><span class="line">    m, n_H, n_W, n_C = dA.shape</span><br><span class="line">    </span><br><span class="line">    dA_prev = np.zeros(A_prev.shape)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">        a_prev = A_prev[i]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> h <span class="keyword">in</span> range(n_H):</span><br><span class="line">            <span class="keyword">for</span> w <span class="keyword">in</span> range(n_W):</span><br><span class="line">                <span class="keyword">for</span> c <span class="keyword">in</span> range(n_C):</span><br><span class="line">                    </span><br><span class="line">                    vert_start = stride*h</span><br><span class="line">                    vert_end = vert_start+f</span><br><span class="line">                    horize_start = stride*w</span><br><span class="line">                    horize_end = horize_start+f</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">if</span>(mode==<span class="string">"max"</span>):</span><br><span class="line">                        a_prev_slice = a_prev[vert_start:vert_end, horize_start:horize_end, c]</span><br><span class="line">                        mask = creat_mask_from_window(a_prev_slice)</span><br><span class="line">                        dA_prev[i, vert_start:vert_end, horize_start:horize_end, c] += np.multiply(mask, dA[i, h, w, c])</span><br><span class="line">                    </span><br><span class="line">                    <span class="keyword">elif</span>(mode==<span class="string">"average"</span>):</span><br><span class="line">                        da = dA[i, h, w, c]</span><br><span class="line">                        shape = (f, f)</span><br><span class="line">                        dA_prev[i, vert_start:vert_end, horize_start:horize_end, c] += distribute_value(da, shape)</span><br><span class="line">                        </span><br><span class="line">    <span class="keyword">assert</span>(dA_prev.shape==A_prev.shape)</span><br><span class="line">    <span class="keyword">return</span> dA_prev</span><br></pre></td></tr></table></figure>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -917,12 +870,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>堆内存结构及简单性能调优</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.6k</span></p>
+    <p><span class="copy-title">文章标题:</span>编程作业-卷积基础1</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">748</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-28, 19:08:24</p>
-    <p><span class="copy-title">最后更新:</span>2020-01-28, 19:25:25</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" title="堆内存结构及简单性能调优">http://yoursite.com/2020/01/28/JVM/%E5%A0%86%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84%E5%8F%8A%E7%AE%80%E5%8D%95%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</a>
+    <p><span class="copy-title">发布时间:</span>2020-03-02, 21:12:17</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-02, 22:48:59</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/02/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/04%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A-%E5%8D%B7%E7%A7%AF%E5%9F%BA%E7%A1%801/" title="编程作业-卷积基础1">http://yoursite.com/2020/03/02/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/04%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/%E7%BC%96%E7%A8%8B%E4%BD%9C%E4%B8%9A-%E5%8D%B7%E7%A7%AF%E5%9F%BA%E7%A1%801/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
