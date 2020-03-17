@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>NumPy | Jacob</title>
-  <meta name="keywords" content=" NumPy ">
-  <meta name="description" content="NumPy | Jacob">
+  <title>AOP | Jacob</title>
+  <meta name="keywords" content=" Spring , AOP ">
+  <meta name="description" content="AOP | Jacob">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="1、新建项目 2、导入依赖 3、Spring-Ioc3.1 XML方式（1）AccountDAO （2）AccountDAOImpl （3）applicationContext （4）test  结果：   （1）添加代码Account、AccountService （2）在applicatContext中添加bean （3）修改test 3.2 注解方式 - @Component, @Servi">
 <meta property="og:type" content="article">
@@ -792,9 +792,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-数据挖掘/NumPy" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Spring/AOP" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">NumPy</h1>
+        <h1 class="article-title">AOP</h1>
     
     <div class="article-meta">
         
@@ -802,26 +802,28 @@
         
         <span class="book">
             
-                <a  data-rel="数据挖掘">数据挖掘</a>
+                <a  data-rel="Spring">Spring</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">NumPy</a>
+            <a class="color2">Spring</a>
+            
+            <a class="color4">AOP</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-01 09:46:05'>2020-01-31 10:38</time>
+        创建时间:<time class="date" title='更新时间: 2020-03-06 00:18:31'>2020-03-05 21:00</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:659</span>
+        <span>字数:725</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -851,7 +853,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#NumPy性能和python列表对比"><span class="toc-text">NumPy性能和python列表对比</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建ndarray"><span class="toc-text">创建ndarray</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#numpy数组的运算"><span class="toc-text">numpy数组的运算</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#基本索引和切片"><span class="toc-text">基本索引和切片</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#布尔类型索引"><span class="toc-text">布尔类型索引</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#数组转置和轴对换"><span class="toc-text">数组转置和轴对换</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#初识AOP"><span class="toc-text">初识AOP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AOP相关概念"><span class="toc-text">AOP相关概念</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -867,116 +869,35 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="NumPy性能和python列表对比"><a href="#NumPy性能和python列表对比" class="headerlink" title="NumPy性能和python列表对比"></a>NumPy性能和python列表对比</h1><pre><code>import numpy as np
-my_arr = np.arange(1000000)
-my_list = list(range(1000000))
-%time for _ in range(10): my_arr2 = my_arr*2
-%time for _ in range(10): my_list2 = [x*2 for x in my_list]</code></pre><p>结果</p>
-<pre><code>Wall time: 16 ms
-Wall time: 636 ms</code></pre><h1 id="创建ndarray"><a href="#创建ndarray" class="headerlink" title="创建ndarray"></a>创建ndarray</h1><pre><code>data1 = [1,23,4.6,2]
-arr1 = np.array(data1)
-arr1
-
-data2 = [[1,2,3],
-        [4,5,6]]
-arr2 = np.array(data2)
-arr2
-
-print(arr2.ndim)
-print(arr2.shape)
-
-np.zeros((2,3))
-
-int_array = np.arange(10)
-calibers = np.array([.22, .270, .357, .380, .44, .50], dtype=np.float64)
-int_array.astype(calibers.dtype)</code></pre><h1 id="numpy数组的运算"><a href="#numpy数组的运算" class="headerlink" title="numpy数组的运算"></a>numpy数组的运算</h1><pre><code>arr = np.array([[1., 2., 3.],
-               [4., 5., 6.]])
-print(arr*arr)
-print(arr*arr == arr)</code></pre><p>结果</p>
-<pre><code>[[ 1.  4.  9.]
- [16. 25. 36.]]
-[[False  True  True]
- [ True  True  True]]</code></pre><h1 id="基本索引和切片"><a href="#基本索引和切片" class="headerlink" title="基本索引和切片"></a>基本索引和切片</h1><pre><code>arr = np.arange(10)
-print(arr)
-print(arr[5])
-arr[5:8]=12
-print(arr[5:8])
-print(arr)</code></pre><p>创建一个切片后，对切片进行操作，会改变原数组中的值</p>
-<pre><code>arr_slice = arr[5:8]
-print(arr_slice)
-arr_slice[1] = 12345
-print(arr)</code></pre><p>结果：</p>
-<pre><code>[12 12 12]
-[    0     1     2     3     4    12 12345    12     8     9]</code></pre><p>若想要得到的是一个副本而不是视图，需要明确<strong>arr[5:8].copy()</strong></p>
-<h1 id="布尔类型索引"><a href="#布尔类型索引" class="headerlink" title="布尔类型索引"></a>布尔类型索引</h1><pre><code>names = np.array([&apos;Bob&apos;, &apos;Joe&apos;, &apos;Will&apos;, &apos;Joe&apos;, &apos;Joe&apos;])
-data = np.random.randn(5,4)
-print(data)
-print(names == &apos;Bob&apos;)
-print(data[names == &apos;Bob&apos;])
-print(names != &apos;Bob&apos;)
-print(data[~(names == &apos;Bob&apos;)])</code></pre><p>结果：</p>
-<pre><code>array([[-0.72559713,  0.5021692 , -0.40538323,  1.03159213],
-       [ 0.72144716,  0.9853986 , -1.90579109, -0.42454087],
-       [-0.35674934,  0.12369675,  1.71308068,  0.61302904],
-       [ 0.86463033, -0.97788801, -0.07978174, -0.44386613],
-       [ 1.47681259,  1.09531974, -0.16154207,  1.92472807]])
-
-array([ True, False, False, False, False])
-
-array([[-0.72559713,  0.5021692 , -0.40538323,  1.03159213]])
-
-array([[ 0.72144716,  0.9853986 , -1.90579109, -0.42454087],
-       [-0.35674934,  0.12369675,  1.71308068,  0.61302904],
-       [ 0.86463033, -0.97788801, -0.07978174, -0.44386613],
-       [ 1.47681259,  1.09531974, -0.16154207,  1.92472807]])</code></pre><h1 id="数组转置和轴对换"><a href="#数组转置和轴对换" class="headerlink" title="数组转置和轴对换"></a>数组转置和轴对换</h1><pre><code>arr = np.arange(16).reshape((2,2,4))
-print(arr)
-arr.transpose((1, 0, 2))</code></pre><p>结果：</p>
-<pre><code>[[[ 0  1  2  3]
-  [ 4  5  6  7]]
-
- [[ 8  9 10 11]
-  [12 13 14 15]]]
-
-array([[[ 0,  1,  2,  3],
-        [ 8,  9, 10, 11]],
-
-       [[ 4,  5,  6,  7],
-        [12, 13, 14, 15]]])</code></pre><p>swapaxes返回源数据的视图</p>
-<pre><code>print(arr.swapaxes(1,2))
-
-[[[ 0  4]
-  [ 1  5]
-  [ 2  6]
-  [ 3  7]]
-
- [[ 8 12]
-  [ 9 13]
-  [10 14]
-  [11 15]]]</code></pre><p>#将条件逻辑表述为数组运算</p>
-<pre><code>x = np.array([1,2,3,4,5])
-y = np.array([4,6,8,9,0])
-cond = np.array([True,False,True,False,True])
-
-result = np.where(cond,x,y)
-print(result)</code></pre><p>结果：</p>
-<pre><code>[1 6 3 9 5]</code></pre><p>where：当cond为真则x，否则为y</p>
-<p>#数学和统计方法</p>
+        <p>参考文章：<a href="https://blog.csdn.net/q982151756/article/details/80513340" target="_blank" rel="noopener">https://blog.csdn.net/q982151756/article/details/80513340</a></p>
+<h1 id="初识AOP"><a href="#初识AOP" class="headerlink" title="初识AOP"></a>初识AOP</h1><blockquote>
+<p>AOP：Aspect Oriented Programming 面向切面的编程，通过预编译方式和运行期间动态代理实现程序功能的统一维护的一种技术。AOP是OOP的延续，是软件开发中的一个热点，也是Spring框架中的一个重要内容，是函数式编程的一种衍生范型。利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。 –百度百科</p>
+</blockquote>
+<p>首先看一个例子：</p>
+<p>我们在举办一个活动，在用户参与活动之前首先要进行活动的有效性检测，例如，检测活动是否还在进行当中、检测该活动是否需要用户登录等等。</p>
 <ul>
-<li>mean 算数平均数</li>
-<li>std、var 标准差、方差</li>
-<li>argmin，argmax 最小最大元素索引</li>
-<li>cumsum 所有元素累计和</li>
-<li>cumprod 所有元素累计积</li>
+<li>按照最普通的方法，有下面两个过程，这两个过程的每一步代码都要各自编写一遍：</li>
 </ul>
-<p>#排序</p>
-<pre><code>np.sort(a, axis, kind, order)</code></pre><ol>
-<li>a:要排序的数组</li>
-<li>axis：按照排序数组的轴</li>
-<li>kind默认为“quicksort”</li>
-<li>order：若数组包含字段，则为要排序的字段</li>
-</ol>
-<p>#唯一化以及其他的集合逻辑<br>    names = np.array([‘Bob’, ‘Joe’, ‘Will’, ‘Joe’, ‘Joe’])<br>    print(np.unique(names))<br>结果：</p>
-<pre><code>[&apos;Bob&apos; &apos;Joe&apos; &apos;Will&apos;]</code></pre>
+<p><img src="https://upload-images.jianshu.io/upload_images/301894-b5da4fd1b180a308.png" alt=""></p>
+<ul>
+<li>然后，我们会想，把中间的相同的部分合并在一起，这样就可以大大减少我们的编码工作量，这就是面向对象的思想OOP</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/301894-0f82e5395dc66e77.png" alt=""></p>
+<ul>
+<li>而上面这种方法的缺点就是：我的原来的程序和红框里面的程序仍然存在耦合，设想，假如“第一个开始程序”这里面要调用100个接口，另一个也要调用100个接口，那么这个类就会变得特变复杂，当我们想要修改一些东西，效率就会变低。而下面这张图就解决了这个问题，可以把方法从外面注入接口调用的地方，这样接口执行不要关心具体的业务，而不需要关注其他非该接口关注的逻辑或处理。</li>
+</ul>
+<p><img src="https://upload-images.jianshu.io/upload_images/301894-897c4ece9209be9c.png" alt=""></p>
+<p>这就是面向切面的思想AOP</p>
+<h1 id="AOP相关概念"><a href="#AOP相关概念" class="headerlink" title="AOP相关概念"></a>AOP相关概念</h1><ul>
+<li><strong>连接点（Join Point）</strong>：所有可能的需要注入切面的地方。如方法前后、类初始化、属性初始化前后等等。</li>
+<li><strong>切点（Poincut）</strong>：需要做某些处理（如打印日志、处理缓存等等）的连接点。</li>
+<li><strong>通知（Advice）</strong>：定义在什么时候做什么事情。</li>
+<li><strong>切面（Aspect）</strong>：通知+切点的集合，定义在什么地方什么时间做什么事情。</li>
+<li><strong>引入（Introduction）</strong>：允许我们向现有的类添加新方法属性。这不就是把切面（也就是新方法属性：通知定义的）用到目标类中吗</li>
+<li><strong>目标（Target）</strong>：引入中提到的目标类，也就是要被通知的对象。也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</li>
+<li><strong>织入（Weaving）</strong>：把切面应用到目标对象来创建新的代理对象的过程。</li>
+</ul>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
     </div>
@@ -989,12 +910,12 @@ print(result)</code></pre><p>结果：</p>
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>NumPy</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">659</span></p>
+    <p><span class="copy-title">文章标题:</span>AOP</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">725</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-01-31, 10:38:27</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-01, 09:46:05</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/NumPy/" title="NumPy">http://yoursite.com/2020/01/31/%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98/NumPy/</a>
+    <p><span class="copy-title">发布时间:</span>2020-03-05, 21:00:23</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-06, 00:18:31</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/05/Spring/AOP/" title="AOP">http://yoursite.com/2020/03/05/Spring/AOP/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>

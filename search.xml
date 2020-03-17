@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>Spring Ioc_Aop实例</title>
+      <link href="/2020/03/17/Spring/Spring%20Ioc_Aop%E5%AE%9E%E4%BE%8B/"/>
+      <url>/2020/03/17/Spring/Spring%20Ioc_Aop%E5%AE%9E%E4%BE%8B/</url>
+      
+        <content type="html"><![CDATA[<h1 id="1、新建项目"><a href="#1、新建项目" class="headerlink" title="1、新建项目"></a>1、新建项目</h1><p><img src="https://pic3.zhimg.com/80/v2-6d084805132f132424c0d069a5a1c490_720w.png" alt=""><br><img src="https://pic1.zhimg.com/80/v2-92fbb1618b07b155902ff41a7ef1beba_720w.png" alt=""><br><img src="https://pic3.zhimg.com/80/v2-17805cffa6b604dc0702a1531650f302_720w.png" alt=""><br><img src="https://pic4.zhimg.com/80/v2-44204619a6e9caf2417aa390a7582349_720w.png" alt=""></p><h1 id="2、导入依赖"><a href="#2、导入依赖" class="headerlink" title="2、导入依赖"></a>2、导入依赖</h1><p><img src="https://pic3.zhimg.com/80/v2-651d822e587249103e5cffb45f7abdbd_720w.png" alt=""><br><img src="https://pic4.zhimg.com/80/v2-2ec9d3e3ed01071a21351d7a60daad94_720w.png" alt=""><br><img src="https://pic2.zhimg.com/80/v2-68d4115936a02f609b99a79b970ff8a4_720w.png" alt=""><br><img src="https://pic3.zhimg.com/80/v2-72aab2560bfc504c90b425856454e840_720w.png" alt=""><br><img src="https://pic3.zhimg.com/80/v2-62fdcb19974a515523380abd14e60a80_720w.png" alt=""></p><h1 id="3、Spring-Ioc"><a href="#3、Spring-Ioc" class="headerlink" title="3、Spring-Ioc"></a>3、Spring-Ioc</h1><h2 id="3-1-XML方式"><a href="#3-1-XML方式" class="headerlink" title="3.1 XML方式"></a><strong>3.1 XML方式</strong></h2><h3 id="（1）AccountDAO"><a href="#（1）AccountDAO" class="headerlink" title="（1）AccountDAO"></a>（1）AccountDAO</h3><p><img src="https://pic3.zhimg.com/80/v2-50eb8061674fb3389e59891f6b7fb65e_720w.png" alt=""></p><h3 id="（2）AccountDAOImpl"><a href="#（2）AccountDAOImpl" class="headerlink" title="（2）AccountDAOImpl"></a>（2）AccountDAOImpl</h3><p><img src="https://pic1.zhimg.com/80/v2-481c8fef2517dcf3ee0a2aa73a306baf_720w.png" alt=""></p><h3 id="（3）applicationContext"><a href="#（3）applicationContext" class="headerlink" title="（3）applicationContext"></a>（3）applicationContext</h3><p><img src="https://pic1.zhimg.com/80/v2-3acff7c3cc0b24f8c9286067a0b59b6c_720w.png" alt=""></p><h3 id="（4）test"><a href="#（4）test" class="headerlink" title="（4）test"></a>（4）test</h3><p><img src="https://pic4.zhimg.com/80/v2-4c5980e3344fc149a6f1534b68d5b9de_720w.png" alt=""></p><p><img src="https://pic4.zhimg.com/80/v2-051a2f37382c1419d5ea39fafe9abdd2_720w.png" alt=""></p><p>结果：</p><p><img src="https://pic4.zhimg.com/80/v2-917dc773b74217bb2fa9809bc029a812_720w.png" alt=""></p><hr><h3 id="（1）添加代码Account、AccountService"><a href="#（1）添加代码Account、AccountService" class="headerlink" title="（1）添加代码Account、AccountService"></a>（1）添加代码Account、AccountService</h3><p><img src="https://pic2.zhimg.com/80/v2-7e0471ab0b9d023d8ee2911bc1bbece4_720w.png" alt=""><br><img src="https://pic4.zhimg.com/80/v2-81f5619e3bc30bd18066334b9e5c4e02_720w.png" alt=""></p><h3 id="（2）在applicatContext中添加bean"><a href="#（2）在applicatContext中添加bean" class="headerlink" title="（2）在applicatContext中添加bean"></a>（2）在applicatContext中添加bean</h3><p><img src="https://pic2.zhimg.com/80/v2-d8fd8b6dec637272cfd589111d1ba6b7_720w.png" alt=""></p><h3 id="（3）修改test"><a href="#（3）修改test" class="headerlink" title="（3）修改test"></a>（3）修改test</h3><p><img src="https://pic1.zhimg.com/80/v2-bf7300112a714c4978d327ff9c797d23_720w.png" alt=""></p><h2 id="3-2-注解方式"><a href="#3-2-注解方式" class="headerlink" title="3.2 注解方式"></a><strong>3.2 注解方式</strong></h2><p><img src="https://pic3.zhimg.com/80/v2-8634dfe1369cc1acfaaa79ca14108595_720w.png" alt=""></p><p><strong>- @Component, @Service, @Controller, @Repository是spring注解，注解后可以被spring框架所扫描并注入到spring容器来进行管理</strong></p><p><strong>- @Component是通用注解，其他三个注解是这个注解的拓展，并且具有了特定的功能</strong></p><p><strong>- @Repository注解在持久层中，具有将数据库操作抛出的原生异常翻译转化为spring的持久层异常的功能。</strong></p><p><strong>- @Controller层是spring-mvc的注解，具有将请求进行转发，重定向的功能。</strong></p><p><strong>- @Service层是业务逻辑层注解，这个注解只是标注该类处于业务逻辑层。</strong></p><h3 id="（1）修改test"><a href="#（1）修改test" class="headerlink" title="（1）修改test"></a>（1）修改test</h3><p><img src="https://pic4.zhimg.com/80/v2-e190fee4de4f6395b401ca9dafe22992_720w.png" alt=""></p><h3 id="（2）给各个类添加注解"><a href="#（2）给各个类添加注解" class="headerlink" title="（2）给各个类添加注解"></a>（2）给各个类添加注解</h3><p><img src="https://pic3.zhimg.com/80/v2-d37fceda8d62a4753048ff0f889a357b_720w.png" alt=""><br><img src="https://pic4.zhimg.com/80/v2-fbbe0fae560c834994a21db21aa2d9c0_720w.png" alt=""><br><img src="https://pic1.zhimg.com/80/v2-5c89af36334be98c0fc554d10e3078eb_720w.png" alt=""></p><h3 id="（3）运行"><a href="#（3）运行" class="headerlink" title="（3）运行"></a>（3）运行</h3><p><img src="https://pic1.zhimg.com/80/v2-cba979ddd4666bec33a6584397e06847_720w.png" alt=""></p><h1 id="4、Spring-Aop"><a href="#4、Spring-Aop" class="headerlink" title="4、Spring-Aop"></a>4、Spring-Aop</h1><h2 id="4-1-传统动态代理方式"><a href="#4-1-传统动态代理方式" class="headerlink" title="4.1 传统动态代理方式"></a><strong>4.1 传统动态代理方式</strong></h2><h3 id="1、proxy类"><a href="#1、proxy类" class="headerlink" title="1、proxy类"></a>1、proxy类</h3><p><img src="https://pic2.zhimg.com/80/v2-acae15d77d7b3d6a11371b4d537b2aaf_720w.png" alt=""></p><h3 id="2、test"><a href="#2、test" class="headerlink" title="2、test"></a>2、test</h3><p><img src="https://pic3.zhimg.com/80/v2-2e3cbd9933103363167394b59dc026eb_720w.png" alt=""></p><p>结果：<img src="https://pic1.zhimg.com/80/v2-e1a1abc9d2bd6d4abc7afe7a88e08ebf_720w.png" alt=""></p><h2 id="4-2使用AOP"><a href="#4-2使用AOP" class="headerlink" title="4.2使用AOP"></a><strong>4.2使用AOP</strong></h2><h3 id="1、添加dependency，创建applicationContext-xml"><a href="#1、添加dependency，创建applicationContext-xml" class="headerlink" title="1、添加dependency，创建applicationContext.xml"></a>1、添加dependency，创建applicationContext.xml</h3><p><img src="https://pic2.zhimg.com/80/v2-62bceb39f3560ee6cda1078949ada11d_720w.png" alt=""><br><img src="https://pic4.zhimg.com/80/v2-347b12c249666e09ca6d4db431fe0244_720w.png" alt=""></p><h3 id="2、创建一个代理类，继承AfterReturningAdvice"><a href="#2、创建一个代理类，继承AfterReturningAdvice" class="headerlink" title="2、创建一个代理类，继承AfterReturningAdvice"></a>2、创建一个代理类，继承AfterReturningAdvice</h3><p><img src="https://pic3.zhimg.com/80/v2-30a144f1258b96fd68df549968fdbba4_720w.png" alt=""></p><h3 id="3、test"><a href="#3、test" class="headerlink" title="3、test"></a>3、test</h3><p><img src="https://pic4.zhimg.com/80/v2-2dc015a818a8169d302d507421db7c6c_720w.png" alt=""></p><p>结果：<br><img src="https://pic1.zhimg.com/80/v2-ee97da6cafca917264f39f4f4eb52fe5_720w.png" alt=""></p><p><strong>很明显这种方法的缺点：1、当被代理类变多，就需要写更多的bean</strong></p><p><strong>2、必须要面向接口</strong></p><p><strong>3、在invoke中只能在方法前后添加东西，而不能更改其他的</strong></p><h2 id="4-3使用AspectJ"><a href="#4-3使用AspectJ" class="headerlink" title="4.3使用AspectJ"></a><strong>4.3使用AspectJ</strong></h2><h3 id="1、添加dependency，更改applicationContext-xml"><a href="#1、添加dependency，更改applicationContext-xml" class="headerlink" title="1、添加dependency，更改applicationContext.xml"></a>1、添加dependency，更改applicationContext.xml</h3><p><img src="https://pic1.zhimg.com/80/v2-a31f8378c83d16f06144bf7dba19a3d7_720w.png" alt=""><br><img src="https://pic1.zhimg.com/80/v2-5ba99b2505dcc59ab5f74bf4f96d1123_720w.png" alt=""></p><h3 id="2、创建切面Aspect"><a href="#2、创建切面Aspect" class="headerlink" title="2、创建切面Aspect"></a>2、创建切面Aspect</h3><p><img src="https://pic4.zhimg.com/80/v2-11ab4944aa21f5473bdeabad66fbe7f2_720w.png" alt=""></p><h3 id="3、test-1"><a href="#3、test-1" class="headerlink" title="3、test"></a>3、test</h3><p><img src="https://pic2.zhimg.com/80/v2-2e61564980e217a15576f9eeec63efc1_720w.png" alt=""></p><p>结果：</p><p><img src="https://pic2.zhimg.com/80/v2-57f6b03335051ffb1d49c3df0faad3c7_720w.png" alt=""></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring </tag>
+            
+            <tag> Maven </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>AOP</title>
+      <link href="/2020/03/05/Spring/AOP/"/>
+      <url>/2020/03/05/Spring/AOP/</url>
+      
+        <content type="html"><![CDATA[<p>参考文章：<a href="https://blog.csdn.net/q982151756/article/details/80513340" target="_blank" rel="noopener">https://blog.csdn.net/q982151756/article/details/80513340</a></p><h1 id="初识AOP"><a href="#初识AOP" class="headerlink" title="初识AOP"></a>初识AOP</h1><blockquote><p>AOP：Aspect Oriented Programming 面向切面的编程，通过预编译方式和运行期间动态代理实现程序功能的统一维护的一种技术。AOP是OOP的延续，是软件开发中的一个热点，也是Spring框架中的一个重要内容，是函数式编程的一种衍生范型。利用AOP可以对业务逻辑的各个部分进行隔离，从而使得业务逻辑各部分之间的耦合度降低，提高程序的可重用性，同时提高了开发的效率。 –百度百科</p></blockquote><p>首先看一个例子：</p><p>我们在举办一个活动，在用户参与活动之前首先要进行活动的有效性检测，例如，检测活动是否还在进行当中、检测该活动是否需要用户登录等等。</p><ul><li>按照最普通的方法，有下面两个过程，这两个过程的每一步代码都要各自编写一遍：</li></ul><p><img src="https://upload-images.jianshu.io/upload_images/301894-b5da4fd1b180a308.png" alt=""></p><ul><li>然后，我们会想，把中间的相同的部分合并在一起，这样就可以大大减少我们的编码工作量，这就是面向对象的思想OOP</li></ul><p><img src="https://upload-images.jianshu.io/upload_images/301894-0f82e5395dc66e77.png" alt=""></p><ul><li>而上面这种方法的缺点就是：我的原来的程序和红框里面的程序仍然存在耦合，设想，假如“第一个开始程序”这里面要调用100个接口，另一个也要调用100个接口，那么这个类就会变得特变复杂，当我们想要修改一些东西，效率就会变低。而下面这张图就解决了这个问题，可以把方法从外面注入接口调用的地方，这样接口执行不要关心具体的业务，而不需要关注其他非该接口关注的逻辑或处理。</li></ul><p><img src="https://upload-images.jianshu.io/upload_images/301894-897c4ece9209be9c.png" alt=""></p><p>这就是面向切面的思想AOP</p><h1 id="AOP相关概念"><a href="#AOP相关概念" class="headerlink" title="AOP相关概念"></a>AOP相关概念</h1><ul><li><strong>连接点（Join Point）</strong>：所有可能的需要注入切面的地方。如方法前后、类初始化、属性初始化前后等等。</li><li><strong>切点（Poincut）</strong>：需要做某些处理（如打印日志、处理缓存等等）的连接点。</li><li><strong>通知（Advice）</strong>：定义在什么时候做什么事情。</li><li><strong>切面（Aspect）</strong>：通知+切点的集合，定义在什么地方什么时间做什么事情。</li><li><strong>引入（Introduction）</strong>：允许我们向现有的类添加新方法属性。这不就是把切面（也就是新方法属性：通知定义的）用到目标类中吗</li><li><strong>目标（Target）</strong>：引入中提到的目标类，也就是要被通知的对象。也就是真正的业务逻辑，他可以在毫不知情的情况下，被咱们织入切面。而自己专注于业务本身的逻辑。</li><li><strong>织入（Weaving）</strong>：把切面应用到目标对象来创建新的代理对象的过程。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring </tag>
+            
+            <tag> AOP </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello Spring理解IoC、DI</title>
       <link href="/2020/03/03/Spring/Hello%20Spring/"/>
       <url>/2020/03/03/Spring/Hello%20Spring/</url>
