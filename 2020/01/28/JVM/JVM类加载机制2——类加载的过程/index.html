@@ -2,15 +2,15 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>类加载的过程 | Jacob</title>
+  <title>类加载的过程 | ������</title>
   <meta name="keywords" content=" 类加载机制 ">
-  <meta name="description" content="类加载的过程 | Jacob">
+  <meta name="description" content="类加载的过程 | ������">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="1、新建项目 2、导入依赖 3、Spring-Ioc3.1 XML方式（1）AccountDAO （2）AccountDAOImpl （3）applicationContext （4）test  结果：   （1）添加代码Account、AccountService （2）在applicatContext中添加bean （3）修改test 3.2 注解方式 - @Component, @Servi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring Ioc_Aop实例">
 <meta property="og:url" content="http://yoursite.com/2020/03/17/Spring/Spring%20Ioc_Aop%E5%AE%9E%E4%BE%8B/index.html">
-<meta property="og:site_name" content="Jacob">
+<meta property="og:site_name" content="������">
 <meta property="og:description" content="1、新建项目 2、导入依赖 3、Spring-Ioc3.1 XML方式（1）AccountDAO （2）AccountDAOImpl （3）applicationContext （4）test  结果：   （1）添加代码Account、AccountService （2）在applicatContext中添加bean （3）修改test 3.2 注解方式 - @Component, @Servi">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://pic3.zhimg.com/80/v2-6d084805132f132424c0d069a5a1c490_720w.png">
@@ -53,7 +53,7 @@
 <meta property="og:image" content="https://pic2.zhimg.com/80/v2-57f6b03335051ffb1d49c3df0faad3c7_720w.png">
 <meta property="article:published_time" content="2020-03-17T03:54:23.000Z">
 <meta property="article:modified_time" content="2020-03-17T03:53:51.639Z">
-<meta property="article:author" content="Jacob">
+<meta property="article:author" content="runze">
 <meta property="article:tag" content="Spring">
 <meta property="article:tag" content="Maven">
 <meta name="twitter:card" content="summary">
@@ -64,7 +64,7 @@
 
 <link href="/css/style.css?v=1.0.1" rel="stylesheet">
 
-<link href="/css/hl_theme/atom-light.css?v=1.0.1" rel="stylesheet">
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
 
 <link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
 <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
@@ -99,7 +99,7 @@
     <img class="avatar" src="/img/avatar.jpg" />
 </a>
 <div class="author">
-    <span>Jacob</span>
+    <span>runze</span>
 </div>
 
 <div class="icon">
@@ -173,8 +173,6 @@
 </div>
 
 
-
-<a class="more-menus">更多菜单</a>
 
 
 <ul>
@@ -348,8 +346,6 @@
 <div class="left-bottom">
     <div class="menus">
     
-    
-    <a class="dynamic-menu site_url"   href="/photo">相册</a>
     
     
     
@@ -1022,7 +1018,7 @@ SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些�
 <div class="article_copyright">
     <p><span class="copy-title">文章标题:</span>类加载的过程</p>
     <p><span class="copy-title">文章字数:</span><span class="post-count">1.1k</span></p>
-    <p><span class="copy-title">本文作者:</span><a  title="Jacob">Jacob</a></p>
+    <p><span class="copy-title">本文作者:</span><a  title="runze">runze</a></p>
     <p><span class="copy-title">发布时间:</span>2020-01-28, 16:46:14</p>
     <p><span class="copy-title">最后更新:</span>2020-01-28, 19:26:41</p>
     <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/01/28/JVM/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B62%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B/" title="类加载的过程">http://yoursite.com/2020/01/28/JVM/JVM%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B62%E2%80%94%E2%80%94%E7%B1%BB%E5%8A%A0%E8%BD%BD%E7%9A%84%E8%BF%87%E7%A8%8B/</a>
@@ -1063,7 +1059,7 @@ SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些�
 
     </div>
     <div class="copyright">
-        <p class="footer-entry">©2020 Jacob</p>
+        <p class="footer-entry">©2020 runze</p>
 <p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
 
     </div>
@@ -1196,7 +1192,7 @@ SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些�
         border-right: 1px solid #C3CCD0;
         text-align: right;
         color: #AAA;
-        background-color: #fafafa;
+        background-color: ;
     }
     .pre-numbering.widther {
         width: 35px;
@@ -1328,18 +1324,6 @@ SourceFile: &quot;Test.java&quot;</code></pre><p>可以看到，上面有一些�
 
 
 
-
-<div class="mobile-menus-out" >
-
-</div>
-<div class="mobile-menus">
-    
-    
-    <a class="dynamic-menu site_url"   href="/photo">相册</a>
-    
-    
-    
-</div>
 
 <div style="position:absolute; bottom: 0; right: 0;">
     <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=4919981&auto=1&height=66"></iframe>
