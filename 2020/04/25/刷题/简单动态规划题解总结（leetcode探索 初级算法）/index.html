@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>1深度学习的实用层面 | runze</title>
-  <meta name="keywords" content=" 神经网络 ">
-  <meta name="description" content="1深度学习的实用层面 | runze">
+  <title>简单动态规划题解总结（leetcode探索 初级算法） | runze</title>
+  <meta name="keywords" content=" 动规 ">
+  <meta name="description" content="简单动态规划题解总结（leetcode探索 初级算法） | runze">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="1、新建项目 2、导入依赖 3、Spring-Ioc3.1 XML方式（1）AccountDAO （2）AccountDAOImpl （3）applicationContext （4）test  结果：   （1）添加代码Account、AccountService （2）在applicatContext中添加bean （3）修改test 3.2 注解方式 - @Component, @Servi">
 <meta property="og:type" content="article">
@@ -828,9 +828,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-吴恩达 深度学习/02改善深层神经网络：超参数调试、正则化以及优化/1深度学习的实用层面" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-刷题/简单动态规划题解总结（leetcode探索 初级算法）" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">1深度学习的实用层面</h1>
+        <h1 class="article-title">简单动态规划题解总结（leetcode探索 初级算法）</h1>
     
     <div class="article-meta">
         
@@ -838,28 +838,26 @@
         
         <span class="book">
             
-                <a  data-rel="DeepLearning">DeepLearning</a>/
-            
-                <a  data-rel="02改善深层神经网络">02改善深层神经网络</a>
+                <a  data-rel="刷题">刷题</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">神经网络</a>
+            <a class="color3">动规</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-02-23 08:30:23'>2020-02-16 17:09</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-25 15:13:09'>2020-04-25 09:48</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:2.5k</span>
+        <span>字数:1.8k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -889,7 +887,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1、训练、验证、测试集"><span class="toc-text">1、训练、验证、测试集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#小数据时代："><span class="toc-text">小数据时代：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#大数据时代"><span class="toc-text">大数据时代</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Notation"><span class="toc-text">Notation</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2、偏差、方差"><span class="toc-text">2、偏差、方差</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3、机器学习基础"><span class="toc-text">3、机器学习基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4、正则化"><span class="toc-text">4、正则化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5、为什么正则化可以减少过拟合"><span class="toc-text">5、为什么正则化可以减少过拟合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#6、Dropout正则化"><span class="toc-text">6、Dropout正则化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#7、理解Dropout"><span class="toc-text">7、理解Dropout</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#8、其他正则化方法"><span class="toc-text">8、其他正则化方法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#9、归一化输入"><span class="toc-text">9、归一化输入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#10、梯度消失、梯度爆炸"><span class="toc-text">10、梯度消失、梯度爆炸</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#11、利用初始化缓解梯度消失和爆炸问题"><span class="toc-text">11、利用初始化缓解梯度消失和爆炸问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#12、梯度的数值逼近"><span class="toc-text">12、梯度的数值逼近</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#13、梯度检验"><span class="toc-text">13、梯度检验</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#14、实现梯度检验-Notes"><span class="toc-text">14、实现梯度检验 Notes</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#爬楼梯"><span class="toc-text">爬楼梯</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：简单递归"><span class="toc-text">&#x3D;&#x3D;思路一：简单递归&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：hashmap"><span class="toc-text">&#x3D;&#x3D;思路二：hashmap&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路三：动规"><span class="toc-text">&#x3D;&#x3D;思路三：动规&#x3D;&#x3D;</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#买卖股票最佳时机"><span class="toc-text">买卖股票最佳时机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：暴力法"><span class="toc-text">&#x3D;&#x3D;思路一：暴力法&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：保存最小值、最大利润"><span class="toc-text">&#x3D;&#x3D;思路二：保存最小值、最大利润&#x3D;&#x3D;</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#最大子序和"><span class="toc-text">最大子序和</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#思路一：暴力法-1"><span class="toc-text">&#x3D;&#x3D;思路一：暴力法&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路二：改进暴力"><span class="toc-text">&#x3D;&#x3D;思路二：改进暴力&#x3D;&#x3D;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#思路三：动规-1"><span class="toc-text">&#x3D;&#x3D;思路三：动规&#x3D;&#x3D;</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#打家劫舍"><span class="toc-text">打家劫舍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#解法"><span class="toc-text">&#x3D;&#x3D;解法&#x3D;&#x3D;</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -905,166 +903,87 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2536090967,3947773569&fm=26&gp=0.jpg" alt=""></p>
-<p>参考文章：<a href="https://zhuanlan.zhihu.com/p/29794318" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/29794318</a></p>
-<h1 id="1、训练、验证、测试集"><a href="#1、训练、验证、测试集" class="headerlink" title="1、训练、验证、测试集"></a><strong>1、训练、验证、测试集</strong></h1><p>对于一组data，我们通常分为：</p>
-<ul>
-<li>训练集（train set）：用训练集对算法或模型进行训练</li>
-<li>验证集（development set）：用验证集（简单交叉验证集hold-out cross validation set）进行交叉验证，选出最好的模型</li>
-<li>测试集（test set）：对模型进行测试，获取模型运行的无偏估计</li>
-</ul>
-<h4 id="小数据时代："><a href="#小数据时代：" class="headerlink" title="小数据时代："></a>小数据时代：</h4><p>例如：100、1000、10000的数据量，可将data分为：</p>
-<ul>
-<li>无验证集：70%  /  30%</li>
-<li>有验证集：60%  /  20%  /  20%</li>
-</ul>
-<h4 id="大数据时代"><a href="#大数据时代" class="headerlink" title="大数据时代"></a>大数据时代</h4><p>验证集的目的是为了验证不同的算法哪种更加有效，所以验证集只要足够大能够验证大约2-10种算法哪种更好就足够了，不需要使用20%的数据作为验证集。如百万数据中抽取1万的数据作为验证集就可以了。</p>
-<p>测试集的主要目的是评估模型的效果，如在单个分类器中，往往在百万级别的数据中，我们选择其中1000条数据足以评估单个模型的效果。</p>
-<ul>
-<li>100万数据量：98% / 1% / 1%；</li>
-<li>超百万数据量：99.5% / 0.25% / 0.25%（或者99.5% / 0.4% / 0.1%）</li>
-</ul>
-<h4 id="Notation"><a href="#Notation" class="headerlink" title="Notation"></a>Notation</h4><ul>
-<li>建议验证和测试集来自同一分布，这样可以使机器学习算法变得更快</li>
-<li>如果不需要无偏估计来评估模型的性能，则可以不需要测试集</li>
-</ul>
-<h1 id="2、偏差、方差"><a href="#2、偏差、方差" class="headerlink" title="2、偏差、方差"></a><strong>2、偏差、方差</strong></h1><p><img src="https://pic2.zhimg.com/80/v2-780fcc9466d6e335241727e0725c61fd_hd.jpg" alt=""></p>
-<p>从图中可以看出，在欠拟合时，会出现高偏差（high bias），在过拟合时，会出现高方差（high variance）</p>
-<p><img src="https://pic2.zhimg.com/80/v2-ef626d89314943c7701c0462fce443a9_hd.jpg" alt=""></p>
-<p>对于1% / 11% 说明过拟合，使训练集误差小，而测试集误差偏大。</p>
-<p>但是这是以人眼的误差为0%为基础，若人眼是 15% ， 则第二种是较好的情况</p>
-<p>对于第三种高偏差、高方差：<br><img src="https://pic2.zhimg.com/80/v2-d31a17414aa07f477be2d1c94fb411ed_hd.jpg" alt=""></p>
-<p>用了线性方程，并且还出现了过拟合</p>
-<h1 id="3、机器学习基础"><a href="#3、机器学习基础" class="headerlink" title="3、机器学习基础"></a><strong>3、机器学习基础</strong></h1><p>如何解决high bias\high variance?</p>
-<p><img src="https://pic3.zhimg.com/80/v2-69ee1d22e22e3509ecd0f87554e7ba02_hd.jpg" alt=""></p>
-<ul>
-<li><p>high bias</p>
-<ul>
-<li>增加网络结构，如增加隐藏层数目；</li>
-<li>训练更长时间；</li>
-<li>寻找合适的网络架构，使用更大的NN结构;</li>
-</ul>
-</li>
-<li><p>high variance</p>
-<ul>
-<li>获取更多的数据；</li>
-<li>正则化（ regularization）；</li>
-<li>寻找合适的网络结构；</li>
-</ul>
-</li>
-</ul>
-<p>通常情况下，减少一方，会使另一方增加。<br>但在大数据时代，我们可以通过上面的方法减少一方，而不影响另一方</p>
-<h1 id="4、正则化"><a href="#4、正则化" class="headerlink" title="4、正则化"></a><strong>4、正则化</strong></h1><p>上面已说，正则化可以降低variance方差</p>
-<ul>
-<li><strong>logistics regression</strong></li>
-</ul>
-<p>加入正则化项的代价函数：<br><img src="https://www.zhihu.com/equation?tex=J%28w%2Cb%29%3D%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7Dl%28%5Chat+y%5E%7B%28i%29%7D%2Cy%5E%7B%28i%29%7D%29%2B%5Cdfrac%7B%5Clambda%7D%7B2m%7D%7C%7Cw%7C%7C_%7B2%7D%5E%7B2%7D" alt=""></p>
+        <h1 id="爬楼梯"><a href="#爬楼梯" class="headerlink" title="爬楼梯"></a>爬楼梯</h1><p>题目：</p>
+<blockquote>
+<p>假设你正在爬楼梯。需要 n 阶你才能到达楼顶。 每次你可以爬 1 或 2 个台阶。你有多少种不同的方法可以爬到楼顶呢？<br> 注意：给定 n 是一个正整数。</p>
+</blockquote>
+<p>示例 1：</p>
+<blockquote>
+<p>输入： 2<br>输出： 2<br>解释： 有两种方法可以爬到楼顶。</p>
 <ol>
-<li><p>L2正则化：<img src="https://www.zhihu.com/equation?tex=%5Cdfrac%7B%5Clambda%7D%7B2m%7D%7C%7Cw%7C%7C_%7B2%7D%5E%7B2%7D+%3D+%5Cdfrac%7B%5Clambda%7D%7B2m%7D%5Csum%5Climits_%7Bj%3D1%7D%5E%7Bn_%7Bx%7D%7D+w_%7Bj%7D%5E%7B2%7D%3D%5Cdfrac%7B%5Clambda%7D%7B2m%7Dw%5E%7BT%7Dw" alt=""></p>
-</li>
-<li><p>L1正则化：<img src="https://www.zhihu.com/equation?tex=%5Cdfrac%7B%5Clambda%7D%7B2m%7D%7C%7Cw%7C%7C_%7B1%7D%3D%5Cdfrac%7B%5Clambda%7D%7B2m%7D%5Csum%5Climits_%7Bj%3D1%7D%5E%7Bn_%7Bx%7D%7D%7Cw_%7Bj%7D%7C" alt=""></p>
-</li>
+<li>1 阶 + 1 阶</li>
+<li>2 阶 示例 2：</li>
 </ol>
-<p>其中的λ为正则化因子</p>
-<p>注意：lambda 在python中属于保留字，所以在编程的时候，用“lambd”代表这里的正则化因子λ。</p>
+</blockquote>
+<p>示例2： </p>
+<blockquote>
+<p>输入： 3<br> 输出： 3<br> 解释： 有三种方法可以爬到楼顶。</p>
+<ol>
+<li>1 阶 + 1 阶 + 1 阶</li>
+<li>1 阶 + 2 阶</li>
+<li>2 阶 + 1 阶</li>
+</ol>
+</blockquote>
+<h3 id="思路一：简单递归"><a href="#思路一：简单递归" class="headerlink" title="==思路一：简单递归=="></a>==思路一：简单递归==</h3><p>首先，考虑特殊情况，即阶梯数为0，1，2时，分别返回值为0，1，2。<br>然后我们只需要返回n-1 和n-2即可，让他逐层往下递归。（爬楼梯每次只趴1或2，从总阶数倒过来看，总阶数的方法数由n-1阶数和n-2阶数的方法数来决定）<br>即：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">climbStairs</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">return</span> climbStairs(n-<span class="number">1</span>)+climbStairs(n-<span class="number">2</span>);</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>此方法性能上有很大的浪费，因为，在进行递归时，有很大一部分计算是重复了的，比如，在进行计算climbStairs(n-1) 时，它要递归计算climbStairs(n-2)+climbStairs(n-3)；而在进行计算climbStairs(n-2)时，它其实已经被算过一次了，但是还要重复计算。</p>
+<h3 id="思路二：hashmap"><a href="#思路二：hashmap" class="headerlink" title="==思路二：hashmap=="></a>==思路二：hashmap==</h3><p>由思路一知道，计算时，会有重复计算的情况，所以可以想办法把一些值存起来，以后就不需要再计算。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">climbStairs</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">return</span> climbStairs(n-<span class="number">1</span>)+climbStairs(n-<span class="number">2</span>);</span><br><span class="line">    </span><br><span class="line">    Map&lt;Integer,Integer&gt; map= <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">return</span> climbStairs(n,map);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">climbStairs</span><span class="params">(<span class="keyword">int</span> n,Map&lt;Integer,Integer&gt; map)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span>(n==<span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">    <span class="keyword">if</span>(map.containsKey(n))&#123;</span><br><span class="line">        <span class="keyword">return</span> map.get(n);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">int</span> val = climbStairs(n-<span class="number">1</span>,map)+climbStairs(n-<span class="number">2</span>,map);</span><br><span class="line">        map.put(n,val);</span><br><span class="line">        <span class="keyword">return</span> val;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="思路三：动规"><a href="#思路三：动规" class="headerlink" title="==思路三：动规=="></a>==思路三：动规==</h3><p>每一个的阶数是前面俩的和F(n)=F(n-1)+F(n-2)<br>这不就是斐波那契数列。<br>这样可以从前往后推。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">climbStairs</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">1</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(n==<span class="number">2</span>) <span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> a=<span class="number">1</span>,b=<span class="number">2</span>,temp=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;n;i++)&#123;</span><br><span class="line">            temp = a+b;</span><br><span class="line">            a=b;</span><br><span class="line">            b=temp;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> temp;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="买卖股票最佳时机"><a href="#买卖股票最佳时机" class="headerlink" title="买卖股票最佳时机"></a>买卖股票最佳时机</h1><p>题目：</p>
+<blockquote>
+<p>给定一个数组，它的第 i 个元素是一支给定股票第 i 天的价格。</p>
+<p>如果你最多只允许完成一笔交易（即买入和卖出一支股票一次），设计一个算法来计算你所能获取的最大利润。</p>
+<p>注意：你不能在买入股票前卖出股票。</p>
+</blockquote>
+<p>示例 1:</p>
+<blockquote>
+<p>输入: [7,1,5,3,6,4]<br>输出: 5<br>解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。<br> 注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格；同时，你不能在买入前卖出股票。</p>
+</blockquote>
+<p>示例 2:</p>
+<blockquote>
+<p>输入: [7,6,4,3,1]<br>输出: 0<br>解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。</p>
+</blockquote>
+<h3 id="思路一：暴力法"><a href="#思路一：暴力法" class="headerlink" title="==思路一：暴力法=="></a>==思路一：暴力法==</h3><p>对于此题可以通过两重循环，依次比较更新最大的利润值。</p>
+<h3 id="思路二：保存最小值、最大利润"><a href="#思路二：保存最小值、最大利润" class="headerlink" title="==思路二：保存最小值、最大利润=="></a>==思路二：保存最小值、最大利润==</h3><p>可以注意到，最大利润肯定是，最小值在左，最大在右。<br>那么我们只需要一次遍历，在这一次遍历中，要存储最小值，并维护一个最大利润值，当一遍遍历的时候，当前值-最小值&gt;最大利润值时，替换最大利润</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxProfit</span><span class="params">(<span class="keyword">int</span>[] prices)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(prices==<span class="keyword">null</span> || prices.length==<span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> profit=<span class="number">0</span>, min=prices[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;prices.length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(min&gt;prices[i])</span><br><span class="line">                min = prices[i];</span><br><span class="line">            <span class="keyword">if</span>(prices[i]-min&gt;profit)&#123;</span><br><span class="line">                profit = prices[i]-min;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> profit;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="最大子序和"><a href="#最大子序和" class="headerlink" title="最大子序和"></a>最大子序和</h1><h3 id="思路一：暴力法-1"><a href="#思路一：暴力法-1" class="headerlink" title="==思路一：暴力法=="></a>==思路一：暴力法==</h3><p>一位学长给我说过，如果刷题的时候一时间想不出来怎么做，可以先从最简单暴力法开始。<br>对于这个题，可以通过三层循环。<br>对于 [7,1,5,3,6,4] </p>
 <ul>
-<li><strong>Neural Network</strong></li>
+<li>第一层，从7遍历到4</li>
+<li>第二次，从上层的那个数的下一个数开始，遍历到4</li>
+<li>第三层，在一二层之间两个数进行遍历相加，并存储为max<br>最后返回max。</li>
 </ul>
-<p>加入正则化项的代价函数：<img src="https://www.zhihu.com/equation?tex=J%28w%5E%7B%5B1%5D%7D%2Cb%5E%7B%5B1%5D%7D%2C%5Ccdots%2Cw%5E%7B%5BL%5D%7D%2Cb%5E%7B%5BL%5D%7D%29%3D%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7Dl%28%5Chat+y%5E%7B%28i%29%7D%2Cy%5E%7B%28i%29%7D%29%2B%5Cdfrac%7B%5Clambda%7D%7B2m%7D%5Csum%5Climits_%7Bl%3D1%7D%5E%7BL%7D%7C%7Cw%5E%7B%5Bl%5D%7D%7C%7C_%7BF%7D%5E%7B2%7D" alt=""></p>
-<p>其中<img src="https://www.zhihu.com/equation?tex=%7C%7Cw%5E%7B%5Bl%5D%7D%7C%7C_%7BF%7D%5E%7B2%7D%3D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bn%5E%7B%5Bl-1%5D%7D%7D%5Csum%5Climits_%7Bj%3D1%7D%5E%7Bn%5E%7B%5Bl%5D%7D%7D%28w_%7Bij%7D%5E%7B%5Bl%5D%7D%29%5E%7B2%7D" alt="">)，因为W的大小为<img src="https://www.zhihu.com/equation?tex=%28n%5E%7B%5Bl-1%5D%7D%2Cn%5E%7B%5Bl%5D%7D%29" alt="">，该矩阵范数被称为“Frobenius norm”。</p>
+<h3 id="思路二：改进暴力"><a href="#思路二：改进暴力" class="headerlink" title="==思路二：改进暴力=="></a>==思路二：改进暴力==</h3><p>很明显，上面暴力法中第三层循环时多余的，因为在第二层遍历的时候，就可以存储最大值。</p>
+<h3 id="思路三：动规-1"><a href="#思路三：动规-1" class="headerlink" title="==思路三：动规=="></a>==思路三：动规==</h3><p>参考文章：<a href="https://blog.csdn.net/zwzsdy/article/details/80029796" target="_blank" rel="noopener">leetcode-最大子序和(四种)</a></p>
+<p>在一遍遍历中，只要每次都保存着之前的最大值即可。</p>
 <ul>
-<li><strong>Weight decay 权重衰减</strong></li>
+<li>当临时最大值小于0，直接换成数组中的值</li>
+<li>当前值大于0的话，就同nums[i]相加</li>
 </ul>
-<p>加入正则化后，梯度变为：</p>
-<p><img src="https://www.zhihu.com/equation?tex=dW%5E%7B%5Bl%5D%7D+%3D+%28form%5C_backprop%29%2B%5Cdfrac%7B%5Clambda%7D%7Bm%7DW%5E%7B%5Bl%5D%7D" alt=""></p>
-<p>则梯度更新公式变为：</p>
-<p><img src="https://www.zhihu.com/equation?tex=W%5E%7B%5Bl%5D%7D%3A%3D+W%5E%7B%5Bl%5D%7D-%5Calpha+dW%5E%7B%5Bl%5D%7D" alt=""></p>
-<p>代入得：</p>
-<p><img src="https://www.zhihu.com/equation?tex=W%5E%7B%5Bl%5D%7D%3A%3D+W%5E%7B%5Bl%5D%7D-%5Calpha+%5B+%28form%5C_backprop%29%2B%5Cdfrac%7B%5Clambda%7D%7Bm%7DW%5E%7B%5Bl%5D%7D%5D%5C%5C+%3D+W%5E%7B%5Bl%5D%7D-%5Calpha%5Cdfrac%7B%5Clambda%7D%7Bm%7DW%5E%7B%5Bl%5D%7D+-%5Calpha%28form%5C_backprop%29%5C%5C%3D%281-%5Cdfrac%7B%5Calpha%5Clambda%7D%7Bm%7D%29W%5E%7B%5Bl%5D%7D-%5Calpha%28form%5C_backprop%29" alt=""></p>
-<p>其中， <img src="https://www.zhihu.com/equation?tex=%281-%5Cdfrac%7B%5Calpha%5Clambda%7D%7Bm%7D%29" alt=""> 为一个 <img src="https://www.zhihu.com/equation?tex=%3C1" alt=""> 的项，会给原来的 <img src="https://www.zhihu.com/equation?tex=W%5E%7B%5Bl%5D%7D" alt="">一个衰减的参数，所以L2范数正则化也被称为“权重衰减（Weight decay）”。</p>
-<h1 id="5、为什么正则化可以减少过拟合"><a href="#5、为什么正则化可以减少过拟合" class="headerlink" title="5、为什么正则化可以减少过拟合"></a><strong>5、为什么正则化可以减少过拟合</strong></h1><p>对于神经网络得cost function：</p>
-<p><img src="https://www.zhihu.com/equation?tex=J%28w%5E%7B%5B1%5D%7D%2Cb%5E%7B%5B1%5D%7D%2C%5Ccdots%2Cw%5E%7B%5BL%5D%7D%2Cb%5E%7B%5BL%5D%7D%29%3D%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7Dl%28%5Chat+y%5E%7B%28i%29%7D%2Cy%5E%7B%28i%29%7D%29%2B%5Cdfrac%7B%5Clambda%7D%7B2m%7D%5Csum%5Climits_%7Bl%3D1%7D%5E%7BL%7D%7C%7Cw%5E%7B%5Bl%5D%7D%7C%7C_%7BF%7D%5E%7B2%7D" alt=""></p>
-<p>当正则化因子λ足够大，为了使cost function变小，则会使w变小趋近于0，则相当于消除了很多神经元的影响，那么图中的大的神经网络就会变成一个较小的网络。</p>
-<p>但是实际上隐藏层的神经元依然存在，但是他们的影响变小了，便不会导致过拟合。</p>
-<p><strong>数学解释：</strong></p>
-<p>假设激活函数为tanh</p>
-<p><img src="https://pic1.zhimg.com/80/v2-649a8466901387e1fdb2f5159fa676f4_hd.jpg" alt=""></p>
-<p>加入正则化项后，当 λ 增大，导致 <img src="https://www.zhihu.com/equation?tex=W%5E%7B%5Bl%5D%7D" alt="">减小， <img src="https://www.zhihu.com/equation?tex=Z%5E%7B%5Bl%5D%7D%3DW%5E%7B%5Bl%5D%7Da%5E%7B%5Bl-1%5D%7D%2Bb%5E%7B%5Bl%5D%7D" alt="">便会减小，由上图可知，在 z 较小的区域里， <img src="https://www.zhihu.com/equation?tex=%5Ctanh%28z%29" alt=""> 函数近似线性，所以每层的函数就近似线性函数，整个网络就成为一个简单的近似线性的网络，从而不会发生过拟合。</p>
-<h1 id="6、Dropout正则化"><a href="#6、Dropout正则化" class="headerlink" title="6、Dropout正则化"></a><strong>6、Dropout正则化</strong></h1><p>Dropout（随机失活）就是在神经网络的Dropout层，为每个神经元结点设置一个随机消除的概率，对于保留下来的神经元，我们得到一个节点较少，规模较小的网络进行训练。</p>
-<p><img src="https://pic4.zhimg.com/80/v2-fa86d4f6c9fd6196859320bbaabba4df_hd.jpg" alt=""></p>
-<p>实现Dropout的方法：反向随机失活（Inverted dropout）</p>
-<p>首先假设对 layer 3 进行dropout：</p>
-<pre><code>keep_prob = 0.8  # 设置神经元保留概率
-d3 = np.random.rand(a3.shape[0], a3.shape[1]) &lt; keep_prob
-a3 = np.multiply(a3, d3)
-a3 /= keep_prob</code></pre><p>这里解释下为什么要有最后一步：a3 /= keep_prob</p>
-<p>依照例子中的 keep_prob = 0.8 ，那么就有大约20%的神经元被删除了，也就是说 <img src="https://www.zhihu.com/equation?tex=a%5E%7B%5B3%5D%7D" alt=""> 中有20%的元素被归零了，在下一层的计算中有 <img src="https://www.zhihu.com/equation?tex=Z%5E%7B%5B4%5D%7D%3DW%5E%7B%5B4%5D%7D%5Ccdot+a%5E%7B%5B3%5D%7D%2Bb%5E%7B%5B4%5D%7D" alt=""> ，所以为了不影响<img src="https://www.zhihu.com/equation?tex=Z%5E%7B%5B4%5D%7D" alt="">的期望值，所以需要 <img src="https://www.zhihu.com/equation?tex=W%5E%7B%5B4%5D%7D%5Ccdot+a%5E%7B%5B3%5D%7D" alt=""> 的部分除以一个keep_prob。</p>
-<p>Inverted dropout 通过对“a3 /= keep_prob”,则保证无论 keep_prob 设置为多少，都不会对<img src="https://www.zhihu.com/equation?tex=Z%5E%7B%5B4%5D%7D" alt="">的期望值产生影响。</p>
-<p>Notation：在测试阶段不要用dropout，因为那样会使得预测结果变得随机。</p>
-<h1 id="7、理解Dropout"><a href="#7、理解Dropout" class="headerlink" title="7、理解Dropout"></a><strong>7、理解Dropout</strong></h1><p>我们以单个神经元入手，单个神经元的工作就是接收输入，并产生一些有意义的输出，但是加入了Dropout以后，输入的特征都是有可能会被随机清除的，所以该神经元不会再特别依赖于任何一个输入特征，也就是说不会给任何一个输入设置太大的权重。</p>
-<p>所以通过传播过程，dropout将产生和L2范数相同的收缩权重的效果。</p>
-<p>对于不同的层，设置的keep_prob也不同，一般来说神经元较少的层，会设 keep_prob=1.0，神经元多的层，则会将keep_prob设置的较小。</p>
-<p><strong>Dropout 缺点</strong>：</p>
-<p>dropout的一大缺点就是其使得 Cost function不能再被明确的定义，以为每次迭代都会随机消除一些神经元结点，所以我们无法绘制出每次迭代<img src="https://www.zhihu.com/equation?tex=J%28W%2Cb%29" alt="">下降的图，如下：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-b766c408d994212d8eb7e198440be695_hd.jpg" alt=""></p>
-<p><strong>使用Dropout：</strong></p>
-<p>关闭dropout功能，即设置 keep_prob = 1.0；<br>运行代码，确保<img src="https://www.zhihu.com/equation?tex=J%28W%2Cb%29" alt="">函数单调递减；<br>再打开 dropout 。</p>
-<h1 id="8、其他正则化方法"><a href="#8、其他正则化方法" class="headerlink" title="8、其他正则化方法"></a><strong>8、其他正则化方法</strong></h1><ul>
-<li><strong>数据扩增</strong>：通过变换图片，得到更多的训练集和验证集</li>
-</ul>
-<p><img src="https://pic1.zhimg.com/80/v2-4ee8dd7e2fd0bfd2c5424994a59fcc98_hd.jpg" alt=""></p>
-<ul>
-<li><strong>Early stopping</strong>：在交叉验证集的误差上升之前的点停止迭代，避免过拟合。这种方法的缺点是无法同时解决bias和variance之间的最优。</li>
-</ul>
-<p><img src="https://pic2.zhimg.com/80/v2-cdf222ea7b5b1fc8845f6e815395bd89_hd.jpg" alt=""></p>
-<h1 id="9、归一化输入"><a href="#9、归一化输入" class="headerlink" title="9、归一化输入"></a><strong>9、归一化输入</strong></h1><p>对数据集特征 <img src="https://www.zhihu.com/equation?tex=x_%7B1%7D%2Cx_%7B2%7D" alt=""> 归一化的过程：</p>
-<p><img src="https://pic3.zhimg.com/80/v2-23cc05544f135c29429e7b0198079662_hd.jpg" alt=""></p>
-<ul>
-<li>计算每个特征所有样本数据的均值： <img src="https://www.zhihu.com/equation?tex=%5Cmu+%3D+%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7Dx%5E%7B%28i%29%7D" alt=""> ；</li>
-<li>减去均值得到对称的分布： <img src="https://www.zhihu.com/equation?tex=x+%3A+%3Dx-%5Cmu" alt=""> ；</li>
-<li>归一化方差： <img src="https://www.zhihu.com/equation?tex=%5Csigma%5E%7B2%7D+%3D+%5Cdfrac%7B1%7D%7Bm%7D%5Csum%5Climits_%7Bi%3D1%7D%5E%7Bm%7Dx%5E%7B%28i%29%5E%7B2%7D%7D" alt="">， <img src="https://www.zhihu.com/equation?tex=x+%3D+x%2F%5Csigma%5E%7B2%7D" alt="">。</li>
-</ul>
-<p><strong>使用归一化原因：</strong></p>
-<p><img src="https://pic1.zhimg.com/80/v2-9b8ae9653968c8b956c4144577e75880_hd.jpg" alt=""></p>
-<p>由图可以看出不使用归一化和使用归一化前后 Cost function 的函数形状会有很大的区别。</p>
-<p>在不使用归一化的代价函数中，如果我们设置一个较小的学习率，那么很可能我们需要很多次迭代才能到达代价函数全局最优解；如果使用了归一化，那么无论从哪个位置开始迭代，我们都能以相对很少的迭代次数找到全局最优解。</p>
-<h1 id="10、梯度消失、梯度爆炸"><a href="#10、梯度消失、梯度爆炸" class="headerlink" title="10、梯度消失、梯度爆炸"></a><strong>10、梯度消失、梯度爆炸</strong></h1><p><img src="https://img-blog.csdnimg.cn/20200215110718285.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<p>上面的情况对于导数也是同样的道理，所以在计算梯度时，根据情况的不同，梯度函数会以指数级递增或者递减，导致训练导数难度上升，梯度下降算法的步长会变得非常非常小，需要训练的时间将会非常长。</p>
-<p>在梯度函数上出现的以指数级递增或者递减的情况就分别称为梯度爆炸或者梯度消失。</p>
-<h1 id="11、利用初始化缓解梯度消失和爆炸问题"><a href="#11、利用初始化缓解梯度消失和爆炸问题" class="headerlink" title="11、利用初始化缓解梯度消失和爆炸问题"></a><strong>11、利用初始化缓解梯度消失和爆炸问题</strong></h1><p>以一个单神经元为例：</p>
-<p><img src="https://pic1.zhimg.com/80/v2-a1783f8bfc4a2519275903658fdc44e8_hd.jpg" alt=""></p>
-<p>当输入的数量 <img src="https://www.zhihu.com/equation?tex=n" alt=""> 较大时，我们希望每个 <img src="https://www.zhihu.com/equation?tex=w_%7Bi%7D" alt=""> 的值都小一些，这样它们的和得到的! <a href="https://www.zhihu.com/equation?tex=z" target="_blank" rel="noopener"></a> 也较小。</p>
-<p>这里为了得到较小的 <img src="https://www.zhihu.com/equation?tex=w_%7Bi%7D" alt=""> ，设置 <img src="https://www.zhihu.com/equation?tex=Var%28w_%7Bi%7D%29%3D%5Cdfrac%7B1%7D%7Bn%7D" alt=""> ，这里称为Xavier initialization。</p>
-<p>对参数进行初始化：</p>
-<pre><code>WL = np.random.randn(WL.shape[0],WL.shape[1])* np.sqrt(1/n)</code></pre><p>这么做是因为，如果激活函数的输入 x 近似设置成均值为0，标准方差1的情况，输出 z 也会调整到相似的范围内。虽然没有解决梯度消失和爆炸的问题，但其在一定程度上确实减缓了梯度消失和爆炸的速度。</p>
-<p>不同激活函数的 Xavier initialization：</p>
-<ul>
-<li>激活函数使用Relu： <img src="https://www.zhihu.com/equation?tex=Var%28w_%7Bi%7D%29%3D%5Cdfrac%7B2%7D%7Bn%7D" alt=""></li>
-<li>激活函数使用tanh： <img src="https://www.zhihu.com/equation?tex=Var%28w_%7Bi%7D%29%3D%5Cdfrac%7B1%7D%7Bn%7D" alt=""></li>
-</ul>
-<p>其中n是输入的神经元个数，也就是 <img src="https://www.zhihu.com/equation?tex=n%5E%7B%5Bl-1%5D%7D" alt=""> 。</p>
-<h1 id="12、梯度的数值逼近"><a href="#12、梯度的数值逼近" class="headerlink" title="12、梯度的数值逼近"></a><strong>12、梯度的数值逼近</strong></h1><p>使用双边误差的方法去逼近导数：</p>
-<p><img src="https://pic2.zhimg.com/80/v2-2f23a8f5c12577d9dbaa2eb47b226e2d_hd.jpg" alt=""></p>
-<p>由图可以看出，双边误差逼近的误差是0.0001，先比单边逼近的误差0.03，其精度要高了很多。</p>
-<p><img src="https://img-blog.csdnimg.cn/20200215111402791.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ0MzU3Mzcx,size_16,color_FFFFFF,t_70" alt=""></p>
-<h1 id="13、梯度检验"><a href="#13、梯度检验" class="headerlink" title="13、梯度检验"></a><strong>13、梯度检验</strong></h1><p><strong>连接参数：</strong></p>
-<p>因为我们的神经网络中含有大量的参数： <img src="https://www.zhihu.com/equation?tex=W%5E%7B%5B1%5D%7D%2Cb%5E%7B%5B1%5D%7D%2C%5Ccdots%2CW%5E%7B%5BL%5D%7D%2Cb%5E%7B%5BL%5D%7D" alt=""> ，为了做梯度检验，需要将这些参数全部连接起来，reshape成一个大的向量 θ 。</p>
-<p>同时对 <img src="https://www.zhihu.com/equation?tex=dW%5E%7B%5B1%5D%7D%2Cdb%5E%7B%5B1%5D%7D%2C%5Ccdots%2CdW%5E%7B%5BL%5D%7D%2Cdb%5E%7B%5BL%5D%7D" alt=""> 执行同样的操作：</p>
-<p><img src="https://pic4.zhimg.com/80/v2-4f422f204d09a055d4d4ed78d21a9437_hd.jpg" alt=""></p>
-<p><strong>进行梯度检验：</strong></p>
-<p>进行如下图的梯度检验</p>
-<p><img src="https://pic1.zhimg.com/80/v2-9e1e6192fd6bb32ca0330c29a9d09688_hd.jpg" alt=""></p>
-<p>判断 <img src="https://www.zhihu.com/equation?tex=d%5Ctheta_%7Bapprox%7D%5Capprox+d%5Ctheta" alt=""> 是否接近。</p>
-<p><strong>判断公式：</strong></p>
-<p><img src="https://www.zhihu.com/equation?tex=%5Cdfrac+%7B%7C%7Cd%5Ctheta_%7Bapprox%7D-d%5Ctheta%7C%7C_%7B2%7D%7D%7B%7C%7Cd%5Ctheta_%7Bapprox%7D%7C%7C_%7B2%7D%2B%7C%7Cd%5Ctheta%7C%7C_%7B2%7D%7D" alt=""></p>
-<p>其中，“ <img src="https://www.zhihu.com/equation?tex=%7C%7C%5Ccdot+%7C%7C_%7B2%7D" alt=""> ”表示欧几里得范数，它是误差平方之和，然后求平方根，得到的欧氏距离。</p>
-<h1 id="14、实现梯度检验-Notes"><a href="#14、实现梯度检验-Notes" class="headerlink" title="14、实现梯度检验 Notes"></a><strong>14、实现梯度检验 Notes</strong></h1><ul>
-<li>不要在训练过程中使用梯度检验，只在debug的时候使用，使用完毕关闭梯度检验的功能；</li>
-<li>如果算法的梯度检验出现了错误，要检查每一项，找出错误，也就是说要找出哪个 dθ_approx[i] 与 dθ 的值相差比较大；</li>
-<li>不要忘记了正则化项；</li>
-<li>梯度检验不能与dropout同时使用。因为每次迭代的过程中，dropout会随机消除隐层单元的不同神经元，这时是难以计算dropout在梯度下降上的代价函数J；</li>
-<li>在随机初始化的时候运行梯度检验，或许在训练几次后再进行。</li>
-</ul>
+<blockquote>
+<p>设sum[i]为以第i个元素结尾且和最大的连续子数组。假设对于元素i，所有以它前面的元素结尾的子数组的长度都已经求得，那么以第i个元素结尾且和最大的连续子数组实际上，要么是以第i-1个元素结尾且和最大的连续子数组加上这个元素，要么是只包含第i个元素，即sum[i] = max(sum[i-1] + a[i], a[i])。可以通过判断sum[i-1] + a[i]是否大于a[i]来做选择，而这实际上等价于判断sum[i-1]是否大于0。由于每次运算只需要前一次的结果，因此并不需要像普通的动态规划那样保留之前所有的计算结果，只需要保留上一次的即可，因此算法的时间和空间复杂度都很小</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">maxSubArray</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;<span class="comment">// 动态规划法</span></span><br><span class="line">        <span class="keyword">int</span> sum=nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> n=nums[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;nums.length;i++) &#123;</span><br><span class="line">            <span class="keyword">if</span>(n&gt;<span class="number">0</span>)n+=nums[i];</span><br><span class="line">            <span class="keyword">else</span> n=nums[i];</span><br><span class="line">            <span class="keyword">if</span>(sum&lt;n)sum=n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> sum;</span><br><span class="line">    &#125;https:<span class="comment">//blog.csdn.net/zwzsdy/article/details/80029796</span></span><br></pre></td></tr></table></figure>
+<h1 id="打家劫舍"><a href="#打家劫舍" class="headerlink" title="打家劫舍"></a>打家劫舍</h1><p>题目：</p>
+<blockquote>
+<p>你是一个专业的小偷，计划偷窃沿街的房屋。每间房内都藏有一定的现金，影响你偷窃的唯一制约因素就是相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。</p>
+<p>给定一个代表每个房屋存放金额的非负整数数组，计算你在不触动警报装置的情况下，能够偷窃到的最高金额。</p>
+</blockquote>
+<p>示例 1:</p>
+<blockquote>
+<p>输入: [1,2,3,1]<br>输出: 4<br>解释: 偷窃 1 号房屋 (金额 = 1) ，然后偷窃 3 号房屋 (金额 = 3)。<br>偷窃到的最高金额 = 1 + 3 = 4 。</p>
+</blockquote>
+<p>示例 2:</p>
+<blockquote>
+<p>输入: [2,7,9,3,1]<br>输出: 12<br>解释: 偷窃 1 号房屋 (金额 = 2), 偷窃 3 号房屋 (金额 = 9)，接着偷窃 5号房屋 (金额 = 1)。<br>偷窃到的最高金额 = 2 + 9 + 1 = 12 。</p>
+</blockquote>
+<p>这是一道典型的动态规划题，类似01背包，对于一家屋子偷或不偷。<br><strong>==dp[i]=max(dp[i-1],dp[i-2]+nums[i])==</strong></p>
+<h3 id="解法"><a href="#解法" class="headerlink" title="==解法=="></a>==解法==</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">rob</span><span class="params">(<span class="keyword">int</span>[] nums)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">if</span>(nums.length==<span class="number">0</span> || nums==<span class="keyword">null</span>)&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">int</span>[] results = <span class="keyword">new</span> <span class="keyword">int</span>[nums.length+<span class="number">1</span>];</span><br><span class="line">       results[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">       results[<span class="number">1</span>] = nums[<span class="number">0</span>];</span><br><span class="line">       <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">2</span>;i&lt;=nums.length;i++)&#123;</span><br><span class="line">           results[i]=Math.max(results[i-<span class="number">2</span>]+nums[i-<span class="number">1</span>],results[i-<span class="number">1</span>]);</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> results[nums.length];</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 2470290795@qq.com </span>
@@ -1078,12 +997,12 @@ a3 /= keep_prob</code></pre><p>这里解释下为什么要有最后一步：a3 /
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>1深度学习的实用层面</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">2.5k</span></p>
+    <p><span class="copy-title">文章标题:</span>简单动态规划题解总结（leetcode探索 初级算法）</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.8k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="runze">runze</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-02-16, 17:09:44</p>
-    <p><span class="copy-title">最后更新:</span>2020-02-23, 08:30:23</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/02/16/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/1%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B1%82%E9%9D%A2/" title="1深度学习的实用层面">http://yoursite.com/2020/02/16/%E5%90%B4%E6%81%A9%E8%BE%BE%20%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/02%E6%94%B9%E5%96%84%E6%B7%B1%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%EF%BC%9A%E8%B6%85%E5%8F%82%E6%95%B0%E8%B0%83%E8%AF%95%E3%80%81%E6%AD%A3%E5%88%99%E5%8C%96%E4%BB%A5%E5%8F%8A%E4%BC%98%E5%8C%96/1%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%AE%9E%E7%94%A8%E5%B1%82%E9%9D%A2/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-25, 09:48:03</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-25, 15:13:09</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/25/%E5%88%B7%E9%A2%98/%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E9%A2%98%E8%A7%A3%E6%80%BB%E7%BB%93%EF%BC%88leetcode%E6%8E%A2%E7%B4%A2%20%E5%88%9D%E7%BA%A7%E7%AE%97%E6%B3%95%EF%BC%89/" title="简单动态规划题解总结（leetcode探索 初级算法）">http://yoursite.com/2020/04/25/%E5%88%B7%E9%A2%98/%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%E9%A2%98%E8%A7%A3%E6%80%BB%E7%BB%93%EF%BC%88leetcode%E6%8E%A2%E7%B4%A2%20%E5%88%9D%E7%BA%A7%E7%AE%97%E6%B3%95%EF%BC%89/</a>
     <p>
         <span class="copy-title">版权声明:</span><i class="fa fa-creative-commons"></i> <a rel="license noopener" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
     </p>
